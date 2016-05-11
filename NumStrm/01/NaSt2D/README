@@ -1,0 +1,99 @@
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+|									      |
+|              The 2D CFD Program NaSt2D associated to the book               |
+|									      |
+|            "Numerische Simulation in der Stroemungsmechanik"		      |
+|            by M. Griebel, Th. Dornseifer, and T. Neunhoeffer                |
+|                              Vieweg 1995                                    |
+|                                                                             |
+|      In december 1997, an english translation will be published by SIAM     |
+|               Title: "Numerical Simulation in Fluid Dynamics"               |
+|                                                                             |
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+Remarks:
+--------
+
+- The program is a 2D solver for the incompressible, transient Navier-Stokes
+  equations including the temperature equation and free boundary problems.
+  It uses finite differences for discretization on a structured equidistant
+  staggered grid, central and upwind (donor-cell) discretization of the 
+  convective parts and an explicit time stepping scheme. The free 
+  boundary value problems are treated with the MAC technique.
+
+- The program was developed for education at a Computer Science Institute.
+  Thus, it is easy to understand and easy to implement but it is not a
+  "state of the art" program. 
+
+- The program is written in C.
+
+- Compilation of the program with "make".
+
+- Uses C-compiler is "gcc" (see "makefile")
+
+- Run the program by
+	"run <Inputfile>"    e.g."run dcavity.par".
+
+- In the inputfiles "*.par" (examples can be found in the sub-directory
+  "examples"), the parameters for the program are given, such as
+  the parameters for the discretization, for the fluid, for the
+  initial data,... The inputfile given when starting "run" is read
+  at the beginning of the program.
+
+- The following problems are implemented and inputfiles are available
+  in the subdirectory "examples"
+  * dcavity:		Driven Cavity
+  * backstep:		Flow over a backward facing step
+  * balken:		Flow past an inclined plate
+  * kreis:		Flow past a circular obstacle
+  * klappen:            Flow through a T-junction
+  * damm:               Breaking dam (free boundary value problem FBVP)
+  * tropfen:            Splash of a liquid drop (FBVP)
+  * spritzguss:         Injection moulding (FBVP)
+  * wafa:               Flow over a backward facing step with free surface
+  * convection:         Buoyancy flow with heated side walls
+  * fluidtrap:          Buoyancy flow with obstacles
+  * rayleigh:           Buoyancy flow with heated upper and lower wall
+			(Rayleigh-Benard Flow)
+
+- For some problems (e.g. backstep, balken, kreis) the pressure correction
+  does not converge in the first time steps. This is due to the fact that 
+  the initial velocity field does not satisfy the continuity equation.
+
+- It is possible to store intermediate data in "outfile" specified in the 
+  inputfile. Later on, you can use this intermediate data as initial data
+  for continuing your simulation if you specify this file as input-data 
+  "infile".
+
+- The comments in the code are not very detailed. For a complete
+  description of the code, please see the book.
+
+- For the implementation of new problems, it is necessary to write
+  a new inputfile, to modify the boundary data in the function
+  "SETSPECBCOND" in the file "boundary.c" and the definition of the
+  obstacles in "INIT_FLAG" ("init.c").
+
+- Parallelization and turbulence simulation described in the book are
+  not included in this package.
+
+- For visualization, there are two matlab scripts available (showData.m and showParticles.m)
+  in the sub-directory "examples/matlab/". 
+  Using other visualization software, it might be necessary to adapt the functions
+  "OUTPUTVEC_bin" and "WRITE_PARTICLES_bin" in visual.c.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ATTENTION: The program was developed on a HP workstation. 
+           There might appear some problems under DOS or WINDOWS95
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+If you have questions, please contact
+
+Roberto Croce
+Institut fuer Numerische Simulation 
+Universitaet Bonn
+D-53115 Bonn
+e-mail: croce@ins.uni-bonn.de
+http://wissrech.ins.uni-bonn.de/people/croce.html
+
