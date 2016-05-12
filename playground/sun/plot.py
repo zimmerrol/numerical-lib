@@ -8,7 +8,7 @@ plt.plot(x,z, label='Loaded from file!')
 
 plt.xlabel('Radius r')
 plt.ylabel('Density rho')
-#plt.title('Interesting Graph\nCheck it out')
+#plt.title('Interesting Graph\nCheck it out').
 plt.legend()
 plt.show()
 plt.savefig('/out/rho.png')
