@@ -94,8 +94,10 @@ namespace numerical{
   void stepRK2Explicit(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
   {
     double* k1 = new double[dimensions];
+
     for (size_t i = 0;i < dimensions; i++)
     {
+
       k1[i] = args[i] + 0.5*timeStepWidth * (*(functions[i]))(args, params);
     }
 
