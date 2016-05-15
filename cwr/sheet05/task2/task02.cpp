@@ -7,8 +7,8 @@
 
 using namespace std;
 
-const double R_EARTH = 100;
-const double R_MOON = 1000;
+const double R_EARTH = 0.7298;//100;
+const double R_MOON = 59.3327;//1000;
 const double R_S = 1.06;
 const double OMEGA = 2 * atan(1) * 4 / (27.332 * 24);
 double ALPHA;
@@ -45,7 +45,7 @@ vector2d gravity_pro_mass(vector2d target_position, vector2d source_position, do
 	  );
 
  // cout << "dist=" << distance << "\t" << (source_position.x - target_position.x)/ distance << "\t" << (source_position.y - target_position.y) / distance <<   "\n";
- 
+
   return result;
 }
 
@@ -73,7 +73,7 @@ double dv_y(double* args, double* params)
  // cout << "y''="<<  acc << "\n";
   return acc;
 
-  
+
 }
 
 double dr_x(double* args, double* params)
@@ -115,7 +115,6 @@ int main(int argc, char* argv[])
 	functions[3] = &dv_y;
 
 	double* params = new double[1];
-	double delta_t_save = 1;
 	double last_t = -2;
 	for (double t = 0; t < t_max; t += deltaT)
 	{
@@ -124,18 +123,19 @@ int main(int argc, char* argv[])
 		//params[2] = R_MOON * cos(OMEGA * t);
 		//params[3] = R_MOON * sin(OMEGA * t);
 
-		if (sqrt(pow(explicitValues[0] - R_MOON * cos(OMEGA * t + phase_shift*atan(1) * 4),2) + pow(explicitValues[1] - R_MOON * sin(OMEGA * t + phase_shift*atan(1) * 4), 2)) < 0.5)
+		if (sqrt(pow(explicitValues[0] - R_MOON * cos(OMEGA * t + phase_shift*atan(1) * 4),2) + pow(explicitValues[1] - R_MOON * sin(OMEGA * t + phase_shift*atan(1) * 4), 2)) < 0.05)
 		{
 			cout << "The satelite hit the moon at t = " << t << " hours!\n";
 			return 0;
 		}
 
-		if (t - last_t >= 0.1)
+		if (t - last_t >= 0.01)
 		{
 			cout << "time = " << t << "\tdistance = " << sqrt(pow(explicitValues[0] - R_MOON * cos(OMEGA * t + phase_shift*atan(1) * 4), 2) + pow(explicitValues[1] - R_MOON * sin(OMEGA * t + phase_shift*atan(1) * 4), 2)) <<  "\n";
 			outputFile << t << "\t";
 			outputFile << explicitValues[0] << "\t" << explicitValues[1] << "\t";
-			outputFile << explicitValues[2] << "\t" << explicitValues[3] << "\t";
+      //velocity:
+			//outputFile << explicitValues[2] << "\t" << explicitValues[3] << "\t";
 			outputFile << R_EARTH * cos(OMEGA * t) << "\t" << R_EARTH * sin(OMEGA * t) << "\t";
 			outputFile << R_MOON * cos(OMEGA * t + phase_shift*atan(1) * 4) << "\t" << R_MOON * sin(OMEGA * t + phase_shift*atan(1) * 4) << "\n";
 			last_t = t;
@@ -147,3 +147,5 @@ int main(int argc, char* argv[])
 }
 
 //hit for: task02.exe res/out.dat 0.001 733.5 1.95 0.4 0.4677
+
+//better hit for: ./task02.exe res/out2.dat 0.001 400 1.7515 0 0
