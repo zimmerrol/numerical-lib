@@ -61,6 +61,24 @@ void gauss_seidel_step(double** x_values, double* b_values, int x_dimension, int
   }
 }
 
+void sor_step(double** x_values, double* b_values, int x_dimension, int y_dimension, double delta_x, double delta_y, double s)
+{
+  //skip the values at the border, as they are fixed
+  for (int x = 0; x<x_dimension; x++)
+  {
+    for (int y = 0; y<y_dimension; y++)
+    {
+      if (point_has_fixed_border_constraint(x,y,x_dimension, y_dimension, delta_x, delta_y))
+      {
+        continue;
+      }
+      //laplace u = 1/h^2 * (u_i+1,j + u_i-1,j + u_i,j+0 + u_i,j-1 - 4*u_i,j) for delta_x = delta_y
+      //x_values[x][y] = 1/pow(delta_x,2) * (x_values[x+1][y] + x_values[x-1][y] - 2*x_values[x][y]) + 1/pow(delta_y,2) * (x_values[x][y+1] + x_values[x][y-1] - 2*x_values[x][y]);
+      x_values[x][y] = (1-s) * x_values[x][y] + s*((-b_values[x+y*x_dimension] + (x_values[x+1][y] + x_values[x-1][y])/pow(delta_x,2) + (x_values[x][y+1] + x_values[x][y-1])/pow(delta_y,2)) / ( 2* (1/pow(delta_x,2) + 1/pow(delta_y,2))));
+    }
+  }
+}
+
 double calculate_error(double** x_values, double* b_values, int x_dimension, int y_dimension, double delta_x, double delta_y)
 {
   double squared_error = 0;
@@ -69,6 +87,11 @@ double calculate_error(double** x_values, double* b_values, int x_dimension, int
   {
     for (int y = 1; y<y_dimension-1; y++)
     {
+      if (point_has_fixed_border_constraint(x,y,x_dimension, y_dimension, delta_x, delta_y))
+      {
+        continue;
+      }
+
       squared_error += pow(b_values[x_dimension*y + x] - 1/pow(delta_x,2) * (x_values[x+1][y] + x_values[x-1][y] - 2*x_values[x][y]) - 1/pow(delta_y,2) * (x_values[x][y+1] + x_values[x][y-1] - 2*x_values[x][y]) ,2);
     }
   }
@@ -87,6 +110,8 @@ int main(int argc, char* argv[])
 
   int dimension_x = atoi(argv[3]);
   int dimension_y = atoi(argv[4]);
+
+  double s = atof(argv[5]);
 
   double delta_x = length_x / dimension_x;
   double delta_y = length_y / dimension_y;
@@ -151,26 +176,21 @@ int main(int argc, char* argv[])
     }
   }
 
-  int step = 0;
-  int aa = 0;
+  int totalIterations = 0;
+  int lastCoutIteration = 0;
   double err = calculate_error(values,  b, dimension_x, dimension_y, delta_x, delta_y);
   while (err > epsilon)
   {
-    aa++;
-    if (aa == 25)
+    if (totalIterations - lastCoutIteration > 25)
     {
-      cout << "error: " << err << endl;
-      aa = 0;
+      cout <<"iteration: " << totalIterations  << "\terror: " << err << endl;
+      lastCoutIteration = totalIterations;
     }
-    gauss_seidel_step(values,  b, dimension_x, dimension_y, delta_x, delta_y);
+    //gauss_seidel_step(values,  b, dimension_x, dimension_y, delta_x, delta_y);
+    sor_step(values,  b, dimension_x, dimension_y, delta_x, delta_y,s);
     err = calculate_error(values,  b, dimension_x, dimension_y, delta_x, delta_y);
 
-    step++;
-
-    if (step == 25*200)
-    {
-      break;
-    }
+    totalIterations++;
   }
 
   //calc E
@@ -184,7 +204,7 @@ int main(int argc, char* argv[])
   }
 
 
-  cout << "final error=" <<  err << endl;
+  cout <<"final iteration: " << totalIterations  << "\tfinal error: " << err << endl;
 
 
 /*  cout << "field:\n";
