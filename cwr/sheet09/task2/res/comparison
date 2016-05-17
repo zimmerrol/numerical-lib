@@ -1,9 +1,0 @@
-#N_x |  N_Y | iterations to archive epsilion < 0.001 GAUUS-SEIDEL |  iterations to archive epsilion < 0.001 SOR (S=1.72)
-61  41  615 88
-122 82  2553  392
-183 123 5899  937
-244 164 10513 1686
-305 205
-
-=>
-Algorithm € O(X_N^2)
