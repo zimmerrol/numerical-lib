@@ -9,21 +9,28 @@ using namespace std;
 
 const double x_position_electrode_1 = 0.4;
 const double y_position_electrode_1 = 0.6;
-const double r_electrode_1 = 0.2;
+const double size_electrode_1 = 0.2;
 const double v_electrode_1 = -1.0;
 
 const double x_position_electrode_2 = 1.1;
 const double y_position_electrode_2 = 0.4;
-const double r_electrode_2 = 0.3;
+const double size_electrode_2 = 0.3;
 const double v_electrode_2 = 1.0;
 
 const double length_x = 1.6;
 const double length_y = 1.0;
 
-struct point2d
+class point2d
 {
+public:
     double x,y;
-}
+    point2d(){}
+    point2d(double x, double y)
+    {
+      this-> x = x;
+      this-> y = y;
+    }
+};
 
 int jordan_cross_product_test(point2d a, point2d b, point2d c)
 {
@@ -74,7 +81,7 @@ int jordan_cross_product_test(point2d a, point2d b, point2d c)
 
 int jordan_point_in_polygon_test(size_t n, point2d* points, point2d test_point)
 {
-  int result = -1;
+  int t = -1;
 
   for (int i=0;i<n-1;i++)
   {
@@ -83,12 +90,92 @@ int jordan_point_in_polygon_test(size_t n, point2d* points, point2d test_point)
 
   t *= jordan_cross_product_test(test_point, points[n-1], points[0]);
 
-  return result;
+  return t;
 }
 
-bool point_is_in_triangle(int x, int y, double middle_x, double middle_y, double rotation_angle, int x_dimension, int y_dimension, double delta_x, double delta_y, double side_length)
+bool point_is_in_hexagon(double x, double y, double middle_x, double middle_y, double side_length)
 {
-  //TODO: add function oontent
+  point2d* points = new point2d[3];
+
+  points[0] = point2d(middle_x, middle_y);
+  points[1] = point2d(middle_x - side_length, middle_y);
+  points[2] = point2d(middle_x - side_length/2, middle_y + sqrt(3)/2 * side_length);
+
+  if (jordan_point_in_polygon_test(3,points, point2d(x,y)))
+  {
+    cout << x << "\t" << y << "\t" << middle_x << "\t" << middle_y << endl;
+    return true;
+  }
+
+  points[0] = point2d(middle_x, middle_y);
+  points[1] = point2d(middle_x - side_length/2, middle_y + sqrt(3)/2 * side_length);
+  points[2] = point2d(middle_x + side_length/2, middle_y + sqrt(3)/2 * side_length);
+
+  if (jordan_point_in_polygon_test(3,points, point2d(x,y)))
+  {
+    cout << "2\t";
+    return true;
+  }
+
+  points[0] = point2d(middle_x, middle_y);
+  points[1] = point2d(middle_x + side_length/2, middle_y + sqrt(3)/2 * side_length);
+  points[2] = point2d(middle_x + side_length, middle_y);
+
+  if (jordan_point_in_polygon_test(3,points, point2d(x,y)))
+  {
+    cout << "3\t";
+    return true;
+  }
+
+  points[0] = point2d(middle_x, middle_y);
+  points[1] = point2d(middle_x + side_length, middle_y);
+  points[2] = point2d(middle_x + side_length/2, middle_y - sqrt(3)/2 * side_length);
+
+  if (jordan_point_in_polygon_test(3,points, point2d(x,y)))
+  {
+    cout << "4\t";
+    return true;
+  }
+
+  points[0] = point2d(middle_x, middle_y);
+  points[1] = point2d(middle_x - side_length/2, middle_y - sqrt(3)/2 * side_length);
+  points[2] = point2d(middle_x + side_length/2, middle_y - sqrt(3)/2 * side_length);
+
+  if (jordan_point_in_polygon_test(3,points, point2d(x,y)))
+  {
+    cout << "5\t";
+    return true;
+  }
+
+  points[0] = point2d(middle_x, middle_y);
+  points[1] = point2d(middle_x - side_length/2, middle_y - sqrt(3)/2 * side_length);
+  points[2] = point2d(middle_x - side_length, middle_y );
+
+  if (jordan_point_in_polygon_test(3,points, point2d(x,y)))
+  {
+    cout << "6\t";
+    return true;
+  }
+
+  return false;
+}
+
+bool point_is_in_triangle(double x, double y, double middle_x, double middle_y, double rotation_angle, double side_length)
+{
+    //at first: calculate relative coordinates to the midle of the triangle, then rotate them
+    point2d a_raw = point2d(0.0,sqrt(3)/2.0 * side_length/2.0);
+    point2d b_raw = point2d(-side_length/2, -sqrt(3)/2.0 * side_length/2.0);
+    point2d c_raw = point2d(side_length/2, -sqrt(3)/2.0 * side_length/2.0);
+
+    //now turn all points
+    point2d a = point2d(middle_x + cos(rotation_angle) * a_raw.x + sin(rotation_angle) * a_raw.y, middle_y -sin(rotation_angle) * a_raw.x + cos(rotation_angle) * a_raw.y);
+    point2d b = point2d(middle_x + cos(rotation_angle) * b_raw.x + sin(rotation_angle) * b_raw.y, middle_y -sin(rotation_angle) * b_raw.x + cos(rotation_angle) * b_raw.y);
+    point2d c = point2d(middle_x + cos(rotation_angle) * c_raw.x + sin(rotation_angle) * c_raw.y, middle_y -sin(rotation_angle) * c_raw.x + cos(rotation_angle) * c_raw.y);
+
+    point2d points[] = {a,b,c};
+
+    int result = jordan_point_in_polygon_test(3, points, point2d(x,y));
+    return result >= 0;
 }
 
 bool point_has_fixed_border_constraint(int x, int y, int x_dimension, int y_dimension, double delta_x, double delta_y)
@@ -100,16 +187,15 @@ bool point_has_fixed_border_constraint(int x, int y, int x_dimension, int y_dime
   }
 
   //get electrode position in the grid and check for collision
-  if (sqrt(pow(x_position_electrode_1 - x * delta_x,2) + pow(y_position_electrode_1 - y * delta_y,2)) < r_electrode_1)
+  if (point_is_in_hexagon(x * delta_x, y*delta_y, x_position_electrode_2, y_position_electrode_2, size_electrode_2))
   {
     return true;
   }
 
-  if (sqrt(pow(x_position_electrode_2 - x * delta_x,2) + pow(y_position_electrode_2 - y * delta_y,2)) < r_electrode_2)
+  if (point_is_in_triangle(x * delta_x, y*delta_y, x_position_electrode_2, y_position_electrode_2, 0.0, size_electrode_2))
   {
     return true;
   }
-
   //nothing detected
   return false;
 }
@@ -228,7 +314,7 @@ int main(int argc, char* argv[])
   {
     for (int y=0; y<dimension_y; y++)
     {
-      if (sqrt(pow(x_position_electrode_1 - x * delta_x,2) + pow(y_position_electrode_1 - y * delta_y,2)) < r_electrode_1)
+      if (point_is_in_hexagon(x * delta_x, y*delta_y, x_position_electrode_2, y_position_electrode_2, size_electrode_2))
       {
         values[x][y] = v_electrode_1;
       }
@@ -240,7 +326,7 @@ int main(int argc, char* argv[])
   {
     for (int y=0; y<dimension_y; y++)
     {
-      if (sqrt(pow(x_position_electrode_2 - x * delta_x,2) + pow(y_position_electrode_2 - y * delta_y,2)) < r_electrode_2)
+      if (point_is_in_triangle(x * delta_x, y*delta_y, x_position_electrode_2, y_position_electrode_2, 0.0, size_electrode_2))
       {
         values[x][y] = v_electrode_2;
       }
@@ -269,23 +355,10 @@ int main(int argc, char* argv[])
   {
     for (int y = 0; y<dimension_y-1; y++)
     {
-      outputFile << x * delta_x << "\t" << y * delta_y << "\t" << (values[x+1][y] - values[x][y]) << "\t" << (values[x][y+1] - values[x][y]) << endl;
-      //outputFile << x << "\t" << y << "\t" << values[x][y] << endl;
+      //outputFile << x * delta_x << "\t" << y * delta_y << "\t" << (values[x+1][y] - values[x][y]) << "\t" << (values[x][y+1] - values[x][y]) << endl;
+      outputFile << x << "\t" << y << "\t" << values[x][y] << endl;
     }
   }
 
-
   cout <<"final iteration: " << totalIterations  << "\tfinal error: " << err << endl;
-
-
-/*  cout << "field:\n";
-  for (int x = 0; x<dimension_x; x++)
-  {
-    for (int y = 0; y<dimension_y; y++)
-    {
-      cout << values[x][y] << "\t";
-    }
-    cout << endl;
-  }*/
-
 }
