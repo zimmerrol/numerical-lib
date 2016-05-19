@@ -2,7 +2,7 @@
 #include <iostream>
 
 namespace numerical{
-  Matrix::Matrix(int m, int n)
+  matrix::matrix(int m, int n)
   {
     this->n = n;
     this->m = m;
@@ -13,7 +13,7 @@ namespace numerical{
     }
   }
 
-  Matrix::Matrix(int m, int n, double defaultValue)
+  matrix::matrix(int m, int n, double defaultValue)
   {
     this->n = n;
     this->m = m;
@@ -28,12 +28,12 @@ namespace numerical{
     }
   }
 
-  Matrix::~Matrix()
+  matrix::~matrix()
   {
     delete data;
   }
 
-  void Matrix::swapRows(int targetm, int sourcem)
+  void matrix::swap_rows(int targetm, int sourcem)
   {
     double buffer;
     for (int i=0;i<this->n;i++)
@@ -44,7 +44,7 @@ namespace numerical{
     }
   }
 
-  void Matrix::replaceRow(int targetm, double* source)
+  void matrix::replace_row(int targetm, double* source)
   {
     for (int i=0;i<this->n;i++)
     {
@@ -52,7 +52,7 @@ namespace numerical{
     }
   }
 
-  void Matrix::swapColumn(int targetn, int sourcen)
+  void matrix::swap_column(int targetn, int sourcen)
   {
     double buffer;
     for (int i=0;i<this->n;i++)
@@ -63,7 +63,7 @@ namespace numerical{
     }
   }
 
-  void Matrix::replaceColumn(int targetn, double* source)
+  void matrix::replace_column(int targetn, double* source)
   {
     for (int i=0;i<this->n;i++)
     {
@@ -71,15 +71,22 @@ namespace numerical{
     }
   }
 
-  void Matrix::printToCout()
+  void matrix::print_to_stream(std::ostream& stream) const
   {
     for (int y = 0;y<m;y++)
     {
       for (int x = 0;x<n;x++)
       {
-        std::cout << this->data[x][y] << "\t";
+        stream << this->data[x][y] << "\t";
       }
-      std::cout << "\n";
+      stream << std::endl;
     }
+    stream << std::flush;
   }
+
+  std::ostream& operator<<(std::ostream& stream, const matrix& matrix)
+  {
+      matrix.print_to_stream(stream);
+      return stream;
+   }
 }

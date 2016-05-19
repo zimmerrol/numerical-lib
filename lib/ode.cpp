@@ -6,7 +6,7 @@
 namespace numerical{
 
 
-  void stepEulerExplicit(std::size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
+  void step_euler_explicit(std::size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
   {
     //create copy of all submitted arguments
     double* origArgs = new double[dimensions];
@@ -21,7 +21,7 @@ namespace numerical{
     }
   }
 
-  void stepLeapFrog(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* previousArgs, double* params)
+  void step_leap_frog(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* previousArgs, double* params)
   {
     //create copy of all submitted arguments
     double* origArgs = new double[dimensions];
@@ -43,7 +43,7 @@ namespace numerical{
 
   //first item in rkParams* is the the factor for the final summation
   //the other items are the factors for influence of the previous samples for the new relative position calculation
-  void stepRKGeneral(size_t dimensions, odeFunction* functions, size_t order, double** rkParams, double timeStepWidth, double* args, double* params)
+  void step_rk_general(size_t dimensions, odeFunction* functions, size_t order, double** rkParams, double timeStepWidth, double* args, double* params)
   {
     double** samplingPoints = new double*[order];
 
@@ -91,7 +91,7 @@ namespace numerical{
 
   }
 
-  void stepRK2Explicit(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
+  void step_rk2_explicit(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
   {
     double* k1 = new double[dimensions];
 
@@ -113,7 +113,7 @@ namespace numerical{
     }
   }
 
-  void stepRK3Explicit(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
+  void step_rk3_explicit(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
   {
     double* callingArguments = new double[dimensions];
     for (size_t i = 0;i < dimensions; i++)
@@ -155,7 +155,7 @@ namespace numerical{
     }
   }
 
-  void stepRK4Explicit(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
+  void step_rk4_explicit(size_t dimensions, odeFunction* functions, double timeStepWidth, double* args, double* params)
   {
     double* callingArguments = new double[dimensions];
     for (size_t i = 0;i < dimensions; i++)

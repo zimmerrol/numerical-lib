@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
        break;
     }
     //numerical::stepEulerExplicit(2, functions, deltaT, explicitValues, NULL);
-    numerical::stepRK2Explicit(6, functions, deltaT, explicitValues, NULL);
+    numerical::step_rk2_explicit(6, functions, deltaT, explicitValues, NULL);
 
   }
 
