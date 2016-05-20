@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
   {
     outputFile << t << "\t" << explicitValues[0] << "\t" << explicitValues[1] << "\n";
     //numerical::stepEulerExplicit(2, functions, deltaT, explicitValues, NULL);
-    numerical::stepRK4(2, functions, deltaT, explicitValues, NULL);
+    numerical::step_rk4_explicit(2, functions, deltaT, explicitValues, NULL);
   }
 
 }

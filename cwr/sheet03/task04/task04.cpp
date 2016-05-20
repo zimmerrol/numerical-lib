@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
       //calc x
       x = step(x, mu);
       args[0] = mu;
-      lambda += log(abs(numerical::differentiateSterling(&func, x, deltaX, args)));
+      lambda += log(abs(numerical::differentiate_centered_difference(&func, x, deltaX, args)));
     }
 
     lambda /= (1000);

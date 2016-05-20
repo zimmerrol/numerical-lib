@@ -142,7 +142,7 @@ int main(int argc, char* argv[])
 		}
 
 
-		numerical::stepRK4Explicit(4, functions, deltaT, explicitValues, params);
+		numerical::step_rk4_explicit(4, functions, deltaT, explicitValues, params);
 	}
 }
 
