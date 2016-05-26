@@ -134,7 +134,7 @@ void findMaxSpeed(char* argv[])
 
     for(double t=0; t<=500; t+=deltaT)
     {
-      numerical::stepRK2Explicit(2, functions, deltaT, rkValues, params);
+      numerical::step_rk2_explicit(2, functions, deltaT, rkValues, params);
     }
 
     if (rkValues[1] > v_sound)
@@ -146,7 +146,7 @@ void findMaxSpeed(char* argv[])
       for(double t=0; t<=500; t+=deltaT)
       {
         outputFile << t << "\t" << rkValues[0] << "\t" << rkValues[1] << "\t" << rkValues[2] << "\n";//"\t" << xIm << "\t" << yIm  << "\n";
-        numerical::stepRK2Explicit(2, functions, deltaT, rkValues, params);
+        numerical::step_rk2_explicit(2, functions, deltaT, rkValues, params);
       }
 
       break;
@@ -182,7 +182,7 @@ void calcRK2forFixedF(char* argv[])
   for(double t=0; t<=500; t+=deltaT)
   {
     outputFile << t << "\t" << rkValues[0] << "\t" << rkValues[1] << "\t" << rkValues[2] << "\n";//"\t" << xIm << "\t" << yIm  << "\n";
-    numerical::stepRK2Explicit(2, functions, deltaT, rkValues, params);
+    numerical::step_rk2_explicit(2, functions, deltaT, rkValues, params);
   }
 }
 
@@ -210,7 +210,7 @@ void calcMaxSpeed(char* argv[])
 
     for(double t=0; t<=500; t+=deltaT)
     {
-      numerical::stepRK2Explicit(2, functions, deltaT, rkValues, params);
+      numerical::step_rk2_explicit(2, functions, deltaT, rkValues, params);
     }
 
     outputFile << F << "\t" << rkValues[1] << "\n";

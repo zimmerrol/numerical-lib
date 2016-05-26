@@ -45,13 +45,13 @@ int main(int argc, char* argv[])
     double fw_error_cube = 0.0;
     for (double x = -2.0; x <2.0;x+=h)
     {
-      double st_dx_square = numerical::differentiateSterling(&square, x, h, NULL);
-      double st_dx_cube = numerical::differentiateSterling(&cube, x, h, NULL);
+      double st_dx_square = numerical::differentiate_centered_difference(&square, x, h, NULL);
+      double st_dx_cube = numerical::differentiate_centered_difference(&cube, x, h, NULL);
       st_error_square += pow((st_dx_square - real_diff_square(x)),2);
       st_error_cube += pow((st_dx_cube - real_diff_cube(x)),2);
 
-      double fw_dx_square = numerical::differentiateNewtonGregroyForwards(&square, x, h, NULL);
-      double fw_dx_cube = numerical::differentiateNewtonGregroyForwards(&cube, x, h, NULL);
+      double fw_dx_square = numerical::differentiate_newton_gregroy_forwards(&square, x, h, NULL);
+      double fw_dx_cube = numerical::differentiate_newton_gregroy_forwards(&cube, x, h, NULL);
       fw_error_square += pow((fw_dx_square - real_diff_square(x)),2);
       fw_error_cube += pow((fw_dx_cube - real_diff_cube(x)),2);
     }

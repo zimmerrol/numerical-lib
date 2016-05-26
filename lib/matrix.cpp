@@ -2,84 +2,131 @@
 #include <iostream>
 
 namespace numerical{
-  Matrix::Matrix(int m, int n)
+  matrix::matrix(size_t n, size_t m)
   {
     this->n = n;
     this->m = m;
     data = new double*[m];
-    for (int i=0;i<m;i++)
+    for (size_t i=0;i<m;i++)
     {
       data[i] = new double[n];
     }
   }
 
-  Matrix::Matrix(int m, int n, double defaultValue)
+  matrix::matrix(size_t n, size_t m, double defaultValue)
   {
     this->n = n;
     this->m = m;
     data = new double*[m];
-    for (int i=0;i<m;i++)
+    for (size_t i=0;i<m;i++)
     {
       data[i] = new double[n];
-      for (int j=0;j<n;j++)
+      for (size_t j=0;j<n;j++)
       {
         data[i][j] = defaultValue;
       }
     }
   }
 
-  Matrix::~Matrix()
+  matrix::~matrix()
   {
     delete data;
   }
 
-  void Matrix::swapRows(int targetm, int sourcem)
+  // n=row, m=column
+  //data = [rowIndex][columnIndex]
+  void matrix::set_value(size_t n, size_t m, double value)
+  {
+    data[n][m] = value;
+  }
+
+  // n=row, m=column
+  //data = [rowIndex][columnIndex]
+  double matrix::get_value(size_t n, size_t m)
+  {
+    return data[n][m];
+  }
+
+  size_t matrix::get_n()
+  {
+      return this->n;
+  }
+
+  size_t matrix::get_m()
+  {
+    return this->m;
+  }
+
+  void matrix::multiply_row(size_t target_m, double scalar)
+  {
+    for (size_t i=0; i<this->m; i++)
+    {
+      this->data[target_m][i] *= scalar;
+    }
+  }
+
+  void matrix::multiply_column(size_t target_n, double scalar)
+  {
+    for (size_t i=0; i<this->n; i++)
+    {
+      this->data[i][target_n] *= scalar;
+    }
+  }
+
+  void matrix::swap_rows(size_t target_m, size_t source_m)
   {
     double buffer;
-    for (int i=0;i<this->n;i++)
+    for (size_t i=0;i<this->n;i++)
     {
-      buffer = this->data[targetm][i];
-      this->data[targetm][i] = this->data[sourcem][i];
-      this->data[sourcem][i] = buffer;
+      buffer = this->data[target_m][i];
+      this->data[target_m][i] = this->data[source_m][i];
+      this->data[source_m][i] = buffer;
     }
   }
 
-  void Matrix::replaceRow(int targetm, double* source)
+  void matrix::replace_row(size_t target_m, double* source)
   {
-    for (int i=0;i<this->n;i++)
+    for (size_t i=0;i<this->n;i++)
     {
-      this->data[targetm][i] = source[i];
+      this->data[target_m][i] = source[i];
     }
   }
 
-  void Matrix::swapColumn(int targetn, int sourcen)
+  void matrix::swap_column(size_t target_n, size_t source_n)
   {
     double buffer;
-    for (int i=0;i<this->n;i++)
+    for (size_t i=0;i<this->n;i++)
     {
-      buffer = this->data[i][targetn];
-      this->data[i][targetn] = this->data[i][sourcen];
-      this->data[i][sourcen] = buffer;
+      buffer = this->data[i][target_n];
+      this->data[i][target_n] = this->data[i][source_n];
+      this->data[i][source_n] = buffer;
     }
   }
 
-  void Matrix::replaceColumn(int targetn, double* source)
+  void matrix::replace_column(size_t target_n, double* source)
   {
-    for (int i=0;i<this->n;i++)
+    for (size_t i=0;i<this->n;i++)
     {
-      this->data[i][targetn] = source[i];
+      this->data[i][target_n] = source[i];
     }
   }
 
-  void Matrix::printToCout()
+  void matrix::print_to_stream(std::ostream& stream) const
   {
-    for (int y = 0;y<m;y++)
+    for (size_t y = 0;y<n;y++)
     {
-      for (int x = 0;x<n;x++)
+      for (size_t x = 0;x<n;x++)
       {
-        std::cout << this->data[x][y] << "\t";
+        stream << this->data[y][x] << "\t";
       }
-      std::cout << "\n";
+      stream << std::endl;
     }
+    stream << std::flush;
   }
+
+  std::ostream& operator<<(std::ostream& stream, const matrix& matrix)
+  {
+      matrix.print_to_stream(stream);
+      return stream;
+   }
 }

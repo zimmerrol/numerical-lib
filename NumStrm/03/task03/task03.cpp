@@ -34,8 +34,8 @@ int main(int argc, char* argv[])
   double fw_error = 0.0;
   for (double x = 0; x <4*M_PI;x+=delta)
   {
-    double st_dx = numerical::differentiateSterling(&func, x, delta, NULL);
-    double fw_dx= numerical::differentiateNewtonGregroyForwards(&func, x, delta, NULL);
+    double st_dx = numerical::differentiate_centered_difference(&func, x, delta, NULL);
+    double fw_dx= numerical::differentiate_newton_gregroy_forwards(&func, x, delta, NULL);
     st_error += pow((st_dx - real_diff_func(x)),2);
     fw_error += pow((fw_dx - real_diff_func(x)),2);
 

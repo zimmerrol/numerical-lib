@@ -1,5 +1,5 @@
 CC=g++
-SOURCE=task02.cpp ../../../lib/ode.cpp ../../../lib/linear_system.cpp ../../../lib/square_matrix.cpp ../../../lib/matrix.cpp
+SOURCE=task02.cpp ../../../lib/ode.cpp
 CFLAGS=-Wall
 PROGRAM=task02
 
