@@ -53,6 +53,9 @@ int main(int argc, char* argv[])
   double earth_water_gradient = (atof)(argv[4]);
   double kappa = (atof)(argv[5]);
 
+  ofstream outputFile;
+  outputFile.open(argv[6]);
+  outputFile << fixed << setprecision(5);
 
   cout << "delta_r= "<< delta_r <<"\tdelta_t="<<delta_t << "\tearth_water_gradient=" << earth_water_gradient << "\tkappa=" << kappa << endl;
 
@@ -66,12 +69,18 @@ int main(int argc, char* argv[])
 
   double error;
   double derivation;
+
   for (double t=0; t < 1e18; t+=delta_t)
   {
     if (isnan(values[dimension_r-1]) || isnan(values[dimension_r-2]))
     {
       cout << "nan detected for t=" << t << endl;
       return -1;
+    }
+
+    for (size_t i=0; i<dimension_r; i++)
+    {
+      outputFile << "\t" << i << "\t" << values[i] << endl;
     }
 
     error = ftcs_time_step(values, delta_t, delta_r, dimension_r);
@@ -86,3 +95,16 @@ int main(int argc, char* argv[])
 
   cout << "Did not find the age, sorry. Stopped at derivation of: " << (values[dimension_r-1]-values[dimension_r-2])/delta_r << endl;
 }
+
+/*
+bash-4.3$ ./task02 100 6.4e6 2e-6 -211200 1e-6
+delta_r= 0.01	delta_t=0.00	earth_water_gradient=-211200.00	kappa=0.00
+Finished after 116.00 steps.
+	The earth seems to have an age of 301329274.48 years
+
+  bash-4.3$ ./task02 10000 6.4e6 2e-9 -211200 1e-6
+delta_r= 0.00	delta_t=0.00	earth_water_gradient=-211200.00	kappa=0.00
+Finished after 121473.00 steps.
+	The earth seems to have an age of 315546301.37 years
+
+*/
