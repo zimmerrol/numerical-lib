@@ -112,4 +112,7 @@ delta_r= 0.00	delta_t=0.00	earth_water_gradient=-211200.00	kappa=0.00
 Finished after 121473.00 steps.
 	The earth seems to have an age of 315546301.37 years
 
+for animation use:
+  ./task02.exe 2000 6.4e6 2e-8 -211200 1e-5 res/out.dat
+
 */
