@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 
   double error;
   double derivation;
-
+  int time_step_write_counter = 100;
   for (double t=0; t < 1e18; t+=delta_t)
   {
     if (isnan(values[dimension_r-1]) || isnan(values[dimension_r-2]))
@@ -78,10 +78,15 @@ int main(int argc, char* argv[])
       return -1;
     }
 
+if (time_step_write_counter == 100)
+{
     for (size_t i=0; i<dimension_r; i++)
     {
       outputFile << "\t" << i << "\t" << values[i] << endl;
     }
+time_step_write_counter = 0;
+}
+time_step_write_counter++;
 
     error = ftcs_time_step(values, delta_t, delta_r, dimension_r);
     derivation = (values[dimension_r-1]-values[dimension_r-2])/delta_r;
