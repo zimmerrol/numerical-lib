@@ -45,14 +45,14 @@ int main(int argc, char* argv[])
 
   size_t dimension_r = (atoi)(argv[2]);
   double earth_radius = (atof)(argv[3]);
-  double delta_r = 1/dimension_r;
+  double delta_r = 1.0/dimension_r;
 
   double delta_t = atof(argv[4]);
   double earth_water_gradient = (atof)(argv[5]);
   double kappa = (atof)(argv[6]);
 
 
-  cout << "delta_t="<<delta_t << "\tearth_water_gradient=" << earth_water_gradient << "\tkappa=" << kappa << endl;
+  cout << "delta_r= "<< delta_r <<"\tdelta_t="<<delta_t << "\tearth_water_gradient=" << earth_water_gradient << "\tkappa=" << kappa << endl;
 
   double* values = new double[dimension_r];
   for (size_t r=0; r<dimension_r-1; r++)
@@ -64,17 +64,23 @@ int main(int argc, char* argv[])
 
   double error;
   double derivation;
-  for (int time_step=0; time_step < 1e6; time_step++)
+  for (double t=0; t < 1e18; t+=delta_t)
   {
+    if (isnan(values[dimension_r-1]) || isnan(values[dimension_r-2]))
+    {
+      cout << "nan detected for t=" << t << endl;
+      return -1;
+    }
+
     error = ftcs_time_step(values, delta_t, delta_r, dimension_r);
     derivation = (values[dimension_r-1]-values[dimension_r-2])/delta_r;
     if (abs(derivation) < abs(earth_water_gradient))
     {
-      cout << "Finished after " << time_step << " steps." << endl;
-      cout << "\tThe earth seems to have an age of " << (time_step * delta_t)*kappa/pow(earth_radius,2) <<" time units" << endl;
+      cout << "Finished after " << t/delta_t << " steps." << endl;
+      cout << "\tThe earth seems to have an age of " << t/kappa*pow(earth_radius,2) / (60*60*24*365) <<" years" << endl;
       return 1;
     }
   }
 
-  cout << "Did not find the age, sorry. Stopped at derivation of: " <<   (values[dimension_r-1]-values[dimension_r-2])/delta_r << endl;
+  cout << "Did not find the age, sorry. Stopped at derivation of: " << (values[dimension_r-1]-values[dimension_r-2])/delta_r << endl;
 }
