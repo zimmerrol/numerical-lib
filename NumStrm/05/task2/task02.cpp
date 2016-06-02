@@ -18,7 +18,11 @@ double ftcs_time_step(double* values, double delta_t, double delta_r, size_t dim
 
   double first_derivation, second_derivation;
 
-  values[0] += delta_t * (2*old_values[1]-2*old_values[0])/(pow(delta_r,2));
+  //if we assume T'[0] == 0 in the "usual" equation we get:
+  values[0] += delta_t * (2.0*old_values[1]-2.0*old_values[0])/(pow(delta_r,2));
+
+  //if we use the neuman bound.cond. according to the lecture like: T'[0] = 1/h*(-3T[0] +4T[1] -1T[2]) and say T'[0]==0 =>
+  //values[0] = (-values[2]+4.0*values[1])/3.0;
   for (size_t r=1; r<dimension_r-1; r++)
   {
     first_derivation = (old_values[r+1] - old_values[r-1])/(2*delta_r);
@@ -39,17 +43,15 @@ double ftcs_time_step(double* values, double delta_t, double delta_r, size_t dim
 
 int main(int argc, char* argv[])
 {
-  ofstream outputFile;
-	outputFile.open(argv[1]);
-	outputFile << fixed << setprecision(5);
+	cout << fixed << setprecision(2);
 
-  size_t dimension_r = (atoi)(argv[2]);
-  double earth_radius = (atof)(argv[3]);
+  size_t dimension_r = (atoi)(argv[1]);
+  double earth_radius = (atof)(argv[2]);
   double delta_r = 1.0/dimension_r;
 
-  double delta_t = atof(argv[4]);
-  double earth_water_gradient = (atof)(argv[5]);
-  double kappa = (atof)(argv[6]);
+  double delta_t = atof(argv[3]);
+  double earth_water_gradient = (atof)(argv[4]);
+  double kappa = (atof)(argv[5]);
 
 
   cout << "delta_r= "<< delta_r <<"\tdelta_t="<<delta_t << "\tearth_water_gradient=" << earth_water_gradient << "\tkappa=" << kappa << endl;
