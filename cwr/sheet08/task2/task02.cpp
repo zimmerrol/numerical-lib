@@ -17,8 +17,8 @@ const double y_position_electrode_2 = 0.4;
 const double r_electrode_2 = 0.3;
 const double v_electrode_2 = 1.0;
 
-const double length_x = 1.6;
-const double length_y = 1.0;
+const double length_x = 2.0;
+const double length_y = 1.4;
 
 bool point_has_fixed_border_constraint(int x, int y, int x_dimension, int y_dimension, double delta_x, double delta_y)
 {
@@ -29,12 +29,12 @@ bool point_has_fixed_border_constraint(int x, int y, int x_dimension, int y_dime
   }
 
   //get electrode position in the grid and check for collision
-  if (sqrt(pow(x_position_electrode_1 - x * delta_x,2) + pow(y_position_electrode_1 - y * delta_y,2)) < r_electrode_1)
+  if (sqrt(pow(x_position_electrode_1 - x * delta_x,2) + pow(y_position_electrode_1 - y * delta_y,2)) <= r_electrode_1)
   {
     return true;
   }
 
-  if (sqrt(pow(x_position_electrode_2 - x * delta_x,2) + pow(y_position_electrode_2 - y * delta_y,2)) < r_electrode_2)
+  if (sqrt(pow(x_position_electrode_2 - x * delta_x,2) + pow(y_position_electrode_2 - y * delta_y,2)) <= r_electrode_2)
   {
     return true;
   }
@@ -61,8 +61,10 @@ void gauss_seidel_step(double** x_values, double* b_values, int x_dimension, int
   }
 }
 
-void sor_step(double** x_values, double* b_values, int x_dimension, int y_dimension, double delta_x, double delta_y, double s)
+double sor_step(double** x_values, double* b_values, int x_dimension, int y_dimension, double delta_x, double delta_y, double s)
 {
+  double squared_error = 0;
+
   //skip the values at the border, as they are fixed
   for (int x = 0; x<x_dimension; x++)
   {
@@ -75,8 +77,12 @@ void sor_step(double** x_values, double* b_values, int x_dimension, int y_dimens
       //laplace u = 1/h^2 * (u_i+1,j + u_i-1,j + u_i,j+0 + u_i,j-1 - 4*u_i,j) for delta_x = delta_y
       //x_values[x][y] = 1/pow(delta_x,2) * (x_values[x+1][y] + x_values[x-1][y] - 2*x_values[x][y]) + 1/pow(delta_y,2) * (x_values[x][y+1] + x_values[x][y-1] - 2*x_values[x][y]);
       x_values[x][y] = (1-s) * x_values[x][y] + s*((-b_values[x+y*x_dimension] + (x_values[x+1][y] + x_values[x-1][y])/pow(delta_x,2) + (x_values[x][y+1] + x_values[x][y-1])/pow(delta_y,2)) / ( 2* (1/pow(delta_x,2) + 1/pow(delta_y,2))));
+
+      squared_error += pow(b_values[x_dimension*y + x] - 1/pow(delta_x,2) * (x_values[x+1][y] + x_values[x-1][y] - 2*x_values[x][y]) - 1/pow(delta_y,2) * (x_values[x][y+1] + x_values[x][y-1] - 2*x_values[x][y]) ,2);
     }
   }
+
+    return sqrt(squared_error);
 }
 
 double calculate_error(double** x_values, double* b_values, int x_dimension, int y_dimension, double delta_x, double delta_y)
@@ -157,7 +163,7 @@ int main(int argc, char* argv[])
   {
     for (int y=0; y<dimension_y; y++)
     {
-      if (sqrt(pow(x_position_electrode_1 - x * delta_x,2) + pow(y_position_electrode_1 - y * delta_y,2)) < r_electrode_1)
+      if (sqrt(pow(x_position_electrode_1 - x * delta_x,2) + pow(y_position_electrode_1 - y * delta_y,2)) <= r_electrode_1)
       {
         values[x][y] = v_electrode_1;
       }
@@ -169,7 +175,7 @@ int main(int argc, char* argv[])
   {
     for (int y=0; y<dimension_y; y++)
     {
-      if (sqrt(pow(x_position_electrode_2 - x * delta_x,2) + pow(y_position_electrode_2 - y * delta_y,2)) < r_electrode_2)
+      if (sqrt(pow(x_position_electrode_2 - x * delta_x,2) + pow(y_position_electrode_2 - y * delta_y,2)) <= r_electrode_2)
       {
         values[x][y] = v_electrode_2;
       }
@@ -178,43 +184,36 @@ int main(int argc, char* argv[])
 
   int totalIterations = 0;
   int lastCoutIteration = 0;
-  double err = calculate_error(values,  b, dimension_x, dimension_y, delta_x, delta_y);
-  while (err > epsilon)
+  double err = 2.0*dimension_x*dimension_y;//calculate_error(values,  b, dimension_x, dimension_y, delta_x, delta_y);
+  while ((err = sor_step(values,  b, dimension_x, dimension_y, delta_x, delta_y,s)) > epsilon)
   {
     if (totalIterations - lastCoutIteration > 25)
     {
-      cout <<"iteration: " << totalIterations  << "\terror: " << err << endl;
+      cout <<"iteration: " << totalIterations  << "\ts: " << s << "\terror: " << err << endl;
       lastCoutIteration = totalIterations;
     }
-    //gauss_seidel_step(values,  b, dimension_x, dimension_y, delta_x, delta_y);
-    sor_step(values,  b, dimension_x, dimension_y, delta_x, delta_y,s);
-    err = calculate_error(values,  b, dimension_x, dimension_y, delta_x, delta_y);
-
     totalIterations++;
   }
 
+  /*
   //calc E
   for (int x = 0; x<dimension_x-1; x++)
   {
     for (int y = 0; y<dimension_y-1; y++)
     {
       outputFile << x * delta_x << "\t" << y * delta_y << "\t" << (values[x+1][y] - values[x][y]) << "\t" << (values[x][y+1] - values[x][y]) << endl;
-      //outputFile << x << "\t" << y << "\t" << values[x][y] << endl;
     }
   }
+  */
 
-
-  cout <<"final iteration: " << totalIterations  << "\tfinal error: " << err << endl;
-
-
-/*  cout << "field:\n";
+  //print v
   for (int x = 0; x<dimension_x; x++)
   {
     for (int y = 0; y<dimension_y; y++)
     {
-      cout << values[x][y] << "\t";
+      outputFile << x << "\t" << y << "\t" << values[x][y] << endl;
     }
-    cout << endl;
-  }*/
+  }
 
+  cout <<"final iteration: " << totalIterations  << "\tfinal error: " << err << endl;
 }
