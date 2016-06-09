@@ -33,6 +33,33 @@ namespace numerical
     delete d;
   }
 
+  //solves M*x = b for M €tridiagMatrix(...)
+  //implementation of the thomas algortihm
+  void linear_system_solve_tridiagonal(size_t n, double* diag_left, double* diag, double* diag_right, double*x, double* b)
+  {
+    double* c = new double[n];
+    double* d = new double[n];
+
+    c[0] = diag_right[0] / diag[0];
+    d[0] = b[0] / diag[0];
+    for (size_t i=1; i<n; i++)
+    {
+        c[i] = diag_right[i] / (diag[i] - c[i-1]*diag_left[i]);
+        d[i] = (b[i] - d[i-1]*diag_right[i-1]) / (diag[i]- c[i-1]*diag_left[i]);
+    }
+
+    x[n-1] = d[n-1];
+
+    for (size_t i = n-1; i>0; i--)
+    {
+      x[i] = d[i] - c[i]*x[i+1];
+    }
+    x[0] = d[0] - c[0]*x[1];
+
+    delete c;
+    delete d;
+  }
+
   double linear_system_solve_gauss_seidel_step(square_matrix& coeff_matrix, double* x, double* b)
   {
     //this is just a special case of SOR with alpha = 1.0
