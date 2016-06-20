@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector>
 #include "../../../lib/square_matrix.h"
 #include "../../../lib/linear_system.h"
 
@@ -14,52 +15,32 @@ double analytic_solution(double x, double D, double v)
   return (exp(v/D*x)-1)/(exp(v/D)-1);
 }
 
-//returns the error after one step
-void step(size_t n, double* T, double* a, double*b, double* c, double*d)
+void integrate(vector<double> &values, square_matrix &coeff_matrix, double D, double v, double delta_x, double delta_t)
 {
-  c[1] /= b[1];
-   d[1] /= b[1];
+  size_t n = coeff_matrix.get_n();
+  double T_left = 0.0;
+  double T_right = 1.0;
 
-   for(size_t i = 2; i < n; i++)
-   {
-     c[i] /= (b[i] - a[i] * c[i-1] );
-     d[i] = (d[i] - a[i] * d[i-1])/(b[i] - a[i] * c[i-1]);
-   }
+  vector<double> x(n);
+  vector<double> b(n);
 
-   for(size_t i = n-1; i>= 1 ; i--)
-   {
-     T[i] = d[i] - c[i]*T[i+1];
-   }
-}
+//b starts at T_1 and yields till T_N-1
+  b.at(0) = T_left*D*delta_t + v/2.0*delta_t*delta_x*(T_left-values.at(2)) + pow(delta_x,2)*values.at(1);
+  b.at(n-1) = T_right*D*delta_t + v/2.0*delta_t*delta_x*(values.at(n) - T_right) + pow(delta_x, 2)*values.at(n+1);
 
-void integrate_exim(double* grid, double &kappa, double &v,double &dx, double &dt, size_t N)
-{
-  double* a = new double[N];
-  double* b = new double[N];
-  double* c = new double[N];
-  double* d = new double[N];
-
-  double alpha = 1/dt + 2*kappa/dx/dx;
-  double beta = -kappa/dx/dx;
-  //stay with the convention to label a, b, c starting from 1 to avoid confusion
-  // with subscribts of grid points
-
-  for(size_t i = 2; i < N-1; i++)
+  for (size_t i=1; i<n-1; i++)
   {
-    b[i] = alpha;
-    a[i] = beta; c[i] = beta;
-    d[i] = v/2/dx*(grid[i-1] - grid[i+1]) + grid[i]/dt;
+    b.at(i) = v/2.0*delta_t*delta_x*(values.at(i)-values.at(i+2)) + pow(delta_x,2)*values.at(i+1);
   }
 
-  b[1] = alpha;
-  d[1] = v/2/dx*(grid[0] - grid[2]) + grid[1]/dt ;
+  linear_system_solve_tridiagonal(coeff_matrix, &x[0], &b[0]);
 
-  d[N-1] = v/2/dx*(grid[N-2] - grid[N]) + kappa*grid[N]/dx/dx + grid[N-1]/dt;
-
-  c[1] = beta; a[N-1] = beta;
-
-  step(N-1, a, b, c, d, grid);
-  delete a; delete b; delete c; delete d;
+  values.at(0) = T_left;
+  values.at(n+1) = T_right;
+  for (size_t i=0; i<n; i++)
+  {
+    values.at(i+1) = x.at(i);
+  }
 }
 
 int main(int argc, char* argv[])
@@ -67,31 +48,48 @@ int main(int argc, char* argv[])
   cout << "Expects:" << endl;
   cout << "\t" << "outputPath\tdimension_x\tmax_time\tdelta_t\tv\tD" << endl;
   ofstream outputFile;
-	outputFile.open(argv[1]);
+	outputFile.open("res/out.dat");
 	outputFile << fixed << setprecision(5);
 
-  size_t dimension_x = (atoi)(argv[2]);
-  dimension_x++;
+  size_t dimension_x = 100;
 
-  double delta_x = 1.0/(dimension_x-1);
+  double delta_x = 1.0/(dimension_x);
 
-  int max_time = (int)atof(argv[3]);
-  double delta_t = atof(argv[4]);
+  int max_time = 20;
+  double delta_t = 3.85e-2;
 
-  double v = atof(argv[5]);
-  double D = atof(argv[6]);
+  double v = 1;
+  double D = 0.01;
 
   cout << "delta_t="<<delta_t << "\tmax_time=" << max_time << "\tdelta_x=" << delta_x << "\tv=" << v << "\tD=" << D << endl;
 
-  double* values = new double[dimension_x];
-  for (size_t i=0; i<dimension_x-1; i++)
+  vector<double> values(dimension_x);
+  for (size_t i=0; i<dimension_x; i++)
   {
-    values[i] = i*delta_x;
+    values.at(i) = i*delta_x;
   }
+
+  double alpha = delta_x*delta_x + 2*D*delta_t;
+  double beta = D*delta_t;
+
+  square_matrix coeff_matrix = square_matrix(dimension_x-2,0);
+  coeff_matrix.set_value(0,0,alpha);
+  coeff_matrix.set_value(0,1,-beta);
+
+  for (size_t i=1; i<dimension_x-3; i++)
+  {
+    coeff_matrix.set_value(i,i,alpha);
+    coeff_matrix.set_value(i,i-1,-beta);
+    coeff_matrix.set_value(i,i+1,-beta);
+  }
+
+  coeff_matrix.set_value(dimension_x-3,dimension_x-4,-beta);
+  coeff_matrix.set_value(dimension_x-3,dimension_x-3,alpha);
+
 
   for(double t=0; t<max_time; t+=delta_t)
   {
-    integrate_exim(values, D,v, delta_x, delta_t, dimension_x+1);
+    integrate(values, coeff_matrix, D, v, delta_x, delta_t);
   }
 
   double diff = 0.0;
@@ -101,6 +99,8 @@ int main(int argc, char* argv[])
     diff += pow(analytic_solution(i*delta_x, D, v) - values[i],2);
   }
 
-  cout << "MSE = " << sqrt(diff) << endl;
+  cout << "MSE = " << sqrt(diff)/dimension_x << endl;
   cout << flush;
+
+  system("gnuplot plot.plt");
 }
