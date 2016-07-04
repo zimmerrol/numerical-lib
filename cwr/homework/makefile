@@ -1,15 +1,21 @@
 CC=g++
-SOURCE=task.cpp ../../lib/ode.cpp
+SOURCE=pendulum.cpp ../../lib/ode.cpp
 CFLAGS=-Wall
-PROGRAM=task
+PROGRAM=bin/pendulum
 
 SOURCE2=bifurcation.cpp ../../lib/ode.cpp
-PROGRAM2=bifurcation
+PROGRAM2=bin/bifurcation
 
 OBJECTS=$(SOURCE:.cpp=.o)
 
 all: $(PROGRAM)
 build:
+	#create directory structure
+	mkdir -p results
+	mkdir -p results/bifurcation
+	mkdir -p results/phase_diagrams
+	mkdir -p results/ttheta_omega_tn
+
 	$(CC) -o $(PROGRAM) $(SOURCE)
 	$(CC) -o $(PROGRAM2) $(SOURCE2)
 %.o: %.cpp

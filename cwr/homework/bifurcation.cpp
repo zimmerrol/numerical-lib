@@ -47,7 +47,8 @@ double f_d_theta(double* args, double* params)
 }
 
 
-//best results for bifurcation.exe bif.dat 0.3333 0.75 1.37 1.39 0.0001 10000 500
+//best results for:
+//  bifurcation.exe bif5.dat 0.3333 0.75 1.375 1.45 0.001 10000
 int main(int argc, char* argv[])
 {
   //print information for the usage
@@ -200,7 +201,6 @@ int main(int argc, char* argv[])
       numerical::step_rk4_explicit(2, functions, delta_t, rkValues, rkParams);
 
       //remap the values of theta into the interval [0,2*pi]
-
       while (rkValues[1] > 2*M_PI)
       {
         rkValues[1] -= 2*M_PI;
