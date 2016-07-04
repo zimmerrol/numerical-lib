@@ -159,8 +159,9 @@ int main(int argc,char **argv)
             << probability(psi_before,0,ibl-1,dx) << " " // probability direct before the nucleus
             << probability(psi_before,ibl+1,nx-1,dx) << std::endl; // probability in the nucleus
   
-	std::ofstream ofs("out/out.dat");
-
+	std::ostringstream oss;
+	oss << "out/psi_alpha_" << alpha << ".dat";
+	std::ofstream ofs(oss.str().c_str());
 
 
     //std::ostringstream oss;
