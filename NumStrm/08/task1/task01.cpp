@@ -56,37 +56,71 @@ void ifft(CArray& x)
 
 int main(int argc, char* argv[])
 {
-  size_t n = 64;
+  size_t n = 256;
   double max_t = atof(argv[1]);
   double delta_t = 1e-3;
-  double D = 1.0;
+  double D = 0.01;
+  double max_x = 2*PI;
 
   Complex functionData[n];
 
-  double delta_x = 1.0/n;
+  double delta_x = max_x/n;
 
   for (size_t i=0; i<n; i++)
   {
-    functionData[i] = sin(2*PI*i*delta_x);
+    functionData[i] = sin(i*delta_x);
   }
+
+  Complex imaginary(0,1);
 
   // forward fft
   CArray data(functionData, n);
 
+  //fft
+  //1. abl
+  //ifft
+  //non-lin
+  //fft
+  //euler-step
+  //ifft
 
+int j=0;
   for (double t=0; t<max_t; t+=delta_t)
   {
-    data[0] = Complex(0);
-    data[n-1] = Complex(0);
+    j++;
+    data[0] = 0;
+    data[n-1] = 0;
+    CArray derivative_data(n);
+    CArray second_derivation_data(n);
 
+    //fft
     fft(data);
-    Complex second_derivation;
-    Complex k;
-    for (size_t i=0; i<n; i++)
+
+    //calc (f')^
+    for (size_t i = 0; i < n; ++i)
     {
-      k = Complex(2.0* i / n -1,0);
-      second_derivation = - k*k*data[i];
-      data[i] += D*delta_t*second_derivation;
+      Complex k(2.0* i / n -1,0);
+      derivative_data[i] = imaginary*k*data[i];
+      second_derivation_data = -k*k*data[i];
+    }
+
+    // inverse fft to calc f'
+    ifft(data);
+    ifft(derivative_data);
+
+    CArray non_linearity_data(n);
+    for (size_t i = 0; i < n; ++i)
+    {
+      non_linearity_data[i] = derivative_data[i] * data[i];
+    }
+
+    //get transformed non-linearity
+    fft(non_linearity_data);
+    fft(data);
+
+    for (size_t i = 0; i < n; ++i)
+    {
+        data[i] += delta_t * (D*second_derivation_data[i] - non_linearity_data[i]);
     }
 
     ifft(data);
