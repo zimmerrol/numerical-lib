@@ -46,7 +46,6 @@ double f_d_theta(double* args, double* params)
   return omega;
 }
 
-
 //best results for:
 //  bifurcation.exe bif5.dat 0.3333 0.75 1.375 1.45 0.001 10000
 int main(int argc, char* argv[])
@@ -62,7 +61,7 @@ int main(int argc, char* argv[])
   cout << "\tend f:\t\tThe final value for the iteration over the strength of the force f." << endl;
   cout << "\tf step size:\tThe step size which is used in the iteration over the strength of the force f." << endl;
   cout << "\tmaximum time:\tThe maximum time for the integration (should be high to reach a fixed point)" << endl;
-  cout << "\t[time step size is fixed to 2pi/(Omega * 1024)]" << endl << endl;
+  cout << "\t[time step size is fixed to 2pi/(Omega * 5000)]" << endl << endl;
 
   //read input parameters
   char* file_path = argv[1];
@@ -73,7 +72,8 @@ int main(int argc, char* argv[])
   double step_f = atof(argv[6]);
   double max_t = atof(argv[7]);
 
-  double delta_t = 2.0/big_omega * M_PI / 1024;
+  //choose this delta_t to integrate until a valid t_n
+  double delta_t = 2.0/big_omega * M_PI / 5000;
 
   //indicates the time after which the points will be used for the diagram. we need to calculate a lot of them before we can create the map to be sure,
   //that we have archived a fixed osicllation period. Usage of the last 100 t_n points is sufficient.
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
   cout << "\tstart f:\t" << start_f << endl;
   cout << "\tend f:\t\t." << end_f << endl;
   cout << "\tf step size:\t" << step_f << endl;
-  cout << "\tmaximum time:\t" << max_t << endl;
+  cout << "\tmaximum time:\t" << max_t << endl << endl;
 
   //create output file stream
   ofstream outputFile;
@@ -95,11 +95,9 @@ int main(int argc, char* argv[])
   //outputFile << fixed << setprecision(17);
   outputFile << "#f" << "\t" << "omega" << "\t" << "theta" << endl;
 
-
   //set the boundary conditions of the problem
   double theta_null = 0.0;
   double omega_null = big_omega;
-
 
   //create internal data for the RK4 integration implementation
   //set system of ODEs
@@ -107,17 +105,20 @@ int main(int argc, char* argv[])
   functions[0] = &f_d_omega;
   functions[1] = &f_d_theta;
 
-
   //create storage for the variables. will contain omega and theta according to the comment in the top
   double* rkValues = new double[2];
 
   //set the other parameters of the problem for the evaluation of the ODEs
   double* rkParams = new double[4];
 
-  int detected_period = 1;
+  //gives the difference in t between to t_n values: print_interval_t = t_{n+1}-t_n
+  double print_interval_t = 2.0/big_omega * M_PI;
 
+  //indicates the current period which has been detected below
+  int detected_period = 1;
   for (double f=start_f; f<=end_f; f+=step_f)
   {
+    //set the needed parameters
     //rkParams[0] will contain the current time t
     rkParams[1] = q;
     rkParams[2] = f;
@@ -127,8 +128,6 @@ int main(int argc, char* argv[])
     rkValues[0] = omega_null;
     rkValues[1] = theta_null;
 
-    //gives the difference in t between to t_n values: print_interval_t = t_{n+1}-t_n
-    double print_interval_t = 2.0/big_omega * M_PI;
     //is beeing used to store the time for which the values haven been saved the last time
     //use this value for the initialization, so that the first iteration will be used
     double last_printed_t = -print_interval_t;
@@ -146,7 +145,7 @@ int main(int argc, char* argv[])
       if (t > start_print_t)
       {
         //to be sure that t = t_n we have to test if the interval between this time and the last time hast been 2*pi/Omega = print_interval_t
-        if (t - last_printed_t >= print_interval_t)
+        if (abs(t - last_printed_t + epsilon) >= print_interval_t)
         {
           //memorize the current time
           last_printed_t = t;
@@ -158,42 +157,7 @@ int main(int argc, char* argv[])
         }
       }
 
-      //detect the current period to detect the perdio doubling
-      //loop over all possible period values for the current amount of recored values for this f iteration
-      for (int period=1; period < (int)calculated_values.size()-1; period++)
-      {
-        bool found_period = true;
-        //loop over all items and check if their period is "period" <=> calculated_values[i+period] is equal to calculated_values[i]
-        for (int index=0; index < (int)calculated_values.size()-1-period; index++)
-        {
-          if (abs(calculated_values.at(index) - calculated_values.at(index+period)) > epsilon)
-          {
-            //this point is not periodically with the period "period"
-            //mark this issue and break the loop to continue to try further period values
-            found_period = false;
-            break;
-          }
-        }
-
-        //not all items seem to be periodically with the period "period" => try to use the next bigger period
-        if (!found_period)
-        {
-          continue;
-        }
-
-        //all items seem to be periodically with the period "period" and this period has been altered compared to the previously detected period "detected_period"
-        if (period != detected_period)
-        {
-          //print this information to the user and memorize the new period
-          cout << "The period has been doubled (f = " << f <<  ")!\t" << detected_period << " => " << period << endl;
-          detected_period = period;
-        }
-
-        break;
-      }
-
-      //RK4 integration
-
+      //RK4 integration starts here
       //set the time parameter
       rkParams[0] = t;
 
@@ -210,6 +174,40 @@ int main(int argc, char* argv[])
       {
         rkValues[1] += 2*M_PI;
       }
+    }
+
+    //detect the current period to detect the perdio doubling
+    //loop over all possible period values for the current amount of recored values for this f iteration
+    for (int period=1; period < (int)calculated_values.size()-1; period++)
+    {
+      bool found_period = true;
+      //loop over all items and check if their period is "period" <=> calculated_values[i+period] is equal to calculated_values[i]
+      for (int index=0; index < (int)calculated_values.size()-1-period; index++)
+      {
+        if (abs(calculated_values.at(index) - calculated_values.at(index+period)) > epsilon)
+        {
+          //this point is not periodically with the period "period"
+          //mark this issue and break the loop to continue to try further period values
+          found_period = false;
+          break;
+        }
+      }
+
+      //not all items seem to be periodically with the period "period" => try to use the next bigger period
+      if (!found_period)
+      {
+        continue;
+      }
+
+      //all items seem to be periodically with the period "period" and this period has been altered compared to the previously detected period "detected_period"
+      if (period != detected_period)
+      {
+        //print this information to the user and memorize the new period
+        cout << "The period has been doubled (f = " << f <<  ")!\t" << detected_period << " => " << period << endl;
+        detected_period = period;
+      }
+
+      break;
     }
   }
 }

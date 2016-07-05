@@ -8,6 +8,13 @@
 
 using namespace std;
 
+/*double delta_t2 = delta_t/100;
+for (int i=0; i<100;i++)
+{
+  rkParams[0] = t + delta_t2*i;
+  numerical::step_rk4_explicit(2, functions, delta_t2, rkValues2, rkParams);
+}*/
+
 /*
   structure:
 
@@ -88,8 +95,11 @@ int main(int argc, char* argv[])
   cout << "\tOmega:\t\t" << big_omega << endl;
   cout << "\tf:\t" << f << endl;
   cout << "\tmaximum time:\t" << max_t << endl;
+  cout << "\tx:\t" << atof(argv[6]) << endl;
   if (use_alternative_theta_mapping)
-    cout << "\tAlternative mapping of theta has been enabled." << endl;
+    cout << "\tAlternative mapping of theta has been enabled!" << endl;
+  if (use_alternative_output_timing)
+      cout << "\tAlternative output timing has been enabled!" << endl;
 
   //create output file stream
   ofstream outputFile;
@@ -153,6 +163,7 @@ int main(int argc, char* argv[])
 
     //do one explicit RK4 integration step
     numerical::step_rk4_explicit(2, functions, delta_t, rkValues, rkParams);
+
 
     //remap the values of theta
     if (!use_alternative_theta_mapping)
