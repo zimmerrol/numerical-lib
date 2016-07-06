@@ -8,15 +8,8 @@
 
 using namespace std;
 
-/*double delta_t2 = delta_t/100;
-for (int i=0; i<100;i++)
-{
-  rkParams[0] = t + delta_t2*i;
-  numerical::step_rk4_explicit(2, functions, delta_t2, rkValues2, rkParams);
-}*/
-
 /*
-  structure:
+  data structure for the integraion methods:
 
   args contains the variables which will be integrated, so here omega, theta
     args[0] = omega
@@ -51,6 +44,18 @@ double f_d_theta(double* args, double* params)
   return omega;
 }
 
+
+/*
+for the creation of the error comparison the program has been called like this
+  pendulum data_a.dat 0.3333 0.75 1.40 500 5000 1 1
+  and
+  pendulum data_b.dat 0.3333 0.75 1.40 500 500000 1 1
+
+for the creation of the phase diagrams the program has been called like this
+  ./pendulum data_f_1.35.dat 0.3333 1.35 0.0 500 5000 1 1
+  ./pendulum data_f_1.45.dat 0.3333 1.45 0.9 500 5000 1 1
+*/
+
 int main(int argc, char* argv[])
 {
   //print information for the usage
@@ -76,8 +81,15 @@ int main(int argc, char* argv[])
   double max_t = atof(argv[5]);
   double delta_t = 2.0/big_omega * M_PI / atof(argv[6]);// atof(argv[6]);
 
+  //if this is set to true, then theta will not be mapped into [0, 2pi] but [-pi,pi].
+  //this is usefull for the creation and comparison of phase diagrams
   bool use_alternative_theta_mapping = false;
+
+  //if this is set to true, then not only the values for t_n will be saved, but every 100th value
+  //this is usefull for comparing the difference between to integrations with different time steps over the time
   bool use_alternative_output_timing = false;
+
+  //check if these flags have been set
   if (argc == 8)
   {
       use_alternative_theta_mapping = atoi(argv[7]) == 1;
@@ -88,7 +100,7 @@ int main(int argc, char* argv[])
     use_alternative_output_timing = atoi(argv[8]) == 1;
   }
 
-  //print entered parameters for the user again
+  //print entered parameters and settings for the user again before starting the calculation
   cout << "Entered parameters:" << endl;
   cout << "\toutput file:\t" << file_path << endl;
   cout << "\tq:\t\t." << q << endl;
@@ -97,9 +109,13 @@ int main(int argc, char* argv[])
   cout << "\tmaximum time:\t" << max_t << endl;
   cout << "\tx:\t" << atof(argv[6]) << endl;
   if (use_alternative_theta_mapping)
-    cout << "\tAlternative mapping of theta has been enabled!" << endl;
+  {
+     cout << "\tAlternative mapping of theta has been enabled." << endl;
+  }
   if (use_alternative_output_timing)
-      cout << "\tAlternative output timing has been enabled!" << endl;
+  {
+       cout << "\tAlternative output timing has been enabled." << endl;
+  }
 
   //create output file stream
   ofstream outputFile;
@@ -131,6 +147,7 @@ int main(int argc, char* argv[])
 
   //gives the difference in t between to t_n values: print_interval_t = t_{n+1}-t_n
   double print_interval_t = 2.0/big_omega * M_PI;
+
   //is beeing used to store the time for which the values haven been saved the last time
   //use this value for the initialization, so that the first iteration will be used
   double last_printed_t = -print_interval_t;
@@ -149,7 +166,8 @@ int main(int argc, char* argv[])
       //memorize the current time
       last_printed_t = t;
 
-      //print the data
+      //print the data in the format
+      //time  omega theta
       outputFile << t << "\t" << rkValues[0] << "\t" << rkValues[1] << endl;
     }
 
@@ -157,13 +175,11 @@ int main(int argc, char* argv[])
     last_printed_index++;
 
     //RK4 integration
-
     //set the time parameter
     rkParams[0] = t;
 
     //do one explicit RK4 integration step
     numerical::step_rk4_explicit(2, functions, delta_t, rkValues, rkParams);
-
 
     //remap the values of theta
     if (!use_alternative_theta_mapping)

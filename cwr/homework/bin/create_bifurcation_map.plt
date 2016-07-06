@@ -8,4 +8,4 @@ set key top left
 set term pngcairo enhanced
 set output "../results/bifurcation/bifurcation.png"
 
-plot "../results/bifurcation/data.dat" u 1:($3 < pi ? $3+0.3 : $3-2*pi+0.3)  pt "." t "Ermittelte periodische Punkte in Theta"
+plot "../results/bifurcation/data.dat" u 1:2  pt "." t "Ermittelte periodische Punkte in Theta"

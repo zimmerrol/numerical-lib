@@ -46,8 +46,12 @@ double f_d_theta(double* args, double* params)
   return omega;
 }
 
-//best results for:
-//  bifurcation.exe bif5.dat 0.3333 0.75 1.375 1.45 0.001 10000
+
+/*
+for the creation of the bifurcation diagram the program has been called like this
+  bifurcation data.dat 0.3333 0.75 1.35 1.45 0.0001 5000
+*/
+
 int main(int argc, char* argv[])
 {
   //print information for the usage
@@ -76,7 +80,7 @@ int main(int argc, char* argv[])
   double delta_t = 2.0/big_omega * M_PI / 5000;
 
   //indicates the time after which the points will be used for the diagram. we need to calculate a lot of them before we can create the map to be sure,
-  //that we have archived a fixed osicllation period. Usage of the last 100 t_n points is sufficient.
+  //that we have archived a fixed osicllation period. Usage of the last 100 t_n points is sufficient for the detection of the first period doubblings.
   double start_print_t = max_t - 2.0/big_omega * M_PI * 100;
 
   //print entered parameters for the user again
@@ -92,8 +96,9 @@ int main(int argc, char* argv[])
   //create output file stream
   ofstream outputFile;
   outputFile.open(file_path);
-  //outputFile << fixed << setprecision(17);
-  outputFile << "#f" << "\t" << "omega" << "\t" << "theta" << endl;
+
+  //print the output data format
+  outputFile << "#f" << "\t" << "theta" << endl;
 
   //set the boundary conditions of the problem
   double theta_null = 0.0;
@@ -152,8 +157,6 @@ int main(int argc, char* argv[])
 
           //add the new value of theta (the fixed point) to the stack/vector
           calculated_values.push_back(rkValues[1]);
-          //save it now to the file stream
-          outputFile << f << "\t" << rkValues[0] << "\t" << rkValues[1] << endl;
         }
       }
 
@@ -208,6 +211,27 @@ int main(int argc, char* argv[])
       }
 
       break;
+    }
+
+    //detect multiple items now to keep the output file small
+    for (size_t i=0; i<calculated_values.size(); i++)
+    {
+      //loop over all other items to detect multiples of item i
+      for (size_t j=i+1; j<calculated_values.size(); j++)
+      {
+        //compare if the values seem to be equal (accoring to definition above)
+        if (abs(calculated_values.at(i) - calculated_values.at(j)) < epsilon)
+        {
+          calculated_values.erase(calculated_values.begin()+j);
+          j--;
+        }
+      }
+    }
+
+    //save the calculated theta values now
+    for (size_t i=0; i<calculated_values.size(); i++)
+    {
+      outputFile << f << "\t" << calculated_values.at(i) << endl;
     }
   }
 }

@@ -14,7 +14,6 @@ build:
 	mkdir -p results
 	mkdir -p results/bifurcation
 	mkdir -p results/phase_diagrams
-	mkdir -p results/ttheta_omega_tn
 
 	$(CC) -o $(PROGRAM) $(SOURCE)
 	$(CC) -o $(PROGRAM2) $(SOURCE2)
