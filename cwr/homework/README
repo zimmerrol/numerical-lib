@@ -8,7 +8,7 @@ Name: Roland Zimmermann
 Matrikel Nummer: 21426901
 Mail Adresse: roland.zimmermann@stud.uni-goettingen.de
 
-1.  Zum Kompilieren des Quellcodes rufe "make build" auf; die Programme werden hier bei im Ordner "bin" erstellt.
+1.  Zum Kompilieren des Quellcodes rufe "make build" auf; die Programme werden im Ordner "bin" erstellt.
     Hier sind auch die von mit benutzen Scripte zu finden, mit denen die meisten Daten aufgenommen wurden, sodass die Befehle nachvollzogen werden können.
     GNUPLOT Skripte für die grafische Darstellung liegen auch bei.
 
