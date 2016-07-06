@@ -1,0 +1,16 @@
+Computergestütztes Wissenschaftliches Rechnen
+            -Sommersemester 2015-
+
+                  Projekt 007
+          Pendel Periodenverdopplung
+
+Name: Roland Zimmermann
+Matrikel Nummer: 21426901
+Mail Adresse: roland.zimmermann@stud.uni-goettingen.de
+
+1.  Zum Kompilieren des Quellcodes rufe "make build" auf; die Programme werden hier bei im Ordner "bin" erstellt.
+    Hier sind auch die von mit benutzen Scripte zu finden, mit denen die meisten Daten aufgenommen wurden, sodass die Befehle nachvollzogen werden können.
+    GNUPLOT Skripte für die grafische Darstellung liegen auch bei.
+
+2.  Das Programm "pendulum" gibt Theta(t_n) und omega(t_n) aus. Alles Weitere siehe "pendulum.cpp".
+3.  Das Programm "bifurcation" erstellt die Daten für ein Bifurkationsdiagramm. Alles Weitere siehe "bifurcation.cpp".
