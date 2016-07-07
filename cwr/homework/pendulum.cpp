@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "math.h"
-#include "../../lib/ode.h"
+#include "lib/ode.h"
 
 using namespace std;
 
@@ -46,14 +46,19 @@ double f_d_theta(double* args, double* params)
 
 
 /*
-for the creation of the error comparison the program has been called like this
+for the creation of the error comparison the program has been called like this:
   pendulum data_a.dat 0.3333 0.75 1.40 500 5000 1 1
   and
   pendulum data_b.dat 0.3333 0.75 1.40 500 500000 1 1
 
-for the creation of the phase diagrams the program has been called like this
+for the creation of the phase diagrams the program has been called like this:
   ./pendulum data_f_1.35.dat 0.3333 1.35 0.0 500 5000 1 1
   ./pendulum data_f_1.45.dat 0.3333 1.45 0.9 500 5000 1 1
+
+to simulate the pendulum and save the values t_n, Theta(t_n) and omega(t_n) call the program like this:
+  ./pendulum data_f_1.35.dat 0.3333 1.35 0.0 500 5000
+
+Further information about the usage of the program can be obtained in the following few lines OR by reading the output of the program once it has been called
 */
 
 int main(int argc, char* argv[])
@@ -65,13 +70,20 @@ int main(int argc, char* argv[])
   cout << "\toutput file:\tThe path to the file in which the results of the bifurcation will be stored." << endl;
   cout << "\tq:\t\tThe damping parameter." << endl;
   cout << "\tOmega:\t\tThe frequency of the driving force of the pendulum." << endl;
-  cout << "\tf:\tThe value of the strength of the force f." << endl;
-  cout << "\tmaximum time:\tThe maximum time for the integration (should be high to reach a fixed point)" << endl;
-  cout << "\tx:\t\t Indicates the time step size via delta_t = 2pi/(Omega * x)]" << endl << endl;
-  cout << "\tremap theta alt. flag:\t (default value = 0) If this is set to 1, then theta will be remapped to [-pi,pi] instead of [0,2pi] (this is useful for phase diagrams)" << endl;
-  cout << "\talt. output timing flag:\t (default value = 0) If this is set to 1, then not only the t_n but every 100th value will be saved (this is useful for phase diagrams)" << endl;
+  cout << "\tf:\t\tThe value of the strength of the force f." << endl;
+  cout << "\tmaximum time:\tThe maximum time for the integration (should be high to reach period behaviour)" << endl;
+  cout << "\tx:\t\tIndicates the time step size via delta_t = 2pi/(Omega * x)]" << endl << endl;
+  cout << "\tremap theta alt. flag (default value = 0):\t If this is set to 1, then theta will be remapped to [-pi,pi] instead of [0,2pi] (this is useful for phase diagrams)" << endl;
+  cout << "\talt. output timing flag (default value = 0):\t If this is set to 1, then not only the t_n but every 100th value will be saved (this is useful for phase diagrams)" << endl;
 
   cout << endl;
+
+  //check if at least all necessary parameters have been submitted
+  //if not, exit now
+  if (argc < 7)
+  {
+    return -1;
+  }
 
   //read input parameters
   char* file_path = argv[1];

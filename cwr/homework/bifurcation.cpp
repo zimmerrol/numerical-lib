@@ -5,7 +5,7 @@
 #include <cmath>
 #include "math.h"
 #include <vector>
-#include "../../lib/ode.h"
+#include "lib/ode.h"
 
 using namespace std;
 
@@ -65,8 +65,16 @@ int main(int argc, char* argv[])
   cout << "\tend f:\t\tThe final value for the iteration over the strength of the force f." << endl;
   cout << "\tf step size:\tThe step size which is used in the iteration over the strength of the force f." << endl;
   cout << "\tmaximum time:\tThe maximum time for the integration (should be high to reach a fixed point)" << endl;
-  cout << "\t[time step size is fixed to 2pi/(Omega * 5000)]" << endl << endl;
+  cout << "\t[time step size is fixed to 2pi/(Omega * 5000)]" << endl;
 
+  cout << endl;
+
+  //check if at least all necessary parameters have been submitted
+  //if not, exit now
+  if (argc < 8)
+  {
+    return -1;
+  }
   //read input parameters
   char* file_path = argv[1];
   double q = atof(argv[2]);
