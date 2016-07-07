@@ -54,21 +54,34 @@ void ifft(CArray& x)
     x /= x.size();
 }
 
+void dealiasing(CArray &data)
+{
+  return;
+
+  size_t n = data.size();
+
+  for (size_t i=0;i<n; i++)
+  {
+    if (2.0* i / n -1 > 2.0*n/3.0)
+      data[i] = Complex(0);
+  }
+}
+
 int main(int argc, char* argv[])
 {
   size_t n = 256;
   double max_t = atof(argv[1]);
-  double delta_t = 1e-3;
+  double delta_t = 1e-4;
   double D = 0.01;
   double max_x = 2*PI;
 
   Complex functionData[n];
 
-  double delta_x = max_x/n;
+  double delta_x = max_x/(double)n;
 
   for (size_t i=0; i<n; i++)
   {
-    functionData[i] = sin(i*delta_x);
+    functionData[i] = 1+sin(i*delta_x);
   }
 
   Complex imaginary(0,1);
@@ -84,24 +97,25 @@ int main(int argc, char* argv[])
   //euler-step
   //ifft
 
-int j=0;
+  CArray derivative_data(n);
+  CArray second_derivative_data(n);
   for (double t=0; t<max_t; t+=delta_t)
   {
-    j++;
-    data[0] = 0;
-    data[n-1] = 0;
-    CArray derivative_data(n);
-    CArray second_derivation_data(n);
+    data[0] = data[n-1];//0;
+    //data[n-1] = 0;
 
     //fft
     fft(data);
+
+    //dealiasing
+    dealiasing(data);
 
     //calc (f')^
     for (size_t i = 0; i < n; ++i)
     {
       Complex k(2.0* i / n -1,0);
-      derivative_data[i] = imaginary*k*data[i];
-      second_derivation_data = -k*k*data[i];
+      derivative_data[i] = -imaginary*k*data[i];
+      second_derivative_data = -k*k*data[i];
     }
 
     // inverse fft to calc f'
@@ -118,9 +132,13 @@ int j=0;
     fft(non_linearity_data);
     fft(data);
 
+    //dealiasing
+    dealiasing(data);
+    dealiasing(non_linearity_data);
+
     for (size_t i = 0; i < n; ++i)
     {
-        data[i] += delta_t * (D*second_derivation_data[i] - non_linearity_data[i]);
+        data[i] += delta_t * (D*second_derivative_data[i] - non_linearity_data[i]);
     }
 
     ifft(data);
