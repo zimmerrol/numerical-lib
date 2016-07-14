@@ -1,9 +1,9 @@
 CC=g++
-SOURCE=pendulum.cpp ../../lib/ode.cpp
+SOURCE=pendulum.cpp lib/ode.cpp
 CFLAGS=-Wall
 PROGRAM=bin/pendulum
 
-SOURCE2=bifurcation.cpp ../../lib/ode.cpp
+SOURCE2=bifurcation.cpp lib/ode.cpp
 PROGRAM2=bin/bifurcation
 
 OBJECTS=$(SOURCE:.cpp=.o)
@@ -21,3 +21,4 @@ build:
 	$(CC) $(CFLAGS) -c $< -o $@
 clean:
 	rm -f $(PROGRAM) *.o
+	rm -f $(PROGRAM2) *.o
