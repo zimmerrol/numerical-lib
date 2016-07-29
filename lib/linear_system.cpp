@@ -5,6 +5,8 @@
 #include <cmath>
 #include <vector>
 
+using namespace std;
+
 namespace numerical
 {
 	//solves M*x = b for M €tridiagMatrix(...)
