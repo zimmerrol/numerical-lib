@@ -46,17 +46,20 @@ double f_d_theta(double* args, double* params)
 
 
 /*
+calling argument structure:
+  ./pendulum output_file_path q Omega f maximum_simulation_time time_step_quotient theta(0) omega(0) alternative_theta_remap_flag alternative_output_timing_flag
+
 for the creation of the error comparison the program has been called like this:
-  pendulum data_a.dat 0.3333 0.75 1.40 500 5000 1 1
+  ./pendulum data_a.dat 0.3333 0.75 1.40 500 5000 0 0.75 1 1
   and
-  pendulum data_b.dat 0.3333 0.75 1.40 500 500000 1 1
+  ./pendulum data_b.dat 0.3333 0.75 1.40 500 500000 0 0.75 1 1
 
 for the creation of the phase diagrams the program has been called like this:
-  ./pendulum data_f_1.35.dat 0.3333 1.35 0.0 500 5000 1 1
-  ./pendulum data_f_1.45.dat 0.3333 1.45 0.9 500 5000 1 1
+  ./pendulum data_f_1.35.dat 0.3333 0.75 1.35 500 5000 0 0.75 1 1
+  ./pendulum data_f_1.45.dat 0.3333 0.75 1.45 500 5000 0 0.75 1 1
 
 to simulate the pendulum and save the values t_n, Theta(t_n) and omega(t_n) call the program like this:
-  ./pendulum data_f_1.35.dat 0.3333 1.35 0.0 500 5000
+  ./pendulum data_f_1.45.dat 0.3333 0.75 1.45 500 5000 0 0.75
 
 Further information about the usage of the program can be obtained in the following few lines OR by reading the output of the program once it has been called
 */
@@ -73,6 +76,8 @@ int main(int argc, char* argv[])
   cout << "\tf:\t\tThe value of the strength of the force f." << endl;
   cout << "\tmaximum time:\tThe maximum time for the integration (should be high to reach period behaviour)" << endl;
   cout << "\tx:\t\tIndicates the time step size via delta_t = 2pi/(Omega * x)]" << endl << endl;
+  cout << "\tTheta(0):\tThe boundary condition for the angle Theta]" << endl << endl;
+  cout << "\tomega(0):\tThe boundary condition for the angular speed omega]" << endl << endl;
   cout << "\tremap theta alt. flag (default value = 0):\t If this is set to 1, then theta will be remapped to [-pi,pi] instead of [0,2pi] (this is useful for phase diagrams)" << endl;
   cout << "\talt. output timing flag (default value = 0):\t If this is set to 1, then not only the t_n but every 100th value will be saved (this is useful for phase diagrams)" << endl;
 
@@ -86,12 +91,23 @@ int main(int argc, char* argv[])
   }
 
   //read input parameters
+
+  //output file path
   char* file_path = argv[1];
+  //parameter q
   double q = atof(argv[2]);
+  //parameter Omega
   double big_omega = atof(argv[3]);
+  //parameter f
   double f = atof(argv[4]);
+  //the time until which the system will be simulated
   double max_t = atof(argv[5]);
-  double delta_t = 2.0/big_omega * M_PI / atof(argv[6]);// atof(argv[6]);
+  //the time step
+  double delta_t = 2.0/big_omega * M_PI / atof(argv[6]);
+
+  //the boundary conditions of the problem
+  double theta_null = atof(argv[7]);// 0.0;
+  double omega_null = atof(argv[8]);//big_omega;
 
   //if this is set to true, then theta will not be mapped into [0, 2pi] but [-pi,pi].
   //this is usefull for the creation and comparison of phase diagrams
@@ -102,14 +118,14 @@ int main(int argc, char* argv[])
   bool use_alternative_output_timing = false;
 
   //check if these flags have been set
-  if (argc == 8)
+  if (argc == 10)
   {
-      use_alternative_theta_mapping = atoi(argv[7]) == 1;
+      use_alternative_theta_mapping = atoi(argv[9]) == 1;
   }
-  else if (argc == 9)
+  else if (argc == 11)
   {
-    use_alternative_theta_mapping = atoi(argv[7]) == 1;
-    use_alternative_output_timing = atoi(argv[8]) == 1;
+    use_alternative_theta_mapping = atoi(argv[9]) == 1;
+    use_alternative_output_timing = atoi(argv[10]) == 1;
   }
 
   //print entered parameters and settings for the user again before starting the calculation
@@ -120,6 +136,9 @@ int main(int argc, char* argv[])
   cout << "\tf:\t" << f << endl;
   cout << "\tmaximum time:\t" << max_t << endl;
   cout << "\tx:\t" << atof(argv[6]) << endl;
+  cout << "\tTheta(0):\t" << theta_null << endl;
+  cout << "\tomega(0):\t" << omega_null << endl;
+
   if (use_alternative_theta_mapping)
   {
      cout << "\tAlternative mapping of theta has been enabled." << endl;
@@ -133,10 +152,6 @@ int main(int argc, char* argv[])
   ofstream outputFile;
   outputFile.open(file_path);
   outputFile << "#t" << "\t" << "omega" << "\t" << "theta" << endl;
-
-  //set the boundary conditions of the problem
-  double theta_null = 0.0;
-  double omega_null = big_omega;
 
   //create internal data for the RK4 integration implementation
   //set system of ODEs
