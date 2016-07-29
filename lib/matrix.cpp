@@ -31,7 +31,7 @@ namespace numerical{
   matrix::~matrix()
   {
         std::cout << "k1\n";
-    for (size_t i=0; i<this->n; i++)
+    for (size_t i=0; i<this->m; i++)
     {
       delete data[i];
     }
