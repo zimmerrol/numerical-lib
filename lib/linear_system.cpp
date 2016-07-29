@@ -140,27 +140,6 @@ namespace numerical
 	}
 
 
-	bool linear_system_solve_sor2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha, double error_threshold)
-	{
-		double error = 1000000000;
-		double old_error;
-		while (true)
-		{
-			old_error = error;
-			error = linear_system_solve_sor_step2(coeff_matrix, x, b, alpha);
-
-			if (error < error_threshold)
-			{
-				return true;
-			}
-			else if (error > old_error)
-			{
-				return false;
-			}
-		}
-	}
-
-
 	double linear_system_solve_sor_step2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha)
 	{
 		double error = 0.0;
@@ -186,6 +165,29 @@ namespace numerical
 
 		return sqrt(error);
 	}
+
+	bool linear_system_solve_sor2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha, double error_threshold)
+	{
+		double error = 1000000000;
+		double old_error;
+		while (true)
+		{
+			old_error = error;
+			error = linear_system_solve_sor_step2(coeff_matrix, x, b, alpha);
+
+			if (error < error_threshold)
+			{
+				return true;
+			}
+			else if (error > old_error)
+			{
+				return false;
+			}
+		}
+	}
+
+
+
 
 
 
