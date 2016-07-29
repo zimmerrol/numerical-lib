@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
 	coeff_matrix.set_value(0, 2, 1.0 / 3.0);
 
   cout << "c\n";
-	for (size_t i = 1; i<dimension_x; i += dimension_x)
+	for (size_t i = 1; i<n; i += dimension_x)
 	{
 		coeff_matrix.set_value(0, i - 2, 1.0 / 3.0);
 		coeff_matrix.set_value(0, i - 1, -4.0 / 3.0);
