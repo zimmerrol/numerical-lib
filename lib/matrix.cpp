@@ -30,7 +30,12 @@ namespace numerical{
 
   matrix::~matrix()
   {
-    std::cout << "k1\n";
+        std::cout << "k1\n";
+    for (size_t i=0; i<this->n; i++)
+    {
+      delete data[i];
+    }
+
     delete data;
     std::cout << "k2\n";
   }
