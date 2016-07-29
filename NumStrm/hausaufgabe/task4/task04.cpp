@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 	}*/
 
 
-	double alpha = delta_t * (2.0 / pow(delta_x, 2) + 2.0 / pow(delta_y, 2)) + 1.0;
+  double alpha = delta_t * (2.0 / pow(delta_x, 2) + 2.0 / pow(delta_y, 2)) + 1.0;
 
 	for (size_t i = 0; i<dimension_x; i++)
 	{
@@ -106,7 +106,6 @@ int main(int argc, char* argv[])
 	coeff_matrix.set_value(0, 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, 2, 1.0 / 3.0);
 
-
 	for (size_t i = dimension_x; i<n; i += dimension_x)
 	{
 		coeff_matrix.set_value(0, i - 2, 1.0 / 3.0);
@@ -114,6 +113,7 @@ int main(int argc, char* argv[])
 		coeff_matrix.set_value(0, i + 1, -4.0 / 3.0);
 		coeff_matrix.set_value(0, i + 2, 1.0 / 3.0);
 	}
+
 
 	coeff_matrix.set_value(0, dimension_x - 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, dimension_x - 2, 1.0 / 3.0);
@@ -154,14 +154,14 @@ int main(int argc, char* argv[])
 
 	for (double t = 0.0; t<max_t; t += delta_t)
 	{
-		linear_system_solve_sor2(coeff_matrix, values, old_values, 1.0, 0.0001);
+		linear_system_solve_sor2(coeff_matrix, values, old_values, 1.5, 0.0001);
 
 		for (size_t i = 0; i<n; i++)
 		{
 
 			old_values.at(i) = values.at(i);
 		}
-  
+
 		//ftcs_time_step(values, v0x, v0y, sources, delta_t, delta_x, delta_y, pe) ;
 
 	}
@@ -174,6 +174,8 @@ int main(int argc, char* argv[])
 			outputFile << endl;
 		}
 	}
+
+	cout << "174" << endl;
 
 	/*for (size_t y=0; y<dimension_y; y++)
 	{
