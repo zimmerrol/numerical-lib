@@ -103,12 +103,10 @@ int main(int argc, char* argv[])
 		coeff_matrix.set_value(i, i, 1.0);
 	}
 
-  cout << "b\n";
-
 	coeff_matrix.set_value(0, 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, 2, 1.0 / 3.0);
 
-  cout << "c\n";
+
 	for (size_t i = dimension_x; i<n; i += dimension_x)
 	{
 		coeff_matrix.set_value(0, i - 2, 1.0 / 3.0);
@@ -117,12 +115,9 @@ int main(int argc, char* argv[])
 		coeff_matrix.set_value(0, i + 2, 1.0 / 3.0);
 	}
 
-  cout << "d\n";
-
 	coeff_matrix.set_value(0, dimension_x - 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, dimension_x - 2, 1.0 / 3.0);
 
-  cout << "e\n";
 	for (size_t i = dimension_x; i<n - dimension_x; i++)
 	{
 		coeff_matrix.set_value(i, i - dimension_x, gamma(false, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
@@ -131,7 +126,6 @@ int main(int argc, char* argv[])
 		coeff_matrix.set_value(i, i + 1, beta(true, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
 		coeff_matrix.set_value(i, i + dimension_x, gamma(true, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
 	}
-  cout << "f\n";
 
 	for (size_t i = n - dimension_x; i<n; i++)
 	{
@@ -157,18 +151,19 @@ int main(int argc, char* argv[])
 			old_values.push_back(y*delta_y);
 			values.push_back(0.0);
 		}
+      cout << "h\n";
 	}
 
 	for (double t = 0.0; t<max_t; t += delta_t)
 	{
 		linear_system_solve_sor2(coeff_matrix, values, old_values, 1.0, 0.0001);
-
+  cout << "i\n";
 		for (size_t i = 0; i<n; i++)
 		{
 
 			old_values.at(i) = values.at(i);
 		}
-
+  cout << "j\n";
 		//ftcs_time_step(values, v0x, v0y, sources, delta_t, delta_x, delta_y, pe) ;
 
 	}
