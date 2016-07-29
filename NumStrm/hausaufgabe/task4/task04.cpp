@@ -103,9 +103,12 @@ int main(int argc, char* argv[])
 		coeff_matrix.set_value(i, i, 1.0);
 	}
 
+  cout << "b\n";
+
 	coeff_matrix.set_value(0, 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, 2, 1.0 / 3.0);
 
+  cout << "c\n";
 	for (size_t i = 1; i<dimension_x; i += dimension_x)
 	{
 		coeff_matrix.set_value(0, i - 2, 1.0 / 3.0);
@@ -114,10 +117,12 @@ int main(int argc, char* argv[])
 		coeff_matrix.set_value(0, i + 2, 1.0 / 3.0);
 	}
 
+  cout << "d\n";
 
 	coeff_matrix.set_value(0, dimension_x - 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, dimension_x - 2, 1.0 / 3.0);
 
+  cout << "e\n";
 	for (size_t i = dimension_x; i<n - dimension_x; i++)
 	{
 		coeff_matrix.set_value(i, i - dimension_x, gamma(false, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
@@ -126,11 +131,13 @@ int main(int argc, char* argv[])
 		coeff_matrix.set_value(i, i + 1, beta(true, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
 		coeff_matrix.set_value(i, i + dimension_x, gamma(true, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
 	}
+  cout << "f\n";
 
 	for (size_t i = n - dimension_x; i<n; i++)
 	{
 		coeff_matrix.set_value(i, i, 1.0);
 	}
+  cout << "g\n";
 
 	//grid_t v0x;
 	//grid_t v0y;
@@ -174,8 +181,6 @@ int main(int argc, char* argv[])
 			outputFile << endl;
 		}
 	}
-
-	cout << "174" << endl;
 
 	/*for (size_t y=0; y<dimension_y; y++)
 	{
