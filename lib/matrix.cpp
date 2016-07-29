@@ -30,7 +30,9 @@ namespace numerical{
 
   matrix::~matrix()
   {
+    std::cout << "k1\n";
     delete data;
+    std::cout << "k2\n";
   }
 
   // n=row, m=column

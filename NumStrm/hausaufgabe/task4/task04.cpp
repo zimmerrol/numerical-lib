@@ -131,7 +131,6 @@ int main(int argc, char* argv[])
 	{
 		coeff_matrix.set_value(i, i, 1.0);
 	}
-  cout << "g\n";
 
 	//grid_t v0x;
 	//grid_t v0y;
@@ -151,19 +150,18 @@ int main(int argc, char* argv[])
 			old_values.push_back(y*delta_y);
 			values.push_back(0.0);
 		}
-      cout << "h\n";
 	}
 
 	for (double t = 0.0; t<max_t; t += delta_t)
 	{
 		linear_system_solve_sor2(coeff_matrix, values, old_values, 1.0, 0.0001);
-  cout << "i\n";
+
 		for (size_t i = 0; i<n; i++)
 		{
 
 			old_values.at(i) = values.at(i);
 		}
-  cout << "j\n";
+  
 		//ftcs_time_step(values, v0x, v0y, sources, delta_t, delta_x, delta_y, pe) ;
 
 	}
