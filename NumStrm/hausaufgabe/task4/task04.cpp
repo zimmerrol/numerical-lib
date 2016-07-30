@@ -13,28 +13,28 @@ using namespace numerical;
 
 typedef vector<vector<double > > grid_t;
 
-double beta(bool plus, double delta_x, double delta_y, double pe, double x, double y)
+double beta(bool plus, double delta_t, double delta_x, double delta_y, double pe, double x, double y)
 {
-  if (plus)
-  {
-    return -1.0/pow(delta_x,2) + (pe*(M_PI*sin(2*M_PI*x*delta_x)*cos(M_PI*y*delta_y)))/(2.0*delta_x);
-  }
-  else
-  {
-    return -1.0/pow(delta_x,2) - (pe*(M_PI*sin(2*M_PI*x*delta_x)*cos(M_PI*y*delta_y)))/(2.0*delta_x);
-  }
+	if (plus)
+	{
+		return delta_t*(-1.0 / pow(delta_x, 2) + (pe*(M_PI*sin(2 * M_PI*x*delta_x)*cos(M_PI*y*delta_y))) / (2.0*delta_x));
+	}
+	else
+	{
+		return delta_t*(-1.0 / pow(delta_x, 2) - (pe*(M_PI*sin(2 * M_PI*x*delta_x)*cos(M_PI*y*delta_y))) / (2.0*delta_x));
+	}
 }
 
-double gamma(bool plus, double delta_x, double delta_y, double pe, double x, double y)
+double gamma(bool plus, double delta_t, double delta_x, double delta_y, double pe, double x, double y)
 {
-  if (plus)
-  {
-    return -1.0/pow(delta_y,2) + (pe*(-2.0*M_PI*cos(2*M_PI*x*delta_x)*sin(M_PI*y*delta_y)))/(2.0*delta_y);
-  }
-  else
-  {
-    return -1.0/pow(delta_y,2) - (pe*(-2.0*M_PI*cos(2*M_PI*x*delta_x)*sin(M_PI*y*delta_y)))/(2.0*delta_y);
-  }
+	if (plus)
+	{
+		return delta_t*(-1.0 / pow(delta_y, 2) + (pe*(-2.0*M_PI*cos(2 * M_PI*x*delta_x)*sin(M_PI*y*delta_y))) / (2.0*delta_y));
+	}
+	else
+	{
+		return delta_t*(-1.0 / pow(delta_y, 2) - (pe*(-2.0*M_PI*cos(2 * M_PI*x*delta_x)*sin(M_PI*y*delta_y))) / (2.0*delta_y));
+	}
 }
 
 int main(int argc, char* argv[])
@@ -98,11 +98,13 @@ int main(int argc, char* argv[])
 
   double alpha = delta_t * (2.0 / pow(delta_x, 2) + 2.0 / pow(delta_y, 2)) + 1.0;
 
+	//Matrix A
 	for (size_t i = 0; i<dimension_x; i++)
 	{
 		coeff_matrix.set_value(i, i, 1.0);
 	}
 
+  coeff_matrix.set_value(0, 0, 2.0);
 	coeff_matrix.set_value(0, 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, 2, 1.0 / 3.0);
 
@@ -110,23 +112,25 @@ int main(int argc, char* argv[])
 	{
 		coeff_matrix.set_value(0, i - 2, 1.0 / 3.0);
 		coeff_matrix.set_value(0, i - 1, -4.0 / 3.0);
+    coeff_matrix.set_value(0, i, 2.0);
 		coeff_matrix.set_value(0, i + 1, -4.0 / 3.0);
 		coeff_matrix.set_value(0, i + 2, 1.0 / 3.0);
 	}
 
-
 	coeff_matrix.set_value(0, dimension_x - 1, -4.0 / 3.0);
 	coeff_matrix.set_value(0, dimension_x - 2, 1.0 / 3.0);
 
+	//Matrix B
 	for (size_t i = dimension_x; i<n - dimension_x; i++)
 	{
-		coeff_matrix.set_value(i, i - dimension_x, gamma(false, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
-		coeff_matrix.set_value(i, i - 1, beta(false, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
+		coeff_matrix.set_value(i, i - dimension_x, gamma(false, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
+		coeff_matrix.set_value(i, i - 1, beta(false, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
 		coeff_matrix.set_value(i, i, alpha);
-		coeff_matrix.set_value(i, i + 1, beta(true, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
-		coeff_matrix.set_value(i, i + dimension_x, gamma(true, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
+		coeff_matrix.set_value(i, i + 1, beta(true, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
+		coeff_matrix.set_value(i, i + dimension_x, gamma(true, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
 	}
 
+	//Matrix C
 	for (size_t i = n - dimension_x; i<n; i++)
 	{
 		coeff_matrix.set_value(i, i, 1.0);
@@ -148,13 +152,14 @@ int main(int argc, char* argv[])
 			//v0x.at(x).push_back(M_PI*sin(2*M_PI*x*delta_x)*cos(M_PI*y*delta_y));
 			//v0y.at(x).push_back(-2.0*M_PI*cos(2*M_PI*x*delta_x)*sin(M_PI*y*delta_y));
 			old_values.push_back(y*delta_y);
-			values.push_back(0.0);
+			values.push_back(y*delta_y);
 		}
 	}
 
 	for (double t = 0.0; t<max_t; t += delta_t)
 	{
-		linear_system_solve_sor2(coeff_matrix, values, old_values, 1.5, 0.0001);
+    cout << ".";
+		cout << linear_system_solve_sor2(coeff_matrix, values, old_values, 1.3, 0.0001) << "\t";
 
 		for (size_t i = 0; i<n; i++)
 		{
@@ -165,6 +170,7 @@ int main(int argc, char* argv[])
 		//ftcs_time_step(values, v0x, v0y, sources, delta_t, delta_x, delta_y, pe) ;
 
 	}
+  cout << "\n";
 
 	for (size_t i = 0; i<n; i++)
 	{

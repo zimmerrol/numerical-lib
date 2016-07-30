@@ -1,0 +1,18 @@
+\select@language {ngerman}
+\contentsline {section}{\numberline {1}Einleitung}{3}
+\contentsline {section}{\numberline {2}Fragestellung}{3}
+\contentsline {section}{\numberline {3}Theorie}{3}
+\contentsline {subsection}{\numberline {3.1}Die Diffusions-Advektion-Gleichung}{3}
+\contentsline {subsection}{\numberline {3.2}Das FTCS-Schema}{4}
+\contentsline {subsection}{\numberline {3.3}Das BTCS-Schema}{5}
+\contentsline {section}{\numberline {4}Durchf\IeC {\"u}hrung der Aufgaben}{7}
+\contentsline {subsection}{\numberline {4.1}Aufgabe 1: Untersuchung von $\mathaccentV {vec}17E{v}$}{7}
+\contentsline {subsection}{\numberline {4.2}Aufgabe 2: FTCS-L\IeC {\"o}sung}{8}
+\contentsline {subsection}{\numberline {4.3}Aufgabe 3: Numerische Korrektheit der FTCS-L\IeC {\"o}sung}{8}
+\contentsline {subsection}{\numberline {4.4}Aufgabe 4: Auswertung verschiedener FTCS-L\IeC {\"o}sungen}{10}
+\contentsline {subsection}{\numberline {4.5}Aufgabe 5: Beurteilung der Stabilit\IeC {\"a}t der FTCS-L\IeC {\"o}sung}{12}
+\contentsline {subsection}{\numberline {4.6}Aufgabe 6: BTCS-L\IeC {\"o}sung}{12}
+\contentsline {section}{\numberline {5}Auswertung der Ergebnisse}{12}
+\contentsline {subsection}{\numberline {5.1}Numerische Korrektheit der FTCS-L\IeC {\"o}sung}{12}
+\contentsline {section}{\nonumberline Literatur}{12}
+\contentsline {section}{\numberline {A}Quellcode}{12}

@@ -140,11 +140,27 @@ namespace numerical
 	}
 
 
+	void multiply_matrix_vector(matrix& matrix, vector<double> &xVec, vector<double> &result)
+	{
+		result.clear();
+		double val;
+		for (size_t y = 0; y<matrix.get_n(); y++)
+		{
+			val = 0.0;
+			for (size_t x = 0; x<matrix.get_m(); x++)
+			{
+				val += matrix.get_value(y, x) * xVec.at(x);
+			}
+			result.push_back(val);
+		}
+	}
+
 	double linear_system_solve_sor_step2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha)
 	{
 		double error = 0.0;
 		double new_value;
 		double sum;
+		vector<double> testVector;
 		for (size_t k = 0; k<coeff_matrix.get_n(); k++)
 		{
 			sum = 0.0;
@@ -163,10 +179,16 @@ namespace numerical
 			x.at(k) = new_value;
 		}
 
+		multiply_matrix_vector(coeff_matrix, x, testVector);
+		for (size_t k = 0; k<coeff_matrix.get_n(); k++)
+		{
+			//error += pow(testVector.at(k) - b.at(k), 2);
+		}
+
 		return sqrt(error);
 	}
 
-	bool linear_system_solve_sor2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha, double error_threshold)
+	double linear_system_solve_sor2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha, double error_threshold)
 	{
 		double error = 1000000000;
 		double old_error;
@@ -177,18 +199,14 @@ namespace numerical
 
 			if (error < error_threshold)
 			{
-				return true;
+				return error;
 			}
 			else if (error > old_error)
 			{
-				return false;
+				return error;
 			}
 		}
 	}
-
-
-
-
 
 
 }
