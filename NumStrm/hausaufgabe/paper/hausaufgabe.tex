@@ -218,6 +218,7 @@ T_{i,j}^{N+1} - \frac{4}{3} T_{i+1,j}^{N+1} + \frac{1}{3} T_{i+2,j}^{N+1} = 0.
 
 
 \subsection{Das BTCS-Schema}
+\label{sec:btcs}
 Ein alternativer Ansatz zur Lösung ist das \textit{BTCS}-Schema (Backward in Time, Centered in Space), bei der räumlich erneut eine Diskretisierung zweiter Ordnung durchgeführt wird, diese allerdings zum Zeitpunkt $(N+1)$ ausgewertet wird. Zeitlich wird auch wieder ein Verfahren erster Ordnung verwendet.
 Somit ergibt sich der Ausdruck
 \begin{align}
@@ -422,8 +423,7 @@ Durch Einsetzen in Gleichung (\ref{eq:ftcs}) und Kürzen ergibt sich der Ausdruc
 \end{align*}
 welcher durch trigonometrische Identitäten in
 \begin{align*}
-\xi = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) - \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2}{\Delta x^2}\cos(k_x \Delta x) + \frac{2}{\Delta y^2}\cos(k_y \Delta y) \\
--\frac{2}{\Delta x^2} - \frac{2}{\Delta y^2}
+\xi = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) + \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2}{\Delta x^2}\cos(k_x \Delta x) + \frac{2}{\Delta y^2}\cos(k_y \Delta y) \\-\frac{2}{\Delta x^2} - \frac{2}{\Delta y^2}
 \end{align*}
 übergeht. Damit das Verfahren konvergiert, muss $\xi$ kleiner $1$ ein. Nähert man hier den Sinus und den Cosinus mit den Maximalwerten, und schätzt die Komponenten $v^x$ und $v^y$ nach oben durch $\pi$ und $2\pi$ ab, so ergibt sich
 \begin{align}
@@ -435,14 +435,18 @@ Eine Lösung dieser Ungleichung ergibt folgenden Bereich, sodass das \textit{FTC
 0 < \lambda = \frac{\Delta t}{\Delta x^2} < \frac{8 \left(\frac{Pe}{\Delta x}\right)^2}{32\left(\frac{Pe}{\Delta x}\right)^2 + \pi^2}.
 \end{align}
 Dies ist durch die Abschätzungen nach oben bedingt, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden.
+
 \subsection{Aufgabe 6: BTCS-Lösung}
 \label{sec:task6}
-%\begin{figure}[H]
-% \centering
-%   \includegraphics[width=0.5\textwidth]{res/A1.png}
-%   \caption{Versuchsaufbau mit: 2 Spulen, 1 Hallsonde, 1 Netzgerät[2]}
-% \label{fig:aufbaue_bild}
-%\end{figure}
+Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Hierfür wird zuerst die zuvor beschriebene Matrix $M$ implementiert. Dies wird in (...) durchgeführt. Nun muss nur noch in jedem Integrationsschritt diese Matrix invertiert werden. Dafür wurde das \textit{SOR-Verfahren} in (...) implementiert. Dafür wird in jedem einzelnen Interationsschritt das Residuum $\vec{r} = M \vec{x}-\vec{b}$ für die Lösung von $M \vec{x} = b$ berechnet, und so lange iteriert.\\
+Nun wird gefordert, dass der Betrag der Residuen kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
+\begin{figure}[H]
+ \centering
+   \includegraphics[width=0.65\textwidth]{res/task6_sor_parameter.png}
+   \caption{Grafische Darstellung der benötigten Iterationen zur Konvergenz in Abhängigkeit vom Relaxationsparameter $\alpha$.}
+ \label{fig:task6_param_comp}
+\end{figure}
+Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt. 
 
 \section{Auswertung der Ergebnisse}
 \label{sec:interpretation}

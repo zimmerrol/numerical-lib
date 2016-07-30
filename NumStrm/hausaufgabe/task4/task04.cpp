@@ -123,11 +123,11 @@ int main(int argc, char* argv[])
 	//Matrix B
 	for (size_t i = dimension_x; i<n - dimension_x; i++)
 	{
-		coeff_matrix.set_value(i, i - dimension_x, gamma(false, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
-		coeff_matrix.set_value(i, i - 1, beta(false, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
+		coeff_matrix.set_value(i, i - dimension_x, gamma(false, delta_t, delta_x, delta_y, pe, i % dimension_x, i/dimension_x));
+		coeff_matrix.set_value(i, i - 1, beta(false, delta_t, delta_x, delta_y, pe, i % dimension_x, i/dimension_x));
 		coeff_matrix.set_value(i, i, alpha);
-		coeff_matrix.set_value(i, i + 1, beta(true, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
-		coeff_matrix.set_value(i, i + dimension_x, gamma(true, delta_t, delta_x, delta_y, pe, i / dimension_x, i%dimension_x));
+		coeff_matrix.set_value(i, i + 1, beta(true, delta_t, delta_x, delta_y, pe, i % dimension_x, i/dimension_x));
+		coeff_matrix.set_value(i, i + dimension_x, gamma(true, delta_t, delta_x, delta_y, pe, i % dimension_x, i/dimension_x));
 	}
 
 	//Matrix C
@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
 	for (double t = 0.0; t<max_t; t += delta_t)
 	{
     cout << ".";
-		cout << linear_system_solve_sor2(coeff_matrix, values, old_values, 1.3, 0.0001) << "\t";
+		cout << linear_system_solve_sor2(coeff_matrix, values, old_values, 1.435, 1e-4) << "\t";
 
 		for (size_t i = 0; i<n; i++)
 		{

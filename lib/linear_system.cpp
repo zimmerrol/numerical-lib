@@ -192,19 +192,29 @@ namespace numerical
 	{
 		double error = 1000000000;
 		double old_error;
+		int iteration =0;
+		int biggerTimes = 0;
 		while (true)
 		{
 			old_error = error;
+			iteration++;
 			error = linear_system_solve_sor_step2(coeff_matrix, x, b, alpha);
 
 			if (error < error_threshold)
 			{
+				cout << endl << "+"<<iteration << endl;
 				return error;
 			}
 			else if (error > old_error)
 			{
+				if (biggerTimes > 50){
+					cout << endl <<"-"<< iteration << endl;
 				return error;
+				}
+				biggerTimes++;
 			}
+			else
+				biggerTimes=0;
 		}
 	}
 
