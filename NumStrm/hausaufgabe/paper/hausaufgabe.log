@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2014.11.25)  30 JUL 2016 13:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2014.11.25)  30 JUL 2016 15:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1139,10 +1139,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 193--196
 File: res/task1.png Graphic file (type png)
 
 <use res/task1.png>
-Package pdftex.def Info: res/task1.png used on input line 321.
+Package pdftex.def Info: res/task1.png used on input line 322.
 (pdftex.def)             Requested size: 268.8813pt x 267.9433pt.
  [8 <./res/task1.png>]
-Overfull \hbox (3.19023pt too wide) in paragraph at lines 361--364
+Overfull \hbox (3.19023pt too wide) in paragraph at lines 362--365
 \OT1/cmr/m/n/12 Diese Ab-wei-chung wird nun al-le $100$ Zeit-schrit-te aus-ge-g
 e-ben. Dies f[]uhrt zu Ver[]anderungen
  []
@@ -1150,76 +1150,76 @@ e-ben. Dies f[]uhrt zu Ver[]anderungen
 <res/task3.png, id=42, 642.4pt x 481.8pt>
 File: res/task3.png Graphic file (type png)
  <use res/task3.png>
-Package pdftex.def Info: res/task3.png used on input line 367.
+Package pdftex.def Info: res/task3.png used on input line 368.
 (pdftex.def)             Requested size: 313.69029pt x 235.27538pt.
  [9]
 <res/task4/2_0005.png, id=46, 481.8pt x 361.35pt>
 File: res/task4/2_0005.png Graphic file (type png)
  <use res/task4/2_0005.png>
-Package pdftex.def Info: res/task4/2_0005.png used on input line 382.
+Package pdftex.def Info: res/task4/2_0005.png used on input line 383.
 (pdftex.def)             Requested size: 224.06548pt x 168.04807pt.
 
 <res/task4/2_005.png, id=47, 481.8pt x 361.35pt>
 File: res/task4/2_005.png Graphic file (type png)
  <use res/task4/2_005.png>
-Package pdftex.def Info: res/task4/2_005.png used on input line 383.
+Package pdftex.def Info: res/task4/2_005.png used on input line 384.
 (pdftex.def)             Requested size: 224.06548pt x 168.04807pt.
 
 <res/task4/2_05.png, id=48, 481.8pt x 361.35pt>
 File: res/task4/2_05.png Graphic file (type png)
  <use res/task4/2_05.png>
-Package pdftex.def Info: res/task4/2_05.png used on input line 384.
+Package pdftex.def Info: res/task4/2_05.png used on input line 385.
 (pdftex.def)             Requested size: 224.06548pt x 168.04807pt.
 
 <res/task4/10_0005.png, id=49, 481.8pt x 361.35pt>
 File: res/task4/10_0005.png Graphic file (type png)
  <use res/task4/10_0005.png>
-Package pdftex.def Info: res/task4/10_0005.png used on input line 392.
+Package pdftex.def Info: res/task4/10_0005.png used on input line 393.
 (pdftex.def)             Requested size: 224.06548pt x 168.04807pt.
 
 <res/task4/10_005.png, id=50, 481.8pt x 361.35pt>
 File: res/task4/10_005.png Graphic file (type png)
  <use res/task4/10_005.png>
-Package pdftex.def Info: res/task4/10_005.png used on input line 393.
+Package pdftex.def Info: res/task4/10_005.png used on input line 394.
 (pdftex.def)             Requested size: 224.06548pt x 168.04807pt.
 
 <res/task4/10_05.png, id=51, 481.8pt x 361.35pt>
 File: res/task4/10_05.png Graphic file (type png)
  <use res/task4/10_05.png>
-Package pdftex.def Info: res/task4/10_05.png used on input line 394.
+Package pdftex.def Info: res/task4/10_05.png used on input line 395.
 (pdftex.def)             Requested size: 224.06548pt x 168.04807pt.
 
 [10 <./res/task3.png>] [11 <./res/task4/2_0005.png> <./res/task4/2_005.png> <./
 res/task4/2_05.png> <./res/task4/10_0005.png> <./res/task4/10_005.png> <./res/t
-ask4/10_05.png>] [12] (./hausaufgabe.aux) ) 
+ask4/10_05.png>] [12] [13] (./hausaufgabe.aux) ) 
 Here is how much of TeX's memory you used:
- 8363 strings out of 493109
- 123540 string characters out of 6129602
+ 8364 strings out of 493109
+ 123549 string characters out of 6129602
  247308 words of memory out of 5000000
- 11622 multiletter control sequences out of 15000+600000
+ 11623 multiletter control sequences out of 15000+600000
  19190 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  47i,14n,59p,686b,283s stack positions out of 5000i,500n,10000p,200000b,80000s
-<c:/Program Files (x86)/texlive/2014
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/Program Files (x86)/t
-exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><c:/Program F
-iles (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c
-:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi12.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi6.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmmi8.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr12.pfb><c:/Program Files (x86)/texlive/2014/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/Program Files (x86)/texliv
-e/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/Program Files (x8
-6)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><c:/Prog
-ram Files (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
+<c:/Program Files (x86)/texlive
+/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/Program Files (x
+86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><c:/Prog
+ram Files (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.p
 fb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmsy8.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmti12.pfb>
-Output written on hausaufgabe.pdf (12 pages, 380661 bytes).
+cm/cmmi12.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmmi6.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmi8.pfb><c:/Program Files (x86)/texlive/2014/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/Program Files (x86)/texlive/201
+4/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/Program Files (x86)/t
+exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/Program File
+s (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><c:
+/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cms
+y10.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmsy8.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmti12.pfb>
+Output written on hausaufgabe.pdf (13 pages, 388266 bytes).
 PDF statistics:
- 109 PDF objects out of 1000 (max. 8388607)
- 67 compressed objects within 1 object stream
+ 113 PDF objects out of 1000 (max. 8388607)
+ 70 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

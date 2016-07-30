@@ -204,11 +204,12 @@ Es ergibt sich für die Ableitungen
 \end{align}
 
 Durch Einsetzen in die Gleichung (\ref{eq:diff_adv}) und Umstellen nach $T_{i,j}^{N+1}$ erhält man schließlich in der zweiten räumlichen Ordnung
-\begin{align*}
+\begin{align}
+\label{eq:ftcs}
 T_{i,j}^{N+1} = &T_{i,j}^N + \Delta t \left( -Pe \left( v^x_{i,j} \frac{T_{i+1,j}^N-T_{i-1,j}^N}{2\Delta x}+v^y_{i,j} \frac{T_{i,j+1}^N-T_{i,j-1}^N}{2\Delta x} \right) \right. \nonumber \\ 
  & \left.+ \frac{ T_{i+1,j}^N - 2 T_{i,j}^N +  T_{i-1,j}^N }{\Delta x^2} 
 + \frac{ T_{i,j+1}^N - 2  T_{i,j}^N + T_{i,j-1}^N}{\Delta y^2} \right) 
-\end{align*}
+\end{align}
 womit die Integration durchgeführt werden kann. Die Ausdrücke $v^x$ und $v^y$ stehen für die jeweilige $x$- und $y$-Komponente des zeitlich konstanten Geschwindigkeitsfeldes an dem jeweiligen Ort.\\
 Des Weiteren sind allerdings noch die Randbedingungen zu beachten. Bei \textit{Dirichlet}-Rändern muss an dem Schema nichts geändert werden. Bei \textit{Neumann}-Rändern dagegen schon. Exemplarisch wird hierfür als Beispiels der linke Rand betrachtet, auf dem die erste Ableitung in $x$-Richtung verschwinden soll. Durch eine Taylor-Entwicklung und einen Koeffizientenvergleich erhält man die diskretisierte Randbedingung zweiter Ordnung
 \begin{align*}
@@ -217,7 +218,7 @@ T_{i,j}^{N+1} - \frac{4}{3} T_{i+1,j}^{N+1} + \frac{1}{3} T_{i+2,j}^{N+1} = 0.
 
 
 \subsection{Das BTCS-Schema}
-Ein alternativer Ansatz zur Lösung ist das \textit{BTCS}-Schema (Backward in Time, Centered in Space), bei der räumlich erneut eine Diskretisierung zweiter Ordnung durchgeführt wird, diese allerdings zum Zeitpunkt $(N+1)$ ausgewertet wird. Zeitlich wird auch wieder ein Verfahreb erster Ordnung verwendet.
+Ein alternativer Ansatz zur Lösung ist das \textit{BTCS}-Schema (Backward in Time, Centered in Space), bei der räumlich erneut eine Diskretisierung zweiter Ordnung durchgeführt wird, diese allerdings zum Zeitpunkt $(N+1)$ ausgewertet wird. Zeitlich wird auch wieder ein Verfahren erster Ordnung verwendet.
 Somit ergibt sich der Ausdruck
 \begin{align}
 \label{eq:impli}
@@ -401,7 +402,39 @@ Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kan
 
 \subsection{Aufgabe 5: Beurteilung der Stabilität der FTCS-Lösung}
 \label{sec:task5}
-
+Um weitere Aussagen über die numerische Lösung treffen zu können, wird nun noch die Stabilität betrachtet. Hierfür wird zuerst für $N=N_x=N_y = 30$ die maximale Zeitschrittgröße $\Delta t^{Pe}_{max}$ für die \textit{Péclet-Zahlen} $Pe \in \{0.1, 1.0, 10\}$ bestimmt.\\
+Diese ergeben sich zu
+\begin{align*}
+\Delta t^{0.1}_{max} &= 2.785 \cdot 10^{-4}, \\
+\Delta t^{1.0}_{max} &= 2.787 \cdot 10^{-4}, \\
+\Delta t^{10}_{max}  &= 2.795 \cdot 10^{-4}.
+\end{align*}
+Dies liefert einen ersten Eindruck: Die Stabilitätsgrenze hängt von $Pe$ ab, und nimmt für steigende $Pe$ in gewissen, geringen Maßen zu.\\
+Für eine genauere Aussage wird nun eine \textit{von-Neumann-Stabilitätsanalyse} durchgeführt. Hierfür wird für die Lösung ein Ansatz der generellen Form
+\begin{align*}
+T^N_{i,j} = \xi^N e^{i(k_x \Delta x \cdot i + k_y \Delta y \cdot j)}
+\end{align*}
+gewählt.
+Durch Einsetzen in Gleichung (\ref{eq:ftcs}) und Kürzen ergibt sich der Ausdruck
+\begin{align*}
+\xi = 1 - \frac{\Delta t Pe v^x}{2 \Delta x} \left( e^{i k_x \Delta x} - e^{-i k_x \Delta x} \right) - \frac{\Delta t Pe v^y}{2 \Delta y} \left( e^{i k_y \Delta y} - e^{-i k_y \Delta y} \right) -\frac{2}{\Delta x^2} - \frac{2}{\Delta y^2} \\
+ + \frac{1}{\Delta x^2} \left( e^{i k_x \Delta x} + e^{-i k_x \Delta x} \right) +\frac{1}{\Delta y^2} \left( e^{i k_y \Delta y} + e^{-i k_y \Delta y} \right),
+\end{align*}
+welcher durch trigonometrische Identitäten in
+\begin{align*}
+\xi = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) - \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2}{\Delta x^2}\cos(k_x \Delta x) + \frac{2}{\Delta y^2}\cos(k_y \Delta y) \\
+-\frac{2}{\Delta x^2} - \frac{2}{\Delta y^2}
+\end{align*}
+übergeht. Damit das Verfahren konvergiert, muss $\xi$ kleiner $1$ ein. Nähert man hier den Sinus und den Cosinus mit den Maximalwerten, und schätzt die Komponenten $v^x$ und $v^y$ nach oben durch $\pi$ und $2\pi$ ab, so ergibt sich
+\begin{align}
+\lambda^2 \left(64 + \frac{Pe 2 \pi^2}{\Delta x^2} \right) -16 \lambda <0,
+\end{align}
+mit der \textit{CFL-Zahl} $\lambda = \Delta t/\Delta x^2$.
+Eine Lösung dieser Ungleichung ergibt folgenden Bereich, sodass das \textit{FTCS-Schema} konvergiert:
+\begin{align}
+0 < \lambda = \frac{\Delta t}{\Delta x^2} < \frac{8 \left(\frac{Pe}{\Delta x}\right)^2}{32\left(\frac{Pe}{\Delta x}\right)^2 + \pi^2}.
+\end{align}
+Dies ist durch die Abschätzungen nach oben bedingt, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher.
 \subsection{Aufgabe 6: BTCS-Lösung}
 \label{sec:task6}
 %\begin{figure}[H]
