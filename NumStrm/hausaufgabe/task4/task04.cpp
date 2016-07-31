@@ -126,6 +126,8 @@ int main(int argc, char* argv[])
 	//contains the biggest part of the BTCS-scheme
 	for (size_t i = dimension_x; i<n - dimension_x; i++)
 	{
+		//i % dimension_x gives the x coordinate of the field-value on which the current matrix's item operates
+		//i / dimension_x gives the y coordinate of the field-value on which the current matrix's item operates
 		coeff_matrix.set_value(i, i - dimension_x, gamma(false, delta_t, delta_x, delta_y, pe, i % dimension_x, i/dimension_x));
 		coeff_matrix.set_value(i, i - 1, beta(false, delta_t, delta_x, delta_y, pe, i % dimension_x, i/dimension_x));
 		coeff_matrix.set_value(i, i, alpha);
@@ -154,11 +156,13 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	//start to measure the runtime now
+	clock_t start_time = clock();
 	//loop over the time, until we have reached the maximum time
 	for (double t = 0.0; t<max_t; t += delta_t)
 	{
 		//invert the matrix M/solve the linear system to get the new temperature(value)
-		linear_system_solve_sor(coeff_matrix, values, old_values, 1.44, 1e-4);
+		cout << "t: " << t << "\titerations: " << linear_system_solve_sor(coeff_matrix, values, old_values, 1.43, 1e-4) << endl;
 
 		//copy the new values into the old_values vector for the next iteration
 		for (size_t i = 0; i<n; i++)
@@ -166,6 +170,9 @@ int main(int argc, char* argv[])
 			old_values.at(i) = values.at(i);
 		}
 	}
+	clock_t end_time = clock();
+
+	cout << "Integration finished after " << (end_time - start_time) / CLOCKS_PER_SEC << " seconds.";
 
 	//print the final grid's values in the givven output file in a matrix form
 	for (size_t i = 0; i<n; i++)

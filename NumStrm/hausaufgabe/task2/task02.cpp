@@ -79,10 +79,10 @@ int main(int argc, char* argv[])
 
   cout << "\toutput file:\tThe path to the file in which the results will be stored." << endl;
   cout << "\tN_x:\t\tThe amount of grid points in the x-direction." << endl;
-  cout << "\tN_y\t\tThe amount of grid points in the y-direction." << endl;
+  cout << "\tN_y:\t\tThe amount of grid points in the y-direction." << endl;
   cout << "\tPe:\t\tThe Péclet-Number" << endl;
-  cout << "\tMax t\t\tThe maximum time until the system will be simulated." << endl;
-  cout << "\tDelta t\t\tThe time step size for the integration." << endl;
+  cout << "\tMax t:\t\tThe maximum time until the system will be simulated." << endl;
+  cout << "\tDelta t:\t\tThe time step size for the integration." << endl;
 
   //read entered parameters
 
@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
   const double delta_t = atof(argv[6]);
 
   cout << "Entered parameters:" << endl;
-  cout << "\tNx:" << dimension_x << "\tNy:" << dimension_y << "\tPe:" << pe << "\tMax t" << max_t << "\tDelta t:" << delta_t << endl;
+  cout << "\tNx:" << dimension_x << "\tNy:" << dimension_y << "\tPe:" << pe << "\tMax t:" << max_t << "\tDelta t:" << delta_t << endl;
 
   //to store the x component of the velocity v0
   grid_t v0x;
@@ -137,11 +137,17 @@ int main(int argc, char* argv[])
     }
   }
 
+  //start to measure the runtime now
+  clock_t start_time = clock();
+
   //loop over the time, until we have reached the maximum time
   for (double t=0.0; t<max_t; t+=delta_t)
   {
     ftcs_time_step(values, v0x, v0y, delta_t, delta_x, delta_y, pe);
   }
+  clock_t end_time = clock();
+
+  cout << "Integration finished after " << (end_time - start_time) / CLOCKS_PER_SEC << " seconds.";
 
   //print the final grid's values in the givven output file in a matrix form
   for (size_t y=0; y<dimension_y; y++)

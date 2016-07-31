@@ -85,7 +85,7 @@
   numbers=left,                   % where to put the line-numbers
   stepnumber=1,                   % the step between two line-numbers.        
   numbersep=5pt,				% how far the line-numbers are from the code
-  basicstyle=\small,                  
+  basicstyle=\scriptsize,                  
   backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
   showspaces=false,               % show spaces adding particular underscores
   showstringspaces=false,         % underline spaces within strings
@@ -104,6 +104,8 @@
   title=\lstname,                 % show the filename of files included with \lstinputlisting;
 }
 
+
+\usepackage{textcomp}
 
 \begin{document}
 
@@ -141,16 +143,19 @@ Abgabetermin: & 05.08.2016\\
 
 \section{Einleitung}
 \label{sec:einleitung}
+Viele Verhaltensweisen und Effekte in der Natur können durch partielle Differenzialgleichungen beschrieben werden. Die Lösung dieser ist allerdings nur in wenigen, speziellen Fällen analytisch möglich. Für die restlichen Fälle müssen numerische Lösungsverfahren verwendet werden. Gerade diese Szenarien spielen beispielsweise in der Auto- und Luftfahrtindustrie eine relevante Rolle bei der Produktentwicklung und Optimierung. In dieser Arbeit werden hier durch motoviert zwei verschiedene Lösungsverfahren für ein solches Problem implementiert und anschließend analysiert.
 
 \section{Fragestellung}
 \label{sec:fragestellung}
-In dieser Hausaufgabe wird ein zweidimensionales quadratisches System betrachtet. In diesem soll die Wärmeausbreitung (siehe \ref{sec:diff_adv}) beschrieben werden, welche durch ein extern erzeugtes Geschwindigkeitsfeld (durch einen Ventilator) hervorgerufen wird. Dieses Vektorfeld soll nicht zeitabhängig sein, und lässt sich in dimensionsloser Form durch
+In dieser Hausaufgabe wird die Wärmeausbreitung (siehe \ref{sec:diff_adv}) in einem zweidimensionalen, rechteckigen System betrachtet werden. Diese soll durch ein extern erzeugtes Geschwindigkeitsfeld (beispielsweise durch einen Ventilator) verstärkt werden. Dieses Vektorfeld soll nicht zeitabhängig sein, und lässt sich in dimensionsloser Form durch
 \begin{align*}
 \vec{v} = (\pi \sin(2\pi x) \cos(\pi y), -2 \pi \cos(2\pi x) \sin(\pi y))^t
 \end{align*}
-beschreiben. Hierbei gibt es für jeden der vier Ränder je eine Randbedingung. So soll die Temperatur auf dem oberen Rand $T=1$ betragen, auf dem unteren dagegen $T=0$. An dem linken und rechten Rand soll dagegen bloß die jeweilige Normalenableitung verschwinden. Dies wird durch eine wärmeisoliernde Wand in dem System bedingt. Zu Beginn soll eine Temperaturverteilung der Form $T_{start} = y$ vorliegen.\\
+beschreiben. In dem betrachteten System gibt es für jeden der vier Ränder je eine Randbedingung. So soll die Temperatur auf dem oberen Rand $T=1$ und auf dem unteren $T=0$ betragen. An dem linken und rechten Rand soll dagegen die jeweilige Normalenableitung verschwinden. Dies wird durch eine wärmeisoliernde Wand in dem System bedingt. Zu Beginn soll eine Temperaturverteilung der Form $T_{start} = y$ vorliegen.\\
 
-Zur Untersuchung des System fallen mehrere Aufgaben an. So wird zuerst das Geschwindigkeitsfeld selber untersucht (siehe \ref{sec:task1}). Anschließend wird eine erste numerische Lösung des Problems (im \textit{FTCS-Schema}) durchgeführt (siehe \ref{sec:task2}). Daraufhin wird nun die numerische Korrektheit dieser Lösung untersucht (siehe \ref{sec:task3}). Schließlich werden für verschiedene Parameter Simulationen durchgeführt, um unter anderem die Stabilität zu beurteilen (siehe \ref{sec:task4}, \ref{sec:task5}). Schließlich wird das Problem noch einmal gelöst, diesmal aber im \textit{BTCS-Schema} (siehe \ref{sec:task6}).
+Zur Untersuchung des System fallen mehrere Aufgaben an. So wird zuerst das Geschwindigkeitsfeld selber untersucht (siehe \ref{sec:task1}). Anschließend wird eine erste numerische Lösung des Problems (im \textit{FTCS-Schema}) durchgeführt (siehe \ref{sec:task2}). Daraufhin wird nun die numerische Korrektheit dieser Lösung untersucht (siehe \ref{sec:task3}). Schließlich werden für verschiedene Parameter Simulationen durchgeführt, um unter anderem die Stabilität zu beurteilen (siehe \ref{sec:task4}, \ref{sec:task5}). Schließlich wird das Problem noch einmal gelöst, diesmal aber im \textit{BTCS-Schema} (siehe \ref{sec:task6}).\\
+Abschließend wird noch ein kurzer Vergleich der beiden Verfahren hinsichtlich ihrer Resultate und der benötigten Rechenzeit durchgeführt.\\
+Alle hierfür benötigten Programme und Hilfsroutinen werden in \textit{C++} implementiert.
 
 \section{Theorie}
 \label{sec:theorie}
@@ -172,11 +177,11 @@ und zum anderen durch die \textit{Advektionsgleichung}
 \end{align}
 beschrieben werden. Hierbei stehen $T$ für die Verteilung der Energie (Temperatur), $t$ für die Zeit und $D$ für die Diffusionskonstante.
 Während die \textit{Diffusionsgleichung} die zeitliche Ausbreitung der Partikel beziehungsweise der Energie, bedingt durch zufällige Bewegungen, beschreibt, beschreibt die \textit{Advektionsgleichung} den Partikelfluss der durch ein Geschwindigkeitsfeld herbeigeführt wird.\\
-Fasst man diese beiden Effekte zusammen, so erhält man die \textit{Diffusions-Advektion-Gleichung}
-\begin{align}
+Fasst man diese beiden Effekte aus den Gleichungen (\ref{eq:adv}) und (\ref{eq:diff}) zusammen, so erhält man die \textit{Diffusions-Advektion-Gleichung}
+\begin{align*}
 \frac{\partial}{\partial t}T = D \nabla^2 T - \nabla \cdot (\vec{v}\cdot T)
-%= D \left(\frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} \right)T - (\frac{\partial}{\partial x} + \frac{\partial}{\partial y}) (\vec{v}\cdot T)
-\end{align}
+%= D \left(\frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} \right)T - (\frac{\partial}{\partial x} + \frac{\partial}{\partial y}) (\vec{v}\cdot T).
+\end{align*}
 Hierbei kann nun, wenn ein gegebenen externes, divergenzfreies Geschwindigkeitsfeld gegeben ist, dieses aus der Divergenz herausgelöst werden, sodass sich
 \begin{align}
 \label{eq:orig_diff_adv}
@@ -194,14 +199,15 @@ ist eine Entdimensionalisierung der Gleichung (\ref{eq:orig_diff_adv}) möglich.
 \end{align}
 
 \subsection{Das FTCS-Schema}
+\label{sec:ftcs}
 Eine mögliche Methode zur Lösung einer solchen partiellen Differenzialgleichung ist durch die Verfahrensgruppe der finiten Differenzen gegeben. Eine hierfür geeignete Diskretiserung des Problems ist in Form eines \textit{FTCS}-Schemas (Forward in Time, Centered in Space) gegeben. Hierbei wird der Raum in der $x$-Richtung in $(N_x+1)$- und in der $y$-Richtung in $(N_y+1)$ Stützstellen unterteilt, sodass sich ein räumliches Gitter ergibt. Zwischen diesen Punkten herrscht ein jeweiliger Abstand von $\Delta x = X/N_x$ und $\Delta y = Y/N_y$, wobei $X$ und $Y$ für die Ausmaße des zu beschreibenden Problems in der $x$- und $y$-Richtung sind.\\
 Die Temperatur $T(x, y)$, die hiermit beschrieben werden soll, geht somit in die Form $T_{i,j}$ über, wobei $i$ der Index des Punktes in der $x$- und $j$ der in der $y$-Richtung ist. Diese Indizes laufen von $0$ bis $N_x$ beziehungsweise $N_y$.\\
 Um nun noch die Zeit zu erfassen, wird auch diese in Punkte diskretisiert, die einen Abstand $\Delta_t$ haben. Sodass sich insgesamt ein dreidimensionaler Würfel ergibt, dessen verschiedenen Ebenen für die verschiedenen Zeitpunkte stehen. Erneut geht die Temperatur $T(x, y) = T_{i,j}$ über in $T_{i,j}^N$, wobei $N$ für den zeitlichen Index steht. Auch hier wird von $0$ an indiziert.\\
 
 Diese Aufteilung erlaubt es nun, die in den Gleichung (\ref{eq:diff_adv}) vorkommenden Ableitungen zu beschreiben.   
-Hierbei wird in dem \textit{FTCS}-Schema die zeitliche Ableitung in der ersten und die räumlichen in der zweiten Ordnung beschrieben.
+Hierbei wird in dem \textit{FTCS}-Schema die zeitliche Ableitung in der ersten und die räumlichen in der zweiten Ordnung beschrieben. Die Ordnung gibt hierbei jeweils an, wie stark der Fehler von der jeweiligen Schrittweite abhängt. Bei einem Verfahren zweiter Ordnung hängt dieser Fehler von $\mathcal{O}(\Delta x^2)$ ab.
 Es ergibt sich für die Ableitungen
-\begin{align}
+\begin{align*}
 \frac{\partial}{\partial t}T(x,y) &= \frac{T_{i,j}^{N+1} - T_{i,j}^{N}}{\Delta t}, \\
 \frac{\partial}{\partial x}T(x,y) &= \frac{T_{i+1,j}^{N} - T_{i-1,j}^{N}}{2 \Delta x}, \\
 \frac{\partial^2}{\partial x^2}T(x,y) &= \frac{T_{i+1,j}^{N} - 2 T_{i,j}^{N} + T_{i-1,j}^{N}}{ \Delta x^2}.
@@ -210,9 +216,9 @@ Es ergibt sich für die Ableitungen
 Durch Einsetzen in die Gleichung (\ref{eq:diff_adv}) und Umstellen nach $T_{i,j}^{N+1}$ erhält man schließlich in der zweiten räumlichen Ordnung
 \begin{align}
 \label{eq:ftcs}
-T_{i,j}^{N+1} = &T_{i,j}^N + \Delta t \left( -Pe \left( v^x_{i,j} \frac{T_{i+1,j}^N-T_{i-1,j}^N}{2\Delta x}+v^y_{i,j} \frac{T_{i,j+1}^N-T_{i,j-1}^N}{2\Delta x} \right) \right. \nonumber \\ 
+T_{i,j}^{N+1} = T_{i,j}^N &+ \Delta t \left[ -Pe \left( v^x_{i,j} \frac{T_{i+1,j}^N-T_{i-1,j}^N}{2\Delta x}+v^y_{i,j} \frac{T_{i,j+1}^N-T_{i,j-1}^N}{2\Delta x} \right) \right. \nonumber \\ 
  & \left.+ \frac{ T_{i+1,j}^N - 2 T_{i,j}^N +  T_{i-1,j}^N }{\Delta x^2} 
-+ \frac{ T_{i,j+1}^N - 2  T_{i,j}^N + T_{i,j-1}^N}{\Delta y^2} \right) 
++ \frac{ T_{i,j+1}^N - 2  T_{i,j}^N + T_{i,j-1}^N}{\Delta y^2} \right] 
 \end{align}
 womit die Integration durchgeführt werden kann. Die Ausdrücke $v^x$ und $v^y$ stehen für die jeweilige $x$- und $y$-Komponente des zeitlich konstanten Geschwindigkeitsfeldes an dem jeweiligen Ort.\\
 Des Weiteren sind allerdings noch die Randbedingungen zu beachten. Bei \textit{Dirichlet}-Rändern muss an dem Schema nichts geändert werden. Bei \textit{Neumann}-Rändern dagegen schon. Exemplarisch wird hierfür als Beispiels der linke Rand betrachtet, auf dem die erste Ableitung in $x$-Richtung verschwinden soll. Durch eine Taylor-Entwicklung und einen Koeffizientenvergleich erhält man die diskretisierte Randbedingung zweiter Ordnung
@@ -230,11 +236,11 @@ Somit ergibt sich der Ausdruck
 T_{i,j}^{N} = T_{i,j}^{N+1} \alpha + \beta^-_{i-1,j} T_{i-1,j}^{N+1} + \beta^+_{i+1,j} T_{i+1,j}^{N+1} + \gamma^-_{i,j-1} T_{i,j-1}^{N+1} + \gamma^+_{i,j+1} T_{i,j+1}^{N+1}.
 \end{align}
 Dabei wurden die folgenden Abkürzungen eingeführt und benutzt
-\begin{align}
+\begin{align*}
 \alpha &= \Delta t \left(\frac{1}{\Delta x^2} + \frac{1}{\Delta y^2} + \frac{1}{\Delta t} \right), \\
 \beta^\pm_{i,j} &= \Delta t \left(-\frac{1}{\Delta x^2} \pm \frac{Pe v^x_{i,j}}{2 \Delta x}\right), \\
 \gamma^\pm_{i,j} &= \Delta t \left(-\frac{1}{\Delta y^2} \pm \frac{Pe v^y_{i,j}}{2 \Delta y}\right).
-\end{align}
+\end{align*}
 
 Um das Problem nun besser beschreiben zu können, wird das zweidimensionale Feld in einen eindimensionalen Spaltenvektor zusammengefasst. Hierfür ist es notwendig, die Indizes umzubenennen. Hierbei wird ab jetzt die folgende Konvention benutzt: durchlaufe erst alle $x$-Werte zu einem festen $y$-Wert, und erhöhe das $y$. Dies bewirkt, dass die Zeilen des Feldes hintereinander geschrieben werden:
 \begin{align*}
@@ -249,13 +255,13 @@ Diese hat die fünf Diagonalen, die ungleich null sind in ihrem Hauptteil, und z
 Somit schreibe $M$ nun als Blockmatrix
 \begin{align*}
  \boldsymbol{M}  =  \begin{pmatrix}
-  A  & 0 & 0 \\
-  0  & B & 0 \\
-  0  & 0 & C \\
+  \textbf{A}  & 0 & 0 \\
+  0  & \textbf{B} & 0 \\
+  0  & 0 & \textbf{C} \\
  \end{pmatrix}
- ,
+ .
 \end{align*}
-mit der Matrix $A$ 
+Hierbei stehen $\textbf{A}, \textbf{B}, \textbf{C}$ jeweils für eine Matrix. Die Matrix $A$ 
 \begin{align*}
 \boldsymbol{A} =
   \begin{pmatrix}
@@ -272,8 +278,7 @@ mit der Matrix $A$
  \end{pmatrix}
  ,
  \end{align*}
- welche die Randbedingungen am oberen, linken und rechten Rand umsetzt; und der Matrix $C$
-
+ setzt die Randbedingungen am oberen, linken und rechten Rand ums. Die Matrix $C$
  \begin{align*}
  \boldsymbol{C}  =
   \begin{pmatrix}
@@ -286,7 +291,7 @@ mit der Matrix $A$
   ,
 \end{align*}
 \setcounter{MaxMatrixCols}{25}
-welche die Randbedingungen am unteren Rand umsetzt. Die Matrix $B$
+dagegen setzt die Randbedingungen am unteren Rand um. Die Matrix $B$
 \begin{align*}
 \boldsymbol{B} =
   \begin{pmatrix}
@@ -304,7 +309,8 @@ welche die Randbedingungen am unteren Rand umsetzt. Die Matrix $B$
  \end{pmatrix}
  ,
  \end{align*}
-setzt die implizite Gleichung (\ref{eq:impli}) um. Um nun einen Zeitschritt vorzugehen, muss also nur noch die Matrix $M$ invertiert werden, beziehungsweise das Gleichungssystem $M \vec{x} = \vec{b}$ gelöst werden.\\
+setzt die implizite Gleichung (\ref{eq:impli}) um, ist also das Kernstück des \textit{BTCS-Schemas}.\\
+Um das System nun um einen Zeitschritt weiter zu simulieren, muss die Matrix $\ŧextbf{M}$ invertiert werden - beziehungsweise das Gleichungssystem $\textbf{M} \vec{x} = \vec{b}$ gelöst werden.\\
 Hierfür hat sich das \textit{SOR-Verfahren}, welches eine Modifikation des \textit{Gauß-Seidel-Verfahrens} ist, als besonders geeignet herausgestellt. Dies sind beides iterative Lösungsverfahren. Um diese zu benutzen, wird die Matrix zuerst in drei Teilmatrizen $\boldsymbol{M}=\boldsymbol{L}+\boldsymbol{D}+\boldsymbol{U}$ zerlegt, wobei $D$ eine Diagonal-, $L$ eine untere Dreiecks- und $U$ eine obere Dreiecksmatrix ist. Zudem wird der \textit{Residuen-Vektor} $\vec{r_n} = \boldsymbol{M} \vec{x_n} - \vec{b}$ eingeführt, wobei der Index den jeweiligen Iterationsschritt angibt. Dieser Vektor beschreibt die Differenz zwischen der korrekten und der iterativen Lösung der Gleichung $M x = b$.\\
 Durch diese Zerlegung ist es möglich eine rekursive Bestimmungsformel [2, S. 25ff]
 \begin{align*}
@@ -321,7 +327,7 @@ aufgefasst werden [2, S.30], wobei $N$ die Dimensionen des Problems angibt.
 \section{Durchführung der Aufgaben}
 \subsection{Aufgabe 1: Untersuchung von $\vec{v}$}
 \label{sec:task1}
-Für die numerische Betrachtung des Problems spielt der Einfluss von $\vec{v}$ eine entscheidende Rolle. Ist dieses Geschwindigkeitsfeld nämlich divergenzfrei, so ergibt sich eine mögliche, vereinfachende Betrachtung in diskretisierter Form (siehe ). Für das externe Feld
+Für die numerische Betrachtung des Problems spielt der Einfluss von $\vec{v}$ eine entscheidende Rolle. Ist dieses Geschwindigkeitsfeld nämlich divergenzfrei, so ergibt sich eine mögliche, vereinfachende Betrachtung in diskretisierter Form nach Gleichung (\ref{eq:ftcs}). Für das externe Feld
 \begin{align*}
 \vec{v} = (\pi \sin(2\pi x) \cos(\pi y), -2 \pi \cos(2\pi x) \sin(\pi y))^t
 \end{align*}
@@ -329,16 +335,21 @@ gilt
 \begin{align*}
 \nabla \cdot \vec{v} = \frac{\partial}{\partial x} (\pi \sin(2\pi x) \cos(\pi y) + \frac{\partial}{\partial y} (-2 \pi \cos(2\pi x) \sin(\pi y)) = 0;
 \end{align*}
-es ist somit divergenzfrei. Dies kann man auch grafisch nachvollziehen.
+es ist somit divergenzfrei. Es bietet sich zudem an, das Feld grafisch darzustellen. Dies kann in Abbildung (\ref{fig:task1}) nachvollzogen werden.
 \begin{figure}[H]
  \centering
    \includegraphics[width=0.6\textwidth]{res/task1.png}
    \caption{Grafische Darstellung des Geschwindigkeitsfeldes $\vec{v}$ in Abhängigkeit von $x$ und $y$.}
- \label{fig:aufbaue_bild}
+ \label{fig:task1}
 \end{figure}
+Es ist zu erkennen, dass das Feld zwei Zentren hat, um die sich je ein Strudel bildet. Diese laufen in der Mitte zusammen, und strömen zum oberen Rand hin.
 
 \subsection{Aufgabe 2: FTCS-Lösung}
 \label{sec:task2}
+Um nun eine erste numerische Lösung erzeugen zu können, wird das zuvor in (\ref{sec:ftcs}) hergeleitete Verfahren benutzt. Hierfür wird direkt eine etwas allgemeinere Implementation gewählt, welche in der Integration auch möglich Quellterme berücksichtigt. Dieser Ansatz wird gewählt, da im weiteren Verlauf dieser Arbeit (siehe \ref{sec:task3}) die numerische Korrektheit des Integrators überprüft werden soll. Hierfür wird die eine Quelle hinzugefügt, welche eine analytische Lösung erlaubt.\\
+Das Programm besteht aus zwei verschiedenen Routinen. Die \textit{main}-Methode liest gewünschte Eingangsparameter, wie die Schrittweite $\Delta t$, die maximale Integrationszeit $t_{max}$, die \textit{Péclet-Zahl} $Pe$, die Gitterauflösung $N_x$ und $N_y$ und einen weiteren Parameter, der angibt, ob ein Quellterm erzeugt werden soll, ein (Zeile 78-119) . Zudem erzeugt sie Objekte des Types \textit{vector\textless vector\textless double\textgreater \textgreater}, in welchem der Temperaturverlauf in dem Rechteck, und ein etwaiger Quellterm abgespeichert werden. Hierfür wird ein \textit{vector} statt eines Feldes genutzt, um möglich \textit{Acess Violation Exceptions} zu vermeiden und um Memoryleaks zu reduzieren (Zeile 121-163).\\
+In einer Schleife wird in den gewählten Zeitschritten bis zur Endzeit iteriert, und für jede Zeit ein Integrationsschritt durchgeführt (Zeile 131-163). Zuletzt wird die berechnete Temperaturverteilung in die vorher angegebene Datei ausgegeben (Zeile 199-209).\\
+Der jeweilige Integrationsschritt wird von der \textit{ftcs\_time\_step}-Methode ausgeführt. Diese legt zuerst eine Kopie des übermittelten Feldes an, um auf Grundlage dieser, die Ableitungsterme berechnen zu können. Hierfür wird in einer Schleife über das gesamte Gitter iteriert, und jeweils der $\nabla^2 T$ und der $\vec{v_0} \cdot \nabla T$ Term einzeln berechnet und anschließend nach Gleichung (\ref{eq:ftcs_source}) als Änderung von $T$ verrechnet (Zeile 19-59). Abschließend werden noch die \textit{Dirichlet}- und \textit{Neumann}-Ränder beachtet und die Werte passend aktualisiert (Zeile 61-76). 
 
 \subsection{Aufgabe 3: Numerische Korrektheit der FTCS-Lösung}
 \label{sec:task3}
@@ -362,18 +373,19 @@ Q = \pi^2 \left(2 \cos(\pi x) \sin(\pi y) - Pe \cdot \cos(\pi x)^3 \sin(2 \pi y)
 \end{align*}
 ergibt.\\
 Berücksichtigt man diesen Quellterm in dem \textit{FTCS-Schema}, folgt:
-\begin{align*}
-T_{i,j}^{N+1} = &T_{i,j}^N + \Delta t \left( -Pe \left( v^x_{i,j} \frac{T_{i+1,j}^N-T_{i-1,j}^N}{2\Delta x}+v^y_{i,j} \frac{T_{i,j+1}^N-T_{i,j-1}^N}{2\Delta x} \right) \right. \nonumber \\ 
+\begin{align}
+\label{eq:ftcs_source}
+T_{i,j}^{N+1} = T_{i,j}^N & + \Delta t \left[ -Pe \left( v^x_{i,j} \frac{T_{i+1,j}^N-T_{i-1,j}^N}{2\Delta x}+v^y_{i,j} \frac{T_{i,j+1}^N-T_{i,j-1}^N}{2\Delta x} \right) \right. \nonumber \\ 
  & \left.+ \frac{ T_{i+1,j}^N - 2 T_{i,j}^N +  T_{i-1,j}^N }{\Delta x^2} 
-+ \frac{ T_{i,j+1}^N - 2  T_{i,j}^N + T_{i,j-1}^N}{\Delta y^2} + Q_{i,j} \right) 
-\end{align*}
++ \frac{ T_{i,j+1}^N - 2  T_{i,j}^N + T_{i,j-1}^N}{\Delta y^2} + Q_{i,j} \right]
+\end{align}
 
-Dies führt zu Änderungen des Quellcodes im Vergleich zur vorherige Aufgabe in der Methode ... in den Zeilen ...-... .
+Dieser Quellterm wurde in den Zeilen 148 bis 161 in (\ref{src:ftcs}) implementiert. 
 Nun kann zu jedem Zeitpunkt die Differenz zwischen der stationären Lösung $T_{i,j}^*$ und der numerischen Lösung $T_{i,j}^N$ berechnet werden als
 \begin{align*}
 \sigma^N = \sqrt(\Sigma_{i,j} (T_{i,j}^N - T_{i,j}^*)^2 ).
 \end{align*}
-Diese Abweichung wird nun alle $100$ Zeitschritte ausgegeben. Dies führt zu Veränderungen in der Methode ... in Zeile ... bis ... .\\
+Diese Abweichung wird nun alle $100$ Zeitschritte ausgegeben. Dies wurde in der \textit{main}-Methode in Zeile 175 bis 196 implementiert.\\
 Setzt man nun noch $N_x = N_y$, und variiert diese Werte für ein festes $\Delta t$, so können Aussagen getroffen werden, über die Abweichungen der stationären numerischen $T$ und der tatsächlichen stationären Lösung $T^*$ in Abhängigkeit von der Gittergröße.
 
 \begin{figure}[H]
@@ -399,6 +411,7 @@ Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kan
    \caption{Temperatur für $Pe = 2$.}
    \label{fig:task4_2}
    \end{figure}
+   \vspace{1cm}
 \end{minipage}%
 \hfill%
 \noindent\begin{minipage}[t]{0.50\textwidth}% adapt widths of minipages to your needs
@@ -412,17 +425,19 @@ Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kan
 \end{minipage}%
 \hfill%
 
+Hierbei ergibt sich unabhängig von der \textit{Péclet-Zahl} eine ähnliche Temperaturverteilung. So ist sie im unteren Bereich deutlich geringer, als im oberen Bereich, was durch die \textit{Dirichlet}-Randbedingungen hervorgerufen wird. Zudem ist sie in der Mitte deutlich geringer, als rechts und links daneben. Dies lässt sich gut durch die Verteilung durch das Geschwindigkeitsfeld erklären. Diese transportiert anschaulich die vorhandene Wärme aus der Mitte hinweg, und verteilt sich im oberen Bereich. Bei der größeren \textit{Péclet-Zahl} $Pe=10$ ergibt sich eine stärkere Verteilung, sodass ein stärker ausgeprägtes Gefälle zwischen warm und kalt entsteht. Für beide Parameter geht das System allerdings schon nach der kurzen Zeitspanne $t = 0.05$ in eine annähernd stationäre Lösung über - die Unterschiede zwischen den Verteilung für $t=0.05$ und $t=0.5$ sind minimal. 
+
 
 \subsection{Aufgabe 5: Beurteilung der Stabilität der FTCS-Lösung}
 \label{sec:task5}
 Um weitere Aussagen über die numerische Lösung treffen zu können, wird nun noch die Stabilität betrachtet. Hierfür wird zuerst für $N=N_x=N_y = 30$ die maximale Zeitschrittgröße $\Delta t^{Pe}_{max}$ für die \textit{Péclet-Zahlen} $Pe \in \{0.1, 1.0, 10\}$ bestimmt.\\
 Diese ergeben sich zu
 \begin{align*}
-\Delta t^{0.1}_{max} &= 2.785 \cdot 10^{-4} 2.788, \\
-\Delta t^{1.0}_{max} &= 2.787 \cdot 10^{-4} 2.789, \\
+\Delta t^{0.1}_{max} &= 2.788 \cdot 10^{-4}, \\
+\Delta t^{1.0}_{max} &= 2.789 \cdot 10^{-4}, \\
 \Delta t^{10}_{max}  &= 2.795 \cdot 10^{-4} .
 \end{align*}
-Dies liefert einen ersten Eindruck: Die Stabilitätsgrenze hängt von $Pe$ ab, und nimmt für steigende $Pe$ in gewissen, geringen Maßen zu.\\
+Dies liefert einen ersten Eindruck: Die Stabilitätsgrenze hängt von $Pe$ ab, und nimmt für steigende $Pe$ in gewissen, geringen Maßen in dem hier betrachteten Intervall zu.\\
 Für eine genauere Aussage wird nun eine \textit{von-Neumann-Stabilitätsanalyse} durchgeführt. Hierfür wird für die Lösung ein Ansatz der generellen Form
 \begin{align*}
 T^N_{i,j} = \xi^N e^{i(k_x \Delta x \cdot i + k_y \Delta y \cdot j)}
@@ -439,25 +454,33 @@ welcher durch trigonometrische Identitäten in
 \end{align*}
 übergeht. Damit das Verfahren konvergiert, muss $\xi$ kleiner $1$ ein. Nähert man hier den Sinus und den Cosinus mit den Maximalwerten, und schätzt die Komponenten $v^x$ und $v^y$ nach oben durch $\pi$ und $2\pi$ ab, so ergibt sich
 \begin{align}
-\lambda^2 \left(64 + \frac{Pe 2 \pi^2}{\Delta x^2} \right) -16 \lambda <0,
+\lambda^2 \left(64 + (Pe 2 \pi \Delta x)^2 \right) -16 \lambda <0,
 \end{align}
 mit der \textit{CFL-Zahl} $\lambda = \Delta t/\Delta x^2$.
 Eine Lösung dieser Ungleichung ergibt folgenden Bereich, sodass das \textit{FTCS-Schema} konvergiert:
 \begin{align}
-0 < \lambda = \frac{\Delta t}{\Delta x^2} < \frac{8 \left(\frac{Pe}{\Delta x}\right)^2}{32\left(\frac{Pe}{\Delta x}\right)^2 + \pi^2}.
+0 < \lambda = \frac{\Delta t}{\Delta x^2} < \frac{4}{16 + (\Delta_x Pe \pi)^2}.
 \end{align}
-Dies ist durch die Abschätzungen nach oben bedingt, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden.
+Hierdurch kann der maximale Zeitschrit, für den das Verfahren konvergiert durch
+\begin{align}
+\label{eq:neumann_delta_t_max}
+\Delta t_{max} = \frac{4 \Delta x^2}{16 + \left(\pi Pe \Delta_x \right)^2}
+\end{align}
+ausgedrückt werden.\\
 
+
+\newpage
 \subsection{Aufgabe 6: BTCS-Lösung}
 \label{sec:task6}
-Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Hierfür wird zuerst die zuvor beschriebene Matrix $\textbf{M}$ implementiert. Dies wird in (...) durchgeführt. Nun muss nur noch in jedem Integrationsschritt diese Matrix invertiert werden. Dafür wurde das \textit{SOR-Verfahren} in (...) nach Gleichung (\ref{eq:sor}) implementiert. Dabei werden in jedem einzelnen Interationsschritt die Residuen $\vec{r} = \textbf{M} \vec{x}-\vec{b}$ für die Lösung von $\textbf{M} \vec{x} = \vec{b}$ berechnet, und gefordert, dass der Betrag dieser kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
+Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Dazu werden im Hauptprogramm in (\ref{src:btcs}) vier Routinen benötigt.
+Die \textit{main}-Methode liest die eingegebene Parameter erneut ein (Zeile 50-88), und befüllt die zuvor beschriebene Matrix $\textbf{M}$. Dazu wird ein Objekt der Klasse \textit{square\_matrix} aus (\ref{src:squarematrix.h}) benutzt (Zeile 90-123). Diese erbt von der Klasse \textit{matrix}, welche in (\ref{src:matrix.h}) und (\ref{src:matrix.cpp}) definiert wird. Hierbei werden die Routinen \textit{beta} und \textit{gamma} benutzt, welche die so benannten Variablen für den jeweiligen Gitterpunkt berechnen (Zeile 21-48). Weitergehend wird das Temperaturfeld nicht mehr in einem zwei sondern in einem eindimensionalen Objekt gespeichert. Dieses wird zunächst mit den gewünschten Startwerten initialisiert (Zeile 143-155).\\
+Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrationsschritt die zuvor aufgestellte Matrix invertiert. Dafür wurde das \textit{SOR-Verfahren} in (\ref{src:linearsystem.cpp}) und (\ref{src:linearsystem.h}) nach Gleichung (\ref{eq:sor}) implementiert. Dabei werden in jedem einzelnen Interationsschritt die Residuen $\vec{r} = \textbf{M} \vec{x}-\vec{b}$ für die Lösung von $\textbf{M} \vec{x} = \vec{b}$ berechnet, und gefordert, dass der Betrag dieser kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
 \begin{figure}[H]
  \centering
    \includegraphics[width=0.65\textwidth]{res/task6/sor_parameter.png}
    \caption{Grafische Darstellung der benötigten Iterationen zur Konvergenz in Abhängigkeit vom Relaxationsparameter $\alpha$.}
  \label{fig:task6_param_comp}
 \end{figure}
-Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt.
 
 \noindent\begin{minipage}[t]{0.55\textwidth}% adapt widths of minipages to your needs
 \begin{figure}[H]  
@@ -471,6 +494,7 @@ Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fi
 \hfill%
 \noindent\begin{minipage}[t]{0.45\textwidth}% adapt widths of minipages to your needs
 \vspace{1cm}
+Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt.\\
 Schließlich wird das zuvor implementierte und getestete Verfahren noch einmal für die Parameterwahl aus Aufgabenpunkt (\ref{sec:task4}) angewendet, um die Ergebnisse miteinander zu vergleichen. Hierfür wurde also erneut $Pe = 10$, $\Delta t = 2 \cdot 10^{-4}$ und $t \in \{0.005, 0.05, 0.5\}$ gewählt. Die hierdurch erhaltenen Temperaturverteilungen sind erneut als Heatmap in Abbildung (\ref{fig:task6}) dargestellt.
 \end{minipage}%
 \hfill%
@@ -480,6 +504,10 @@ Schließlich wird das zuvor implementierte und getestete Verfahren noch einmal f
 \subsection{Numerische Korrektheit der FTCS-Lösung}
 \label{sec:disc_num_corr}
 Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numerische Fehler für größere Gitter deutlich geringer wird. Dieser Abfall hat allerdings auch eine bestimmte Grenze. Überschreitet $N = N_x = N_y$ diesen Wert, so kann die numerische Lösung nicht mehr konvergieren. Den Grund für dieses Verhalten (Abweichung der \textit{CFL-Zahl}) ist in Abschnitt (\ref{sec:task5}) beschrieben und erklärt. Anzumerken ist noch, dass der Fehler noch rapider gefallen wäre, wenn man den Gesamtfehler durch die Anzahl der zu berechnenden Gitterpunkte zwecks einer Normalisierung geteilt hätte.
+
+\subsection{Aufgabe 5: Beurteilung der Stabilität der FTCS-Lösung}
+\label{sec:disc_stability}
+Die zuvor in Abschnitt (\ref{sec:task5}) hergeleitete Gleichung für den maximal gültigen Zeitschritt $\Delta t_{max}$ ist durch die Abschätzungen nach oben, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden. Hierbei zeigte sich allerdings, dass die Aussagen der Gleichung (\ref{eq:neumann_delta_t_max}) für geringe \textit{Péclet-Zahlen} zu stark sind, und noch zu viele Werte ausschließen, für die das Verfahren noch konvergiert. Allerdings konnte durch exemplarische Tests bei höhreren Werten ein Verhalten festgestellt werden, welches dem durch die Formel beschriebenen entspricht: je höher die Zahl wird, desto feiner muss die Zeitintegration gewählt werden.
 
 \begin{thebibliography}{9}
   \bibitem{manmana}
@@ -498,11 +526,21 @@ Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numer
  \end{thebibliography}
 \clearpage
 
+\clearpage
 \appendix
 \section{Quellcode}
-\label{sec:source} 
-\lstinputlisting{source/task02.cpp}
-\lstinputlisting{source/task03.cpp}
-\lstinputlisting{source/task06.cpp}
+\subsection{Hauptprogramme}
+\label{sec:source_main} 
+\lstinputlisting[label=src:ftcs, title=\textbf{Quellcode:} Implementation des FTCS-Schemas]{source/task03.cpp}
+\lstinputlisting[label=src:btcs, title=\textbf{Quellcode:} Implementation des BTCS-Schemas]{source/task06.cpp}
 
+\clearpage
+\subsection{Hilfsbibliotheken}
+\label{sec:source_lib} 
+\lstinputlisting[label=src:squarematrix.h, title=\textbf{Quellcode:} square\_matrix.h]{source/lib/square_matrix.h}
+\lstinputlisting[label=src:matrix.h, title=\textbf{Quellcode:} matrix.h]{source/lib/matrix.h}
+\lstinputlisting[label=src:linearsystem.h, title=\textbf{Quellcode:} linear\_system.h]{source/lib/linear_system.h}
+
+\lstinputlisting[label=src:matrix.cpp, title=\textbf{Quellcode:} matrix.cpp]{source/lib/matrix.cpp}
+\lstinputlisting[label=src:linearsystem.cpp, title=\textbf{Quellcode:} linear\_system.cpp]{source/lib/linear_system.cpp}
 \end{document}

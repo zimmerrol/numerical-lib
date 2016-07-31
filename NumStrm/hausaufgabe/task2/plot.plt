@@ -23,3 +23,7 @@ set output "10_005.png"
 plot "10_005.dat" matrix w image t "Temperatur T zu t = 0.05"
 set output "10_0005.png"
 plot "10_0005.dat" matrix w image t "Temperatur T zu t = 0.005"
+
+
+set output "test.png"
+plot "test.dat" matrix w image t "test"

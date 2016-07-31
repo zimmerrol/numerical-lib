@@ -19,5 +19,5 @@ plot "out005.dat" matrix w image t "Temperatur T zu t = 0.05"
 set output "grid0005.png"
 plot "out0005.dat" matrix w image t "Temperatur T zu t = 0.005"
 
-set output "grid.png"
-plot "out.dat" matrix w image
+set output "test.png"
+plot "test.dat" matrix w image
