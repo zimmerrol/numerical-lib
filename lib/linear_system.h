@@ -15,8 +15,8 @@ namespace numerical
 	bool linear_system_solve_gauss_seidel(square_matrix& coeff_matrix, double*x, double* b, double error_threshold);
 	bool linear_system_solve_sor(square_matrix& coeff_matrix, double*x, double* b, double alpha, double error_threshold);
 
-	double linear_system_solve_sor2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha, double error_threshold);
-	double linear_system_solve_sor_step2(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha);
+	size_t linear_system_solve_sor(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha, double error_threshold);
+	double linear_system_solve_sor_step(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha);
 
 	void multiply_matrix_vector(matrix& matrix, vector<double> &x, vector<double> &result);
 }

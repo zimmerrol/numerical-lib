@@ -25,7 +25,6 @@
 \setkomafont{captionlabel}{\sffamily\bfseries}
 \setcapindent{0em}
 
-
 %---- Weitere Pakete -----------------------------------------------------------
 % Die Pakete sind alle in der TeX Live Distribution enthalten. Wichtige Adressen
 % www.ctan.org, www.dante.de
@@ -35,7 +34,8 @@
 
 % Benutzung von Umlauten direkt im Text
 % entweder "latin1" oder "utf8"
-\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
+%\usepackage[utf8]{inputenc}
 
 % Pakete mit Mathesymbolen und zur Beseitigung von Schwächen der Mathe-Umgebung
 \usepackage{latexsym,exscale,stmaryrd,amssymb,amsmath}
@@ -81,10 +81,11 @@
 \definecolor{source_mauve}{rgb}{0.58,0,0.82}
 
 \lstset{
-  language=C,                % choose the language of the code
+  language=C++,                % choose the language of the code
   numbers=left,                   % where to put the line-numbers
   stepnumber=1,                   % the step between two line-numbers.        
-  numbersep=5pt,                  % how far the line-numbers are from the code
+  numbersep=5pt,				% how far the line-numbers are from the code
+  basicstyle=\small,                  
   backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
   showspaces=false,               % show spaces adding particular underscores
   showstringspaces=false,         % underline spaces within strings
@@ -92,6 +93,9 @@
   tabsize=2,                      % sets default tabsize to 2 spaces
   captionpos=b,                   % sets the caption-position to bottom
   breaklines=true,                % sets automatic line breaking
+  inputencoding=utf8,
+   extendedchars=true,
+   literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1,
   keywordstyle=\color{blue},
   numberstyle=\tiny\color{source_gray},
   stringstyle=\color{source_mauve},
@@ -244,7 +248,7 @@ mit der Matrix $M$ ausgedrückt werden.
 Diese hat die fünf Diagonalen, die ungleich null sind in ihrem Hauptteil, und zwei weitere Submatrizen, die fast nur eine Hauptdiagonale haben, die ungleich null ist.
 Somit schreibe $M$ nun als Blockmatrix
 \begin{align*}
-   \begin{pmatrix}
+ \boldsymbol{M}  =  \begin{pmatrix}
   A  & 0 & 0 \\
   0  & B & 0 \\
   0  & 0 & C \\
@@ -253,7 +257,7 @@ Somit schreibe $M$ nun als Blockmatrix
 \end{align*}
 mit der Matrix $A$ 
 \begin{align*}
-A =
+\boldsymbol{A} =
   \begin{pmatrix}
   2  & -4/3 & 1/3 & . & 1/3 & -4/3 & 2 & -4/3 & 1/3 & .\\
   0  & 1 & 0 & . &   &   &   &   &   & . \\
@@ -271,7 +275,7 @@ A =
  welche die Randbedingungen am oberen, linken und rechten Rand umsetzt; und der Matrix $C$
 
  \begin{align*}
- C  =
+ \boldsymbol{C}  =
   \begin{pmatrix}
   1  & 0 & . & . & 0 \\
   0  & 1 & 0 & . & . \\
@@ -284,7 +288,7 @@ A =
 \setcounter{MaxMatrixCols}{25}
 welche die Randbedingungen am unteren Rand umsetzt. Die Matrix $B$
 \begin{align*}
-A =
+\boldsymbol{B} =
   \begin{pmatrix}
   \gamma^-  & . & \beta^- & \alpha & \beta^+ & . & \gamma^+ & 0 & .& .& 0 \\
   0  & \gamma^- & . & \beta^- & \alpha  & \beta^+  & .  & \gamma^+  & 0 &  .& 0 \\
@@ -300,11 +304,19 @@ A =
  \end{pmatrix}
  ,
  \end{align*}
-setzt die implizite Gleichung (\ref{eq:impli}) um. Um nun einen Zeitschritt vorzugehen, muss also nur noch die Matrix $M$ invertiert werden. Hierfür hat sich das \textit{SOR-Verfahren}, welches eine Modifikation des \textit{Gauß-Seidel-Verfahrens} ist, als besonders geeignet herausgestellt. Dies sind beides iterative Lösungsverfahren.
-
-!\\! \\! \\
-		!TODO: Add more information/text!
-\\! \\ !\\!
+setzt die implizite Gleichung (\ref{eq:impli}) um. Um nun einen Zeitschritt vorzugehen, muss also nur noch die Matrix $M$ invertiert werden, beziehungsweise das Gleichungssystem $M \vec{x} = \vec{b}$ gelöst werden.\\
+Hierfür hat sich das \textit{SOR-Verfahren}, welches eine Modifikation des \textit{Gauß-Seidel-Verfahrens} ist, als besonders geeignet herausgestellt. Dies sind beides iterative Lösungsverfahren. Um diese zu benutzen, wird die Matrix zuerst in drei Teilmatrizen $\boldsymbol{M}=\boldsymbol{L}+\boldsymbol{D}+\boldsymbol{U}$ zerlegt, wobei $D$ eine Diagonal-, $L$ eine untere Dreiecks- und $U$ eine obere Dreiecksmatrix ist. Zudem wird der \textit{Residuen-Vektor} $\vec{r_n} = \boldsymbol{M} \vec{x_n} - \vec{b}$ eingeführt, wobei der Index den jeweiligen Iterationsschritt angibt. Dieser Vektor beschreibt die Differenz zwischen der korrekten und der iterativen Lösung der Gleichung $M x = b$.\\
+Durch diese Zerlegung ist es möglich eine rekursive Bestimmungsformel [2, S. 25ff]
+\begin{align*}
+\vec{x}^{\,n} = \vec{x}^{\,n-1} - \alpha(\boldsymbol{L}+\boldsymbol{D})^{-1} \vec{r}^{\,n-1}
+\end{align*}
+aufzustellen. Hierbei ist $\alpha$ der so genannte \textit{Relaxationsparameter}. Bei dem \textit{Gauss-Seidel-Verfahren} ist er gleich null.\\
+Diese Matrizen-Gleichung kann in Summenschreibweise durch Eigenschaften triagonaler Matrizen aus der linearen Algebra auch als
+\begin{align}
+\label{eq:sor}
+x^{n+1}_i = (1-\alpha)x^{n}_i + \frac{\alpha}{m_{i,i}} \left(b_i - \sum\limits_{j=1}^{i-1} m_{i,j} x^{n+1}_j - \sum\limits_{j=i}^{N} m_{i,j} x^{n}_j \right)  
+\end{align}
+aufgefasst werden [2, S.30], wobei $N$ die Dimensionen des Problems angibt.
 
 \section{Durchführung der Aufgaben}
 \subsection{Aufgabe 1: Untersuchung von $\vec{v}$}
@@ -371,7 +383,7 @@ Setzt man nun noch $N_x = N_y$, und variiert diese Werte für ein festes $\Delta
  \label{fig:task3}
 \end{figure}
 
-In Abbildung (\ref{fig:task3}) ist der Verlauf des Fehlers $\sigma$ in Abhängigkeit von $N_x = N_y$ für $Pe = 2$ für einen Zeitschritt von $\Delta t = 2 \cdot 10^-5$ aufgetragen.
+In Abbildung (\ref{fig:task3}) ist der Verlauf des Fehlers $\sigma$ in Abhängigkeit von $N_x = N_y$ für $Pe = 2$ für einen Zeitschritt von $\Delta t = 2 \cdot 10^{-5}$ aufgetragen.
 Zudem wurde eine eine Regression durchgeführt, welche eine Abhängigkeit der Form $\sigma = N^{-1.2}$ ergeben hat. Dazu ist noch anzumerken, dass für größere $N$-Werte (größer als $115$) der Fehler nicht mehr weiter sinkt, sondern sogar stark anwächst, da die numerische Lösung divergent wird.
 
 
@@ -406,9 +418,9 @@ Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kan
 Um weitere Aussagen über die numerische Lösung treffen zu können, wird nun noch die Stabilität betrachtet. Hierfür wird zuerst für $N=N_x=N_y = 30$ die maximale Zeitschrittgröße $\Delta t^{Pe}_{max}$ für die \textit{Péclet-Zahlen} $Pe \in \{0.1, 1.0, 10\}$ bestimmt.\\
 Diese ergeben sich zu
 \begin{align*}
-\Delta t^{0.1}_{max} &= 2.785 \cdot 10^{-4}, \\
-\Delta t^{1.0}_{max} &= 2.787 \cdot 10^{-4}, \\
-\Delta t^{10}_{max}  &= 2.795 \cdot 10^{-4}.
+\Delta t^{0.1}_{max} &= 2.785 \cdot 10^{-4} 2.788, \\
+\Delta t^{1.0}_{max} &= 2.787 \cdot 10^{-4} 2.789, \\
+\Delta t^{10}_{max}  &= 2.795 \cdot 10^{-4} .
 \end{align*}
 Dies liefert einen ersten Eindruck: Die Stabilitätsgrenze hängt von $Pe$ ab, und nimmt für steigende $Pe$ in gewissen, geringen Maßen zu.\\
 Für eine genauere Aussage wird nun eine \textit{von-Neumann-Stabilitätsanalyse} durchgeführt. Hierfür wird für die Lösung ein Ansatz der generellen Form
@@ -418,12 +430,12 @@ T^N_{i,j} = \xi^N e^{i(k_x \Delta x \cdot i + k_y \Delta y \cdot j)}
 gewählt.
 Durch Einsetzen in Gleichung (\ref{eq:ftcs}) und Kürzen ergibt sich der Ausdruck
 \begin{align*}
-\xi = 1 - \frac{\Delta t Pe v^x}{2 \Delta x} \left( e^{i k_x \Delta x} - e^{-i k_x \Delta x} \right) - \frac{\Delta t Pe v^y}{2 \Delta y} \left( e^{i k_y \Delta y} - e^{-i k_y \Delta y} \right) -\frac{2}{\Delta x^2} - \frac{2}{\Delta y^2} \\
- + \frac{1}{\Delta x^2} \left( e^{i k_x \Delta x} + e^{-i k_x \Delta x} \right) +\frac{1}{\Delta y^2} \left( e^{i k_y \Delta y} + e^{-i k_y \Delta y} \right),
+\xi = 1 - \frac{\Delta t Pe v^x}{2 \Delta x} \left( e^{i k_x \Delta x} - e^{-i k_x \Delta x} \right) - \frac{\Delta t Pe v^y}{2 \Delta y} \left( e^{i k_y \Delta y} - e^{-i k_y \Delta y} \right) -\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2} \\
+ + \frac{\Delta t}{\Delta x^2} \left( e^{i k_x \Delta x} + e^{-i k_x \Delta x} \right) +\frac{\Delta t}{\Delta y^2} \left( e^{i k_y \Delta y} + e^{-i k_y \Delta y} \right),
 \end{align*}
 welcher durch trigonometrische Identitäten in
 \begin{align*}
-\xi = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) + \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2}{\Delta x^2}\cos(k_x \Delta x) + \frac{2}{\Delta y^2}\cos(k_y \Delta y) \\-\frac{2}{\Delta x^2} - \frac{2}{\Delta y^2}
+\xi = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) + \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2 \Delta t}{\Delta x^2}\cos(k_x \Delta x) + \frac{2 \Delta t}{\Delta y^2}\cos(k_y \Delta y) \\-\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2}
 \end{align*}
 übergeht. Damit das Verfahren konvergiert, muss $\xi$ kleiner $1$ ein. Nähert man hier den Sinus und den Cosinus mit den Maximalwerten, und schätzt die Komponenten $v^x$ und $v^y$ nach oben durch $\pi$ und $2\pi$ ab, so ergibt sich
 \begin{align}
@@ -438,21 +450,36 @@ Dies ist durch die Abschätzungen nach oben bedingt, eine obere Schranke. Liegt 
 
 \subsection{Aufgabe 6: BTCS-Lösung}
 \label{sec:task6}
-Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Hierfür wird zuerst die zuvor beschriebene Matrix $M$ implementiert. Dies wird in (...) durchgeführt. Nun muss nur noch in jedem Integrationsschritt diese Matrix invertiert werden. Dafür wurde das \textit{SOR-Verfahren} in (...) implementiert. Dafür wird in jedem einzelnen Interationsschritt das Residuum $\vec{r} = M \vec{x}-\vec{b}$ für die Lösung von $M \vec{x} = b$ berechnet, und so lange iteriert.\\
-Nun wird gefordert, dass der Betrag der Residuen kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
+Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Hierfür wird zuerst die zuvor beschriebene Matrix $\textbf{M}$ implementiert. Dies wird in (...) durchgeführt. Nun muss nur noch in jedem Integrationsschritt diese Matrix invertiert werden. Dafür wurde das \textit{SOR-Verfahren} in (...) nach Gleichung (\ref{eq:sor}) implementiert. Dabei werden in jedem einzelnen Interationsschritt die Residuen $\vec{r} = \textbf{M} \vec{x}-\vec{b}$ für die Lösung von $\textbf{M} \vec{x} = \vec{b}$ berechnet, und gefordert, dass der Betrag dieser kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
 \begin{figure}[H]
  \centering
-   \includegraphics[width=0.65\textwidth]{res/task6_sor_parameter.png}
+   \includegraphics[width=0.65\textwidth]{res/task6/sor_parameter.png}
    \caption{Grafische Darstellung der benötigten Iterationen zur Konvergenz in Abhängigkeit vom Relaxationsparameter $\alpha$.}
  \label{fig:task6_param_comp}
 \end{figure}
-Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt. 
+Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt.
+
+\noindent\begin{minipage}[t]{0.55\textwidth}% adapt widths of minipages to your needs
+\begin{figure}[H]  
+   \includegraphics[width=\linewidth]{res/task6/grid0005.png}
+   \includegraphics[width=\linewidth]{res/task6/grid005.png}
+   \includegraphics[width=\linewidth]{res/task6/grid05.png}
+   \caption{Temperatur nach dem \textit{BTCS-Schema} für $Pe=10$ und $\Delta t = 2\cdot10^{-4}$.}
+   \label{fig:task6}
+   \end{figure}
+\end{minipage}%
+\hfill%
+\noindent\begin{minipage}[t]{0.45\textwidth}% adapt widths of minipages to your needs
+\vspace{1cm}
+Schließlich wird das zuvor implementierte und getestete Verfahren noch einmal für die Parameterwahl aus Aufgabenpunkt (\ref{sec:task4}) angewendet, um die Ergebnisse miteinander zu vergleichen. Hierfür wurde also erneut $Pe = 10$, $\Delta t = 2 \cdot 10^{-4}$ und $t \in \{0.005, 0.05, 0.5\}$ gewählt. Die hierdurch erhaltenen Temperaturverteilungen sind erneut als Heatmap in Abbildung (\ref{fig:task6}) dargestellt.
+\end{minipage}%
+\hfill%
 
 \section{Auswertung der Ergebnisse}
 \label{sec:interpretation}
 \subsection{Numerische Korrektheit der FTCS-Lösung}
 \label{sec:disc_num_corr}
-Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numerische Fehler für größere Gitter deutlich geringer wird. Dieser Abfall hat allerdings auch eine bestimmte Grenze. Überschreitet $N = N_x = N_y$ diesen Wert, so kann die numerische Lösung nicht mehr konvergieren. Den Grund für dieses Verhalten (Abweichung der \textit{CFL-Zahl}) ist in Abschnitt (..) beschrieben und erklärt. Anzumerken ist noch, dass der Fehler noch rapider gefallen wäre, wenn man den Gesamtfehler durch die Anzahl der zu berechnenden Gitterpunkte zwecks einer Normalisierung geteilt hätte.
+Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numerische Fehler für größere Gitter deutlich geringer wird. Dieser Abfall hat allerdings auch eine bestimmte Grenze. Überschreitet $N = N_x = N_y$ diesen Wert, so kann die numerische Lösung nicht mehr konvergieren. Den Grund für dieses Verhalten (Abweichung der \textit{CFL-Zahl}) ist in Abschnitt (\ref{sec:task5}) beschrieben und erklärt. Anzumerken ist noch, dass der Fehler noch rapider gefallen wäre, wenn man den Gesamtfehler durch die Anzahl der zu berechnenden Gitterpunkte zwecks einer Normalisierung geteilt hätte.
 
 \begin{thebibliography}{9}
   \bibitem{manmana}
@@ -460,15 +487,22 @@ Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numer
   \emph{Scriptum zur Vorlesung: Computergestütztes wissenschaftliches Rechnen}. \\
  Göttingen,
   Sommersemester 2016
+
+  \bibitem{sor}
+  W. Auzinger, \\
+  \emph{Lecture Notes Iterative Solution of Large Linear Systems}. \\
+ Wien, 2011
  
  
  
  \end{thebibliography}
-%\clearpage
+\clearpage
 
 \appendix
 \section{Quellcode}
 \label{sec:source} 
-%\lstinputlisting{source/HelloWorld.c}
+\lstinputlisting{source/task02.cpp}
+\lstinputlisting{source/task03.cpp}
+\lstinputlisting{source/task06.cpp}
 
 \end{document}
