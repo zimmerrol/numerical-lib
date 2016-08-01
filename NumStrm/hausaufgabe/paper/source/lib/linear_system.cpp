@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cmath>
 #include <vector>
+#include <float.h>
 
 using namespace std;
 
@@ -74,7 +75,7 @@ namespace numerical
 	size_t linear_system_solve_sor(square_matrix& coeff_matrix, vector<double> &x, vector<double> &b, double alpha, double error_threshold)
 	{
 		//contains the value of the residues of the current iteration. start with a high number because of the if-comparison below
-		double error = 1000000000;
+		double error = DBL_MAX;
 		//contains the value of the residues of the previous iteration. start with a high number because of the if-comparison below
 		double old_error;
 		//counter of the needed iterations
@@ -93,6 +94,7 @@ namespace numerical
 
 			//calculate the next SOR step
 			error = linear_system_solve_sor_step(coeff_matrix, x, b, alpha);
+
 
 			//check for exit condition 1)
 			if (error < error_threshold)

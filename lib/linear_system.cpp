@@ -226,6 +226,10 @@ namespace numerical
 			//calculate the next SOR step
 			error = linear_system_solve_sor_step(coeff_matrix, x, b, alpha);
 
+
+			//	cout << "iteration: " << iteration << "\terror:" << error << "\n";
+
+
 			//check for exit condition 1)
 			if (error < error_threshold)
 			{

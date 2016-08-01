@@ -15,23 +15,23 @@ typedef vector<vector<double > > grid_t;
 //  values: a grid_t object which contains current distribution of the temperature T
 //  v0x, v0y: a grid_t object which contains the x/y component of the velocity v0
 //  delta_t, delta_x, delta_y, pe: the time-step-size, the step size in x/y direction and the Péclet number
-void ftcs_time_step(grid_t& values, grid_t v0x, grid_t v0y, const double delta_t, const double delta_x, const double delta_y, const double pe)
+void ftcs_time_step(grid_t& values, grid_t &v0x, grid_t &v0y, const double delta_t, const double delta_x, const double delta_y, const double pe)
 {
   //get the dimensions of the grid
-  size_t dimension_x = values.size();
-  size_t dimension_y = values.at(0).size();
+  size_t dimension_x = 31;//values.size();
+  size_t dimension_y = 31;//values.at(0).size();
 
   //create copy of the grid with the same dimensions
   //this will be used for the calculation of the derivatives
-  grid_t old_values;
+  grid_t old_values = vector<vector<double> > (dimension_x);
   for (size_t x=0; x<dimension_x; x++)
   {
     //add a new row
-    old_values.push_back(vector<double>());
+    old_values[x] = vector<double>(dimension_y);
     for (size_t y=0; y<dimension_y; y++)
     {
       //copy value
-      old_values.at(x).push_back(values.at(x).at(y));
+      old_values[x][y] = values[x][y];
     }
   }
 
@@ -40,14 +40,14 @@ void ftcs_time_step(grid_t& values, grid_t v0x, grid_t v0y, const double delta_t
   {
     for (size_t y=1; y<dimension_y-1; y++)
     {
-      values.at(x).at(y) += delta_t*
+      values[x][y] += delta_t*
                 (
-                  1.0/pow(delta_x,2)*(old_values.at(x+1).at(y) - 2.0*old_values.at(x).at(y) + old_values.at(x-1).at(y))
-                + 1.0/pow(delta_y,2)*(old_values.at(x).at(y+1) - 2.0*old_values.at(x).at(y) + old_values.at(x).at(y-1))
+                  1.0/pow(delta_x,2)*(old_values[x+1][y] - 2.0*old_values[x][y] + old_values[x-1][y])
+                + 1.0/pow(delta_y,2)*(old_values[x][y+1] - 2.0*old_values[x][y] + old_values[x][y-1])
                   -pe*
                     (
-                      v0x.at(x).at(y)/(2.0*delta_x)*(old_values.at(x+1).at(y)-old_values.at(x-1).at(y))
-                    + v0y.at(x).at(y)/(2.0*delta_y)*(old_values.at(x).at(y+1)-old_values.at(x).at(y-1))
+                      v0x[x][y]/(2.0*delta_x)*(old_values[x+1][y]-old_values[x-1][y])
+                    + v0y[x][y]/(2.0*delta_y)*(old_values[x][y+1]-old_values[x][y-1])
                     )
                 );
     }
@@ -58,17 +58,16 @@ void ftcs_time_step(grid_t& values, grid_t v0x, grid_t v0y, const double delta_t
   //left/right boundaries (Neumann boundaries)
   for (size_t y=0; y<dimension_y; y++)
   {
-    values.at(0).at(y) = 1.0/3.0*(4.0*values.at(0+1).at(y) - values.at(0+2).at(y));
-    values.at(dimension_x-1).at(y) = -2.0/3.0*(-2.0*values.at(dimension_x-2).at(y) + 1.0/2.0*values.at(dimension_x-3).at(y));
+    values[0][y] = 1.0/3.0*(4.0*values[0+1][y] - values[0+2][y]);
+    values[dimension_x-1][y] = -2.0/3.0*(-2.0*values[dimension_x-2][y] + 1.0/2.0*values[dimension_x-3][y]);
   }
 
   //bottom/top boundaries (Dirichlet boundaries)
   for (size_t x=0; x<dimension_x; x++)
   {
-    values.at(x).at(0) = 0.0;
-    values.at(x).at(dimension_y-1) = 1.0;
+    values[x][0] = 0.0;
+    values[x][dimension_y-1] = 1.0;
   }
-
 }
 
 int main(int argc, char* argv[])

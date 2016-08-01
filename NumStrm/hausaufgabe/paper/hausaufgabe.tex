@@ -21,6 +21,8 @@
 
 \usepackage{float}
 
+\usepackage{dsfont} 
+
 %Einstellungen für Figuren- und Tabellenbeschriftungen
 \setkomafont{captionlabel}{\sffamily\bfseries}
 \setcapindent{0em}
@@ -111,24 +113,29 @@
 
 \begin{titlepage}
 \centering
-\textsc{\Large Numerische Strömungsmechanik\\
-[1.5ex] Sommersemester 2016}
+\textsc{\Large \\
+[1.5ex]Georg-August Universität-Göttingen Sommersemester 2016}
 
-\vspace*{4.2cm}
+\vspace*{2.2cm}
 
 \rule{\textwidth}{1pt}\\[0.5cm]
-{\huge \bfseries
-  Hausaufgabe\\[1.5ex]}
+{\large \bfseries
+  Hausarbeit zur Vorlesung\\[1.5ex]
+  \huge Numerische Strömungsmechanik}
 \rule{\textwidth}{1pt}
 
-\vspace*{3.5cm}
+\vspace*{1.0cm}
+
+\begin{figure}[H]  
+	\centering
+   \includegraphics[width=0.7\textwidth]{res/title/2_05.png}
+\end{figure}
 
 \begin{Large}
 \begin{tabular}{ll}
 Name: & Roland Zimmermann\\
 Matrikelnummer:	& 21426901 \\
 Mail Adresse: & roland.zimmermann@stud.uni-goettingen.de \\ 
-\\
 Abgabetermin: & 05.08.2016\\
 \end{tabular}
 \end{Large}
@@ -241,6 +248,12 @@ Dabei wurden die folgenden Abkürzungen eingeführt und benutzt
 \beta^\pm_{i,j} &= \Delta t \left(-\frac{1}{\Delta x^2} \pm \frac{Pe v^x_{i,j}}{2 \Delta x}\right), \\
 \gamma^\pm_{i,j} &= \Delta t \left(-\frac{1}{\Delta y^2} \pm \frac{Pe v^y_{i,j}}{2 \Delta y}\right).
 \end{align*}
+Dies gilt allerdings nur für die inneren Punkte des Gitters. Für den linken und rechten Rand gelten, um ebenfalls die Diskretisierung in der zweiten Ordnung umsetzen zu können, die Gleichungen
+\begin{align}
+\label{eq:impli_neumann}
+T^{N+1}_{0,j} - \frac{4}{3} T^{N+1}_{1,j} + \frac{1}{3} T^{N+1}_{2,j} &= 0, \\
+T^{N+1}_{N_x,j} - \frac{4}{3} T^{N+1}_{N_x-1,j} + \frac{1}{3} T^{N+1}_{N_x-2,j} &= 0. \\
+\end{align}
 
 Um das Problem nun besser beschreiben zu können, wird das zweidimensionale Feld in einem eindimensionalen Spaltenvektor zusammengefasst. Hierfür ist es notwendig, die Indizes umzubenennen. Hierbei wird ab jetzt die folgende Konvention benutzt: durchlaufe erst alle $x$-Werte zu einem festen $y$-Wert, und erhöhe den $y$-Wert. Dies bewirkt, dass die Zeilen des Feldes hintereinander geschrieben werden:
 \begin{align*}
@@ -251,69 +264,46 @@ Nun kann die Gleichung (\ref{eq:impli}) als eine Matrixoperation der Form
 \vec{T}^N = M \cdot \vec{T}^{N+1},
 \end{align*} 
 mit der Matrix \textbf{M} ausgedrückt werden.
-Diese hat die fünf Diagonalen, die ungleich null sind in ihrem Hauptteil (\textbf{B}), und zwei weitere Submatrizen, die fast nur eine Hauptdiagonale haben, die ungleich null ist.
+Diese hat die nur fünf Diagonalen, die ungleich null sind.
 Somit schreibe \textbf{M} nun als Blockmatrix
 \begin{align*}
- \boldsymbol{M}  =  \begin{pmatrix}
- (\chi_1 & . & \chi_2) \\
-  \textbf{A}  & 0 & 0 \\
-  0  & \textbf{B} & 0 \\
-  0  & 0 & \textbf{C} \\
+\boldsymbol{M} = \begin{pmatrix}
+  \mathds{1}  & 0 & 0 &  0 & . & . & . & . & 0 \\
+  E^-  & D & E^+ &  0 & . & . & . & . & 0 \\
+  0  & E^- & D & E^+ & 0 &  . & . & . & 0\\
+  . & & . & . & . & & & &  . \\
+  . & & & . & . & . & & &  . \\
+  . & & & &  . & . & . & &  . \\
+  . & &  & & &  . & . & . &  . \\
+  .  & . & . & . & . & 0 & E^- & D & E^+ \\
+  0  & . & . & . & . & . & . & . & \mathds{1} \\
  \end{pmatrix}
 ,
 \end{align*}
-mit den quadratischen Matrizen \textbf{A}, \textbf{B}, \textbf{C} und dem Zeilenvektor $\vec{\chi}$. Die Matrix \textbf{A} und der Zeilenvektor $\vec{\chi}$
-\setcounter{MaxMatrixCols}{25}
-\begin{align*}
-\boldsymbol{A} &=
-  \begin{pmatrix}
-  0  & 1 & 0 & . &   &   &   &   &   & . \\
-  0  & 0 & 1 & 0 & . &   &   &   &   & . \\
-  .  & . & . & . & . & . &   &   &   & . \\
-  .  &   & . & . & . & . & . &   &   & . \\
-  .  &   &   & . & . & . & . & . & . & . \\
-  .  &   &   &   & . & . & . & . & . & . \\
-  .  &   &   &   &   & . & . & . & . & . \\
-  .  &   &   &   &   &   & . & 0 & 1 & 0 \\
-  0  & . & . & . & . & . & . & . & 0 & 1 \\
- \end{pmatrix}
- ,\\
- \vec{\chi} &= \begin{pmatrix}
- 2  & -\frac{4}{3} & \frac{1}{3} & ... & \frac{1}{3} & -\frac{4}{3} & 2 & -\frac{4}{3} & \frac{1}{3} & ... & -\frac{4}{3} & \frac{1}{3} \\
- \end{pmatrix}
- \end{align*}
- setzen die Randbedingungen am oberen, linken und rechten Rand ums. Die Matrix \textbf{C}
- \begin{align*}
- \boldsymbol{C}  =
-  \begin{pmatrix}
-  1  & 0 & . & . & 0 \\
-  0  & 1 & 0 & . & . \\
-  .  & . & . & . & . \\
-  .  &   & 0 & 1 & 0 \\
-  0  & . & . & 0 & 1 \\
-  \end{pmatrix}
-  ,
-\end{align*}
+mit den quadratischen Matrizen $\textbf{E}^\pm$, \textbf{D} und der Einheitsmatrix $\mathds{1}$. Die beiden Einheitsmatrizen im oberen linken und unteren rechten Eck setzen hierbei die \textit{Dirichlet}-Randbedingungen am oberen und rechten Rand um.
+Die Matrizen \textbf{D} und $\textbf{E}^\pm$ 
 
-dagegen setzt die Randbedingungen am unteren Rand um. Die Matrix \textbf{B}
 \begin{align*}
-\boldsymbol{B} =
-  \begin{pmatrix}
-  \gamma^-  & . & \beta^- & \alpha & \beta^+ & . & \gamma^+ & 0 & .& .& 0 \\
-  0  & \gamma^- & . & \beta^- & \alpha  & \beta^+  & .  & \gamma^+  & 0 &  .& 0 \\
-  0  & 0 & \gamma^- & . & \beta^- & \alpha & \beta^+ & .  & \gamma^+  & .& 0 \\
-  .  &   & . & . & . & . & .  & .  & .  & .  & . \\
-  .  &   &   & . & . & . & . & .  & .  & .  & . \\
-  .  &   &   &   & . & . & . & . & . & .  & . \\
-  .  &   &   &   &   & . & . & . & . & . & .  \\
-  .  &   &   &   &   &   & . & . & . & .  & . \\
-  .  &   &   &   &   &   &   & . & . & .  & . \\
-  0  & . & 0 & \gamma^- & . & \beta^- & \alpha & \beta^+ & .  & \gamma^+  & . \\
-  0  & . & . & 0 & \gamma^- & . & \beta^- & \alpha & \beta^+ & .  & \gamma^+  \\
+\boldsymbol{E^\pm} = \begin{pmatrix}
+	0 & . & .& .& .& 0\\
+	0 & \gamma^\pm & 0 & . & . & 0\\
+	0 & 0 & \gamma^\pm & 0 & . & 0\\
+	0 & . & 0 & \gamma^\pm & 0  & 0\\  
+	0 & . & . & 0 &  \gamma^\pm & 0\\ 
+	0 & . & .& .& .& 0\\
  \end{pmatrix}
- ,
+\end{align*}
+\begin{align*}
+ \boldsymbol{D} = \begin{pmatrix}
+	1 & -\frac{4}{3} & \frac{1}{3} & .& .& 0\\
+	\beta^- & \alpha & \beta^+ & 0 &  & .\\ 
+	0 & \beta^- & \alpha & \beta^+ & 0 & .\\ 
+	. & . & \beta^- & \alpha & \beta^+ & 0\\ 
+	. &   & 0 & \beta^- & \alpha & \beta^+\\ 
+	0 & . & .& \frac{1}{3} & -\frac{4}{3} & 1\\
+ \end{pmatrix}.
  \end{align*}
-setzt die implizite Gleichung (\ref{eq:impli}) um, ist also das Kernstück des \textit{BTCS-Schemas}.\\
+ setzen die implizite Gleichungen (\ref{eq:impli}) und (\ref{eq:impli_neumann}) um, sind also das Kernstück des \textit{BTCS-Schemas}. Ihre erste und letzte Zeile weichen hierbei vom Rest ab, da sie die \textit{Neumann}-Randbedingungen umsetzen.
 Um das System nun um einen Zeitschritt weiter zu simulieren, muss die Matrix $\textbf{M}$ invertiert werden - beziehungsweise das Gleichungssystem $\textbf{M} \vec{x} = \vec{b}$ gelöst werden.\\
 Hierfür hat sich das \textit{SOR-Verfahren}, welches eine Modifikation des \textit{Gauß-Seidel-Verfahrens} ist, als besonders geeignet herausgestellt. Dies sind beides iterative Lösungsverfahren. Um diese zu benutzen, wird die Matrix zuerst in drei Teilmatrizen $\boldsymbol{M}=\boldsymbol{L}+\boldsymbol{D}+\boldsymbol{U}$ zerlegt, wobei $D$ eine Diagonal-, $L$ eine untere Dreiecks- und $U$ eine obere Dreiecksmatrix ist. Zudem wird der \textit{Residuen-Vektor} $\vec{r_n} = \boldsymbol{M} \vec{x_n} - \vec{b}$ eingeführt, wobei der Index den jeweiligen Iterationsschritt angibt. Dieser Vektor beschreibt die Differenz zwischen der korrekten und der iterativen Lösung der Gleichung $\boldsymbol{M} \vec{x} = \vec{b}$.\\
 Durch diese Zerlegung ist es möglich eine rekursive Bestimmungsformel [2, S. 25ff]
@@ -384,7 +374,7 @@ T_{i,j}^{N+1} = T_{i,j}^N & + \Delta t \left[ -Pe \left( v^x_{i,j} \frac{T_{i+1,
 + \frac{ T_{i,j+1}^N - 2  T_{i,j}^N + T_{i,j-1}^N}{\Delta y^2} + Q_{i,j} \right],
 \end{align}
 
-Die Berechnung und Zuweisung dieses Quellterms (Zeile 148-161) wurde in (\ref{src:ftcs}) implementiert. 
+Die Berechnung und Zuweisung dieses Quellterms (Zeile 148-161) wurde im Quellcode (1) implementiert. 
 Nun kann zu jedem Zeitpunkt die Differenz zwischen der stationären Lösung $T_{i,j}^*$ und der numerischen Lösung $T_{i,j}^N$ berechnet werden als
 \begin{align*}
 \sigma^N = \sqrt(\Sigma_{i,j} (T_{i,j}^N - T_{i,j}^*)^2 ).
@@ -405,7 +395,8 @@ Zudem wurde eine eine Regression durchgeführt, welche eine Abhängigkeit der Fo
 
 \subsection{Aufgabe 4: Auswertung verschiedener FTCS-Lösungen}
 \label{sec:task4}
-Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kann das Temperaturfeld $T$ für zwei verschiedene \textit{Péclet-Zahlen} $Pe = 2$ und $Pe = 10$ simuliert, und zu den drei Zeitpunkten $t = 0.005$, $t = 0.05$ und $t=0.5$ visualisiert werden. Hierfür wird $\Delta t = 2 \cdot 10^-4$ und $N=N_x=N_y = 30$ angenommen. Die Darstellungen sind in den Abbildungen (\ref{fig:task4_2}) und (\ref{fig:task4_10}) zu finden.
+Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kann das Temperaturfeld $T$ für zwei verschiedene \textit{Péclet-Zahlen} $Pe = 2$ und $Pe = 10$ simuliert,
+
 
 \noindent\begin{minipage}[t]{0.50\textwidth}% adapt widths of minipages to your needs
 \begin{figure}[H]  
@@ -429,6 +420,8 @@ Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kan
 \end{minipage}%
 \hfill%
 
+und zu den drei Zeitpunkten $t = 0.005$, $t = 0.05$ und $t=0.5$ visualisiert werden. Hierfür wird $\Delta t = 2 \cdot 10^-4$ und $N=N_x=N_y = 30$ angenommen. Die Darstellungen sind in den Abbildungen (\ref{fig:task4_2}) und (\ref{fig:task4_10}) zu finden.
+
 Hierbei ergibt sich unabhängig von der \textit{Péclet-Zahl} eine ähnliche Temperaturverteilung. So ist sie im unteren Bereich deutlich geringer, als im oberen Bereich, was durch die \textit{Dirichlet}-Randbedingungen hervorgerufen wird. Zudem ist sie in der Mitte deutlich geringer, als rechts und links daneben. Dies lässt sich gut durch die Verteilung durch das Geschwindigkeitsfeld erklären. Diese transportiert anschaulich die vorhandene Wärme aus der Mitte hinweg, und verteilt sich im oberen Bereich. Bei der größeren \textit{Péclet-Zahl} $Pe=10$ ergibt sich eine stärkere Verteilung, sodass ein stärker ausgeprägtes Gefälle zwischen warm und kalt entsteht. Für beide Parameter geht das System allerdings schon nach der kurzen Zeitspanne $t = 0.05$ in eine annähernd stationäre Lösung über - die Unterschiede zwischen den Verteilung für $t=0.05$ und $t=0.5$ sind minimal. 
 
 
@@ -449,12 +442,12 @@ T^N_{i,j} = \xi^N e^{i(k_x \Delta x \cdot i + k_y \Delta y \cdot j)}
 gewählt.
 Durch Einsetzen in Gleichung (\ref{eq:ftcs}) und Kürzen ergibt sich der Ausdruck
 \begin{align*}
-\vec{\xi} = 1 - \frac{\Delta t Pe v^x}{2 \Delta x} \left( e^{i k_x \Delta x} - e^{-i k_x \Delta x} \right) - \frac{\Delta t Pe v^y}{2 \Delta y} \left( e^{i k_y \Delta y} - e^{-i k_y \Delta y} \right) -\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2} \\
- + \frac{\Delta t}{\Delta x^2} \left( e^{i k_x \Delta x} + e^{-i k_x \Delta x} \right) +\frac{\Delta t}{\Delta y^2} \left( e^{i k_y \Delta y} + e^{-i k_y \Delta y} \right),
+\vec{\xi} = 1 &- \frac{\Delta t Pe v^x}{2 \Delta x} \left( e^{i k_x \Delta x} - e^{-i k_x \Delta x} \right) - \frac{\Delta t Pe v^y}{2 \Delta y} \left( e^{i k_y \Delta y} - e^{-i k_y \Delta y} \right) -\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2} \\
+ &+ \frac{\Delta t}{\Delta x^2} \left( e^{i k_x \Delta x} + e^{-i k_x \Delta x} \right) +\frac{\Delta t}{\Delta y^2} \left( e^{i k_y \Delta y} + e^{-i k_y \Delta y} \right),
 \end{align*}
 welcher durch trigonometrische Identitäten in
 \begin{align*}
-\vec{\xi} = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) + \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2 \Delta t}{\Delta x^2}\cos(k_x \Delta x) + \frac{2 \Delta t}{\Delta y^2}\cos(k_y \Delta y) \\-\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2}
+\vec{\xi} = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) + \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2 \Delta t}{\Delta x^2}\cos(k_x \Delta x) &+ \frac{2 \Delta t}{\Delta y^2}\cos(k_y \Delta y) \\ &-\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2}
 \end{align*}
 übergeht. Damit das Verfahren konvergiert, muss $|\vec{\xi}|$ kleiner $1$ ein. Nähert man hier den Sinus und den Cosinus mit den Maximalwerten, und schätzt die Komponenten $v^x$ und $v^y$ nach oben durch $\pi$ und $2\pi$ ab, so ergibt sich
 \begin{align}
@@ -476,9 +469,9 @@ ausgedrückt werden.\\
 \newpage
 \subsection{Aufgabe 6: BTCS-Lösung}
 \label{sec:task6}
-Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Dazu werden im Hauptprogramm in (\ref{src:btcs}) vier Routinen benötigt.
-Die \textit{main}-Methode liest die eingegebene Parameter erneut ein (Zeile 50-88), und befüllt die zuvor eingeführte Matrix $\textbf{M}$. Dazu wird ein Objekt der Klasse \textit{square\_matrix} aus (\ref{src:squarematrix.h}) benutzt (Zeile 90-123). Diese erbt von der Klasse \textit{matrix}, welche in (\ref{src:matrix.h}) und (\ref{src:matrix.cpp}) definiert wird. Hierbei werden die Routinen \textit{beta} und \textit{gamma} benutzt, welche die so benannten Variablen für den jeweiligen Gitterpunkt berechnen (Zeile 21-48). Weitergehend wird das Temperaturfeld nicht mehr in einem zwei sondern in einem eindimensionalen Objekt gespeichert. Dieses wird zunächst mit den gewünschten Startwerten initialisiert (Zeile 143-155).\\
-Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrationsschritt die zuvor aufgestellte Matrix invertiert. Dafür wurde das \textit{SOR-Verfahren} in (\ref{src:linearsystem.cpp}) und (\ref{src:linearsystem.h}) nach Gleichung (\ref{eq:sor}) implementiert. Dabei werden in jedem einzelnen Interationsschritt die Residuen $\vec{r} = \textbf{M} \vec{x}-\vec{b}$ für die Lösung von $\textbf{M} \vec{x} = \vec{b}$ berechnet, und gefordert, dass der Betrag dieser kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
+Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Dazu werden im Hauptprogramm im Quellcode (2) vier Routinen benötigt.
+Die \textit{main}-Methode liest die eingegebene Parameter erneut ein (Zeile 50-88), und befüllt die zuvor eingeführte Matrix $\textbf{M}$. Dazu wird ein Objekt der Klasse \textit{square\_matrix} aus Quellcode (3) benutzt (Zeile 90-123). Diese erbt von der Klasse \textit{matrix}, welche im Quellcode (4) und (6) definiert wird. Hierbei werden die Routinen \textit{beta} und \textit{gamma} benutzt, welche die so benannten Variablen für den jeweiligen Gitterpunkt berechnen (Zeile 21-48). Weitergehend wird das Temperaturfeld nicht mehr in einem zwei sondern in einem eindimensionalen Objekt gespeichert. Dieses wird zunächst mit den gewünschten Startwerten initialisiert (Zeile 143-155).\\
+Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrationsschritt die zuvor aufgestellte Matrix invertiert. Dafür wurde das \textit{SOR-Verfahren} im Quellcode (7) und (5) nach Gleichung (\ref{eq:sor}) implementiert. Dabei werden in jedem einzelnen Interationsschritt die Residuen $\vec{r} = \textbf{M} \vec{x}-\vec{b}$ für die Lösung von $\textbf{M} \vec{x} = \vec{b}$ berechnet, und gefordert, dass der Betrag dieser kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
 \begin{figure}[H]
  \centering
    \includegraphics[width=0.65\textwidth]{res/task6/sor_parameter.png}
@@ -486,6 +479,12 @@ Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrat
  \label{fig:task6_param_comp}
 \end{figure}
 
+\noindent\begin{minipage}[t]{0.45\textwidth}% adapt widths of minipages to your needs
+\vspace{1cm}
+Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt.\\
+Schließlich wird das zuvor implementierte und getestete Verfahren noch einmal für die Parameterwahl aus Aufgabenpunkt (\ref{sec:task4}) angewendet, um die Ergebnisse miteinander zu vergleichen. Hierfür wurde also erneut $Pe = 10$, $\Delta t = 2 \cdot 10^{-4}$ und $t \in \{0.005, 0.05, 0.5\}$ gewählt. Die hierdurch erhaltenen Temperaturverteilungen sind erneut als Heatmap in Abbildung (\ref{fig:task6}) dargestellt.
+\end{minipage}%
+\hfill%
 \noindent\begin{minipage}[t]{0.55\textwidth}% adapt widths of minipages to your needs
 \begin{figure}[H]  
    \includegraphics[width=\linewidth]{res/task6/grid0005.png}
@@ -494,12 +493,6 @@ Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrat
    \caption{Temperatur nach dem \textit{BTCS-Schema} für $Pe=10$ und $\Delta t = 2\cdot10^{-4}$.}
    \label{fig:task6}
    \end{figure}
-\end{minipage}%
-\hfill%
-\noindent\begin{minipage}[t]{0.45\textwidth}% adapt widths of minipages to your needs
-\vspace{1cm}
-Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt.\\
-Schließlich wird das zuvor implementierte und getestete Verfahren noch einmal für die Parameterwahl aus Aufgabenpunkt (\ref{sec:task4}) angewendet, um die Ergebnisse miteinander zu vergleichen. Hierfür wurde also erneut $Pe = 10$, $\Delta t = 2 \cdot 10^{-4}$ und $t \in \{0.005, 0.05, 0.5\}$ gewählt. Die hierdurch erhaltenen Temperaturverteilungen sind erneut als Heatmap in Abbildung (\ref{fig:task6}) dargestellt.
 \end{minipage}%
 \hfill%
 
@@ -514,7 +507,32 @@ Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numer
 Die zuvor in Abschnitt (\ref{sec:task5}) hergeleitete Gleichung für den maximal gültigen Zeitschritt $\Delta t_{max}$ ist durch die Abschätzungen nach oben, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden. Hierbei zeigte sich allerdings, dass die Aussagen der Gleichung (\ref{eq:neumann_delta_t_max}) für geringe \textit{Péclet-Zahlen} zu stark sind, und noch zu viele Werte ausschließen, für die das Verfahren noch konvergiert. Allerdings konnte durch exemplarische Tests bei höhreren Werten ein Verhalten festgestellt werden, welches dem durch die Formel beschriebenen entspricht: je höher die Zahl wird, desto feiner muss die Zeitintegration gewählt werden.
 
 \subsection{Aufgabe 6: Auswertung und Vergleich der BTCS-Lösung}
-\label{sec:disc_stability}
+\label{sec:disc_speed_comparison}
+Nachdem nun beide Verfahren umgesetzt und getestet worden sind, folgt nun ein Vergleich dieser. Hierbei werden zuerst die dadurch erhaltenen Lösungen miteinander verglichen. Betrachtet man die Ergebnisse für die \textit{Péclet}-Zahl $Pe = 10$ des \textit{BTCS}-Verfahrens aus Abbildung (\ref{fig:task6}) mit denen des \textit{FTCS}-Verfahrens in Abbildung (\ref{fig:task4_10}), so kann man eine hohe Übereinstimmung des Verlaufes festellen. Hierbei ist für diese gegebene Parameterwahl kein Unterschied feststellbar.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{c|c|c}
+		Simulierte Zeitspanne $t$ & \textit{FTCS} [sec] & \textit{BTCS} [sec] \\ 
+		\hline  \hline 
+		1 & \less 1 & 65 \\ 
+		\hline 
+		10 & 3 & 79 \\ 
+		\hline 
+		50 & 15 & 83 \\ 
+		\hline 
+		100 & 33 & 89 \\ 
+		\hline 
+		200 & 68 & 91 \\ 
+		\hline 
+		400 & 135 & 94 \\ 
+		\hline 
+	\end{tabular}
+	\label{table:speed_comparison} 
+	\caption{Exemplarischer Laufzeitvergleich zwischen dem expliziten (\textit{FTCS}) und dem impliziten (\textit{BTCS}) Lösungsverfahren.}
+\end{table}
+Da zuvor das explizite Lösungsverfahren auf numerische Korrektheit überprüft wurde, kann also auch davon ausgegangen werden, dass das implizite Lösungsverfahren korrekt umgesetzt worden ist.\\
+Betrachtet man allerdings die Laufzeit der beiden Verfahren, so können große Unterschiede sowohl in der Größenordnung, als auch im Verlauf festgestellt werden. Diese Laufzeiten wurden exemplarisch gemessen und in Tabelle (\ref{table:speed_comparison}) festgehalten. Hier ist zu erkennen, dass die Laufzeit des expliziten Verfahrens in etwa linear mit der simulierten Zeitspanne $t$ anwächst, wohingegen die des impliziten Verfahrens deutlich geringer anwäächst, und näherungsweise fast konstant bleibt ab einer bestimmten Zeitspanne $t$.\\
+Somit zeigt sich, dass das explizite Verfahren zweiter Ordnung in diesem Fall seine Stärken bei kurzen und das implizite Verfahren langen Simulationen hat.
 
 \begin{thebibliography}{9}
   \bibitem{manmana}
@@ -535,20 +553,21 @@ Die zuvor in Abschnitt (\ref{sec:task5}) hergeleitete Gleichung für den maximal
 
 \clearpage
 
+\appendix
 \section{Quellcode}
 \subsection{Hauptprogramme}
 \label{sec:source_main} 
-\lstinputlisting[label={src:ftcs}, title=\textbf{Quellcode:} Implementation des FTCS-Schemas]{source/task03.cpp}
-\lstinputlisting[label={src:btcs}, title=\textbf{Quellcode:} Implementation des BTCS-Schemas]{source/task06.cpp}
+\lstinputlisting[label={src:ftcs}, title=\textbf{Quellcode 1:} Implementation des FTCS-Schemas]{source/ftcs.cpp}
+\lstinputlisting[label={src:btcs}, title=\textbf{Quellcode 2:} Implementation des BTCS-Schemas]{source/btcs.cpp}
 
 \clearpage
-\appendix
+
 \subsection{Hilfsbibliotheken}
 \label{sec:source_lib} 
-\lstinputlisting[label=src:squarematrix.h, title=\textbf{Quellcode 1:} square\_matrix.h]{source/lib/square_matrix.h}
-\lstinputlisting[label=src:matrix.h, title=\textbf{Quellcode 2:} matrix.h]{source/lib/matrix.h}
-\lstinputlisting[label=src:linearsystem.h, title=\textbf{Quellcode 3:} linear\_system.h]{source/lib/linear_system.h}
+\lstinputlisting[label=src:squarematrix.h, title=\textbf{Quellcode 3:} square\_matrix.h]{source/lib/square_matrix.h}
+\lstinputlisting[label=src:matrix.h, title=\textbf{Quellcode 4:} matrix.h]{source/lib/matrix.h}
+\lstinputlisting[label=src:linearsystem.h, title=\textbf{Quellcode 5:} linear\_system.h]{source/lib/linear_system.h}
 
-\lstinputlisting[label=src:matrix.cpp, title=\textbf{Quellcode 4:} matrix.cpp]{source/lib/matrix.cpp}
-\lstinputlisting[label=src:linearsystem.cpp, title=\textbf{Quellcode 5:} linear\_system.cpp]{source/lib/linear_system.cpp}
+\lstinputlisting[label=src:matrix.cpp, title=\textbf{Quellcode 6:} matrix.cpp]{source/lib/matrix.cpp}
+\lstinputlisting[label=src:linearsystem.cpp, title=\textbf{Quellcode 7:} linear\_system.cpp]{source/lib/linear_system.cpp}
 \end{document}
