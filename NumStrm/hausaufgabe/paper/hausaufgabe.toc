@@ -15,7 +15,8 @@
 \contentsline {section}{\numberline {5}Auswertung der Ergebnisse}{18}
 \contentsline {subsection}{\numberline {5.1}Numerische Korrektheit der FTCS-L\IeC {\"o}sung}{18}
 \contentsline {subsection}{\numberline {5.2}Aufgabe 5: Beurteilung der Stabilit\IeC {\"a}t der FTCS-L\IeC {\"o}sung}{18}
+\contentsline {subsection}{\numberline {5.3}Aufgabe 6: Auswertung und Vergleich der BTCS-L\IeC {\"o}sung}{18}
 \contentsline {section}{\nonumberline Literatur}{18}
-\contentsline {section}{\numberline {A}Quellcode}{19}
-\contentsline {subsection}{\numberline {A.1}Hauptprogramme}{19}
-\contentsline {subsection}{\numberline {A.2}Hilfsbibliotheken}{26}
+\contentsline {section}{\numberline {6}Quellcode}{19}
+\contentsline {subsection}{\numberline {6.1}Hauptprogramme}{19}
+\contentsline {subsection}{\numberline {.1}Hilfsbibliotheken}{26}
