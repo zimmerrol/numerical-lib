@@ -18,8 +18,8 @@ typedef vector<vector<double > > grid_t;
 void ftcs_time_step(grid_t& values, grid_t &v0x, grid_t &v0y, const double delta_t, const double delta_x, const double delta_y, const double pe)
 {
   //get the dimensions of the grid
-  size_t dimension_x = 31;//values.size();
-  size_t dimension_y = 31;//values.at(0).size();
+  size_t dimension_x = values.size();
+  size_t dimension_y = values.at(0).size();
 
   //create copy of the grid with the same dimensions
   //this will be used for the calculation of the derivatives

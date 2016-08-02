@@ -162,6 +162,9 @@ int main(int argc, char* argv[])
     }
   }
 
+  //start to measure the runtime now
+  clock_t start_time = clock();
+
   //to print just every 100th error comparison
   size_t iteration = 0;
   //is being used to calculate the numerical error compared to stat.solution
@@ -181,9 +184,7 @@ int main(int argc, char* argv[])
       {
         for (size_t y=0; y<dimension_y; y++)
         {
-          error += pow(
-                      values.at(x).at(y) - (cos(M_PI*delta_x*x)*sin(M_PI*delta_y*y)+y*delta_y)
-                    ,2);
+          error += pow(values.at(x).at(y) - (cos(M_PI*delta_x*x)*sin(M_PI*delta_y*y)+y*delta_y), 2);
         }
       }
 
@@ -195,6 +196,11 @@ int main(int argc, char* argv[])
       }
     }
   }
+
+  //stop the time measurement
+  clock_t end_time = clock();
+
+  cout << "Integration finished after " << (end_time - start_time) / CLOCKS_PER_SEC << " seconds.";
 
   //print the final grid's values in the givven output file in a matrix form
   for (size_t y=0; y<dimension_y; y++)
@@ -208,4 +214,3 @@ int main(int argc, char* argv[])
 
   return 1;
 }
-

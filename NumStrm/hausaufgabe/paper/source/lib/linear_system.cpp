@@ -12,14 +12,16 @@ namespace numerical
 {
 	void multiply_matrix_vector(matrix& matrix, vector<double> &xVec, vector<double> &result)
 	{
+		//clear the result vector and reserve enough space
 		result.clear();
 		double val;
+		result.reserve(xVec.size());
 		for (size_t y = 0; y<matrix.get_n(); y++)
 		{
 			val = 0.0;
 			for (size_t x = 0; x<matrix.get_m(); x++)
 			{
-				val += matrix.get_value(y, x) * xVec.at(x);
+				val += matrix.get_value(y, x) * xVec.at[x];
 			}
 			result.push_back(val);
 		}

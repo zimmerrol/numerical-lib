@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
 		old_values.at((dimension_x)*(dimension_x-1)-1) = 0;
 
 		//invert the matrix M/solve the linear system to get the new temperature(value)
-		cout << "t: " << t << "\titerations: " << linear_system_solve_sor(coeff_matrix, values, old_values, 1.475, 1e-4) << endl;
+		cout << "t: " << t << "\titerations: " << linear_system_solve_sor(coeff_matrix, values, old_values, 1.455, 1e-4) << endl;
 
 		//copy the new values into the old_values vector for the next iteration
 		for (size_t i = 0; i<n; i++)
