@@ -114,7 +114,7 @@
 \begin{titlepage}
 \centering
 \textsc{\Large \\
-[1.5ex]Georg-August Universität-Göttingen Sommersemester 2016}
+[1.5ex]Georg-August-Universität Göttingen Sommersemester 2016}
 
 \vspace*{2.2cm}
 
@@ -228,11 +228,16 @@ T_{i,j}^{N+1} = T_{i,j}^N &+ \Delta t \left[ -Pe \left( v^x_{i,j} \frac{T_{i+1,j
 + \frac{ T_{i,j+1}^N - 2  T_{i,j}^N + T_{i,j-1}^N}{\Delta y^2} \right],
 \end{align}
 womit die Integration durchgeführt werden kann. Die Ausdrücke $v^x_{i,j}$ und $v^y_{i,j1}$ stehen für die jeweilige $x$- und $y$-Komponente des zeitlich konstanten Geschwindigkeitsfeldes an dem jeweiligen Ort.\\
-Des Weiteren sind allerdings noch die Randbedingungen zu beachten. Bei \textit{Dirichlet}-Rändern muss an dem Schema nichts geändert werden. Exemplarisch für die \textit{Neumann}-Ränder wird der linke Rand betrachtet, auf dem die erste Ableitung in $x$-Richtung verschwinden soll. Durch eine Taylor-Entwicklung und einen Koeffizientenvergleich erhält man die diskretisierte Randbedingung zweiter Ordnung
+Des Weiteren sind allerdings noch die Randbedingungen zu beachten. Hierbei muss die Differenzialgleichung besonders betrachtet werden, da hier nur Nachbarpunkte in eine Richtung existieren.\\
+Bei den \textit{Dirichlet}-Rändern können die Werte am Rand konstante gehalten werden, sodass
 \begin{align*}
-T_{i,j}^{N+1} - \frac{4}{3} T_{i+1,j}^{N+1} + \frac{1}{3} T_{i+2,j}^{N+1} = 0.
+T^{N+1}_{Rand} = T^{N}_{Rand} \Rightarrow T^{N+1}_{i,0} = T^{N}_{i,0} = 0 \land T^{N+1}_{i,N_y} = T^{N}_{i,N_y} = 1
 \end{align*}
-
+eine geeignete mathematische Beschreibung ist. Exemplarisch für die \textit{Neumann}-Ränder wird der linke Rand betrachtet, auf dem die erste Ableitung in $x$-Richtung verschwinden soll. Durch eine Taylor-Entwicklung und einen Koeffizientenvergleich erhält man die diskretisierte Randbedingung zweiter Ordnung
+\begin{align*}
+T_{0,j}^{N+1} - \frac{4}{3} T_{1,j}^{N+1} + \frac{1}{3} T_{2,j}^{N+1} = 0.
+\end{align*}
+In diesem Problem muss eine analoge Gleichung auch noch für den rechten Rand betrachtet werden.
 
 \subsection{Das BTCS-Schema}
 \label{sec:btcs}
@@ -250,9 +255,10 @@ Dabei wurden die folgenden Abkürzungen eingeführt und benutzt
 \end{align*}
 Dies gilt allerdings nur für die inneren Punkte des Gitters. Für den linken und rechten Rand gelten, um ebenfalls die Diskretisierung in der zweiten Ordnung umsetzen zu können, die Gleichungen
 \begin{align}
-\label{eq:impli_neumann}
+\label{eq:impli_neumann_l}
 T^{N+1}_{0,j} - \frac{4}{3} T^{N+1}_{1,j} + \frac{1}{3} T^{N+1}_{2,j} &= 0, \\
-T^{N+1}_{N_x,j} - \frac{4}{3} T^{N+1}_{N_x-1,j} + \frac{1}{3} T^{N+1}_{N_x-2,j} &= 0. \\
+\label{eq:impli_neumann_r}
+T^{N+1}_{N_x,j} - \frac{4}{3} T^{N+1}_{N_x-1,j} + \frac{1}{3} T^{N+1}_{N_x-2,j} &= 0.
 \end{align}
 
 Um das Problem nun besser beschreiben zu können, wird das zweidimensionale Feld in einem eindimensionalen Spaltenvektor zusammengefasst. Hierfür ist es notwendig, die Indizes umzubenennen. Hierbei wird ab jetzt die folgende Konvention benutzt: durchlaufe erst alle $x$-Werte zu einem festen $y$-Wert, und erhöhe den $y$-Wert. Dies bewirkt, dass die Zeilen des Feldes hintereinander geschrieben werden:
@@ -263,9 +269,8 @@ Nun kann die Gleichung (\ref{eq:impli}) als eine Matrixoperation der Form
 \begin{align*}
 \vec{T}^N = M \cdot \vec{T}^{N+1},
 \end{align*} 
-mit der Matrix \textbf{M} ausgedrückt werden.
-Diese hat die nur fünf Diagonalen, die ungleich null sind.
-Somit schreibe \textbf{M} nun als Blockmatrix
+mit der Matrix \textbf{M} ausgedrückt werden. Hierbei müssen in $\vec{T^N}$ einige Einträge auf null gesetzt werden, um die Gleichungen (\ref{eq:impli_neumann_l}) und (\ref{eq:impli_neumann_r}) korrekt als Matrix-Gleichung darzustellen.
+Die Matrix \textbf{M} hat fünf Diagonalen, die ungleich null sind. \textbf{M} kann nun als Blockmatrix
 \begin{align*}
 \boldsymbol{M} = \begin{pmatrix}
   \mathds{1}  & 0 & 0 &  0 & . & . & . & . & 0 \\
@@ -280,7 +285,7 @@ Somit schreibe \textbf{M} nun als Blockmatrix
  \end{pmatrix}
 ,
 \end{align*}
-mit den quadratischen Matrizen $\textbf{E}^\pm$, \textbf{D} und der Einheitsmatrix $\mathds{1}$. Die beiden Einheitsmatrizen im oberen linken und unteren rechten Eck setzen hierbei die \textit{Dirichlet}-Randbedingungen am oberen und rechten Rand um.
+mit den quadratischen Matrizen $\textbf{E}^\pm$, \textbf{D} und der Einheitsmatrix $\mathds{1}$ geschrieben werden. Die beiden Einheitsmatrizen im oberen linken und unteren rechten Eck setzen hierbei die \textit{Dirichlet}-Randbedingungen am oberen und rechten Rand um.
 Die Matrizen \textbf{D} und $\textbf{E}^\pm$ 
 
 \begin{align*}
@@ -303,9 +308,9 @@ Die Matrizen \textbf{D} und $\textbf{E}^\pm$
 	0 & . & .& \frac{1}{3} & -\frac{4}{3} & 1\\
  \end{pmatrix}.
  \end{align*}
- setzen die implizite Gleichungen (\ref{eq:impli}) und (\ref{eq:impli_neumann}) um, sind also das Kernstück des \textit{BTCS-Schemas}. Ihre erste und letzte Zeile weichen hierbei vom Rest ab, da sie die \textit{Neumann}-Randbedingungen umsetzen.
+ setzen die implizite Gleichungen (\ref{eq:impli}) und (\ref{eq:impli_neumann_l}) um, sind also das Kernstück des \textit{BTCS-Schemas}. Ihre erste und letzte Zeile weichen hierbei vom Rest ab, da sie die \textit{Neumann}-Randbedingungen umsetzen.
 Um das System nun um einen Zeitschritt weiter zu simulieren, muss die Matrix $\textbf{M}$ invertiert werden - beziehungsweise das Gleichungssystem $\textbf{M} \vec{x} = \vec{b}$ gelöst werden.\\
-Hierfür hat sich das \textit{SOR-Verfahren}, welches eine Modifikation des \textit{Gauß-Seidel-Verfahrens} ist, als besonders geeignet herausgestellt. Dies sind beides iterative Lösungsverfahren. Um diese zu benutzen, wird die Matrix zuerst in drei Teilmatrizen $\boldsymbol{M}=\boldsymbol{L}+\boldsymbol{D}+\boldsymbol{U}$ zerlegt, wobei $D$ eine Diagonal-, $L$ eine untere Dreiecks- und $U$ eine obere Dreiecksmatrix ist. Zudem wird der \textit{Residuen-Vektor} $\vec{r_n} = \boldsymbol{M} \vec{x_n} - \vec{b}$ eingeführt, wobei der Index den jeweiligen Iterationsschritt angibt. Dieser Vektor beschreibt die Differenz zwischen der korrekten und der iterativen Lösung der Gleichung $\boldsymbol{M} \vec{x} = \vec{b}$.\\
+Hierfür hat sich das \textit{SOR-Verfahren} (Successive Over-Relaxation), welches eine Modifikation des \textit{Gauß-Seidel-Verfahrens} ist, als besonders geeignet herausgestellt. Dies sind beides iterative Lösungsverfahren. Um sie verwenden zu können, wird die Matrix zuerst in drei Teilmatrizen $\boldsymbol{M}=\boldsymbol{L}+\boldsymbol{D}+\boldsymbol{U}$ zerlegt, wobei $D$ eine Diagonal-, $L$ eine untere Dreiecks- und $U$ eine obere Dreiecksmatrix ist. Zudem wird der \textit{Residuen-Vektor} $\vec{r_n} = \boldsymbol{M} \vec{x_n} - \vec{b}$ eingeführt, wobei der Index den jeweiligen Iterationsschritt angibt. Dieser Vektor beschreibt die Differenz zwischen der korrekten und der iterativen Lösung der Gleichung $\boldsymbol{M} \vec{x} = \vec{b}$.\\
 Durch diese Zerlegung ist es möglich eine rekursive Bestimmungsformel [2, S. 25ff]
 \begin{align*}
 \vec{x}^{\,n} = \vec{x}^{\,n-1} - \alpha(\boldsymbol{L}+\boldsymbol{D})^{-1} \vec{r}^{\,n-1}
@@ -341,7 +346,7 @@ Es ist zu erkennen, dass das Feld zwei Zentren hat, um die sich je ein Strudel b
 \subsection{Aufgabe 2: FTCS-Lösung}
 \label{sec:task2}
 Um nun eine erste numerische Lösung erzeugen zu können, wird das zuvor in (\ref{sec:ftcs}) hergeleitete Verfahren benutzt. Hierfür wird direkt eine etwas allgemeinere Implementation gewählt, welche in der Integration auch möglich Quellterme berücksichtigt. Dieser Ansatz wird gewählt, da im weiteren Verlauf dieser Arbeit (siehe \ref{sec:task3}) die numerische Korrektheit des Integrators überprüft werden soll. Hierfür wird eine Quelle hinzugefügt, welche eine analytische Lösung erlaubt.\\
-Das Programm besteht aus zwei verschiedenen Routinen. Die \textit{main}-Methode liest gewünschte Eingangsparameter, wie die Schrittweite $\Delta t$, die maximale Integrationszeit $t_{max}$, die \textit{Péclet-Zahl} $Pe$, die Gitterauflösung $N_x$ und $N_y$ und einen weiteren Parameter, der angibt, ob ein Quellterm erzeugt werden soll, ein (Zeile 78-119). Zudem erzeugt sie Objekte des Types \textit{vector\textless vector\textless double\textgreater \textgreater}, in welchem der Temperaturverlauf in dem Rechteck, und ein etwaiger Quellterm abgespeichert werden. Hierfür wird ein \textit{vector} statt eines Feldes genutzt, um mögliche \textit{Acess Violation Exceptions} zu vermeiden und um Memoryleaks zu reduzieren (Zeile 121-163).\\
+Das Programm besteht aus zwei verschiedenen Routinen. Die \textit{main}-Methode liest gewünschte Eingangsparameter, wie die Schrittweite $\Delta t$, die maximale Integrationszeit $t_{max}$, die \textit{Péclet-Zahl} $Pe$, die Gitterauflösung $N_x$ und $N_y$ und einen weiteren Parameter, der angibt, ob ein Quellterm erzeugt werden soll, ein (Zeile 78-119). Zudem erzeugt sie Objekte des Types \textit{vector\textless vector\textless double\textgreater \textgreater}, in welchem der Temperaturverlauf in dem Rechteck, und ein etwaiger Quellterm abgespeichert werden. Hierfür wird ein \textit{vector} statt eines Feldes genutzt, um mögliche \textit{Acess Violation Exceptions} zu vermeiden und um Memoryleaks zu reduzieren (Zeile 121-163). Etwaige Leistungsverluste hierdurch sind zum einen begrenzt und steuern keinen großen Anteil zu der Gesamtlaufzeit bei.\\
 In einer Schleife wird in den gewählten Zeitschritten bis zur Endzeit iteriert, und für jede Zeit ein Integrationsschritt durchgeführt (Zeile 131-163). Zuletzt wird die berechnete Temperaturverteilung in die vorher angegebene Datei ausgegeben (Zeile 199-209).\\
 Der jeweilige Integrationsschritt wird von der \textit{ftcs\_time\_step}-Methode ausgeführt. Diese legt zuerst eine Kopie des übermittelten Feldes an, um auf Grundlage dieser, die Ableitungsterme berechnen zu können. Hierfür wird in einer Schleife über das gesamte Gitter iteriert, und jeweils der $\nabla^2 T$ und der $\vec{v_0} \cdot \nabla T$ Term einzeln berechnet und anschließend nach Gleichung (\ref{eq:ftcs_source}) als Änderung von $T$ verrechnet (Zeile 19-59). Abschließend werden noch die \textit{Dirichlet}- und \textit{Neumann}-Ränder beachtet und die Werte passend aktualisiert (Zeile 61-76). 
 
@@ -463,14 +468,34 @@ Hierdurch kann der maximale Zeitschrit, für den das Verfahren konvergiert durch
 \label{eq:neumann_delta_t_max}
 \Delta t_{max} = \frac{4 \Delta x^2}{16 + \left(\pi Pe \Delta_x \right)^2}
 \end{align}
-ausgedrückt werden.\\
+ausgedrückt werden.
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c}
+		\textit{Péclet}-Zahl & $\Delta t_{max}$ (empirisch) & $\Delta t_{max}$ (theoretisch) \\ 
+		\hline 
+		\hline 
+		0.1 & $2.788 \cdot 10^{-4}$  & $2.778 \cdot 10^{-4}$ \\ 
+		\hline 
+		1 & $2.789 \cdot 10^{-4}$ & $2.776 \cdot 10^{-4}$ \\ 
+		\hline 
+		10 & $2.795 \cdot 10^{-4}$ & $2.600  \cdot 10^{-4}$ \\ 
+		\hline 
+	\end{tabular} 
+	\caption{Vergleich der empirischen und theoretischen abgeschätzten Werte für $\Delta t_{max}$.}
+	\label{tab:delta_t_comp}
+\end{table}
+
+Ein Vergleich zwischen den empirisch ermittelten Grenzzeitschritten und den maximalen Zeitschritten, für die nach der nach oben abgeschätzten theoretischen Betrachtung noch ein konvergentes Verhalten zu erwarten ist, bietet die Tabelle (\ref{tab:delta_t_comp}) Es ist zu erkennen, die theoretische Abschätzung für die kleinste \textit{Péclet}-Zahl die beste Übereinstimmung mit dem empirisch gefunden Wert hat - dies hebt den Charakter der bei der Herleitung angenommenen Abschätzungen hervor.  
+\\
 
 
 \newpage
 \subsection{Aufgabe 6: BTCS-Lösung}
 \label{sec:task6}
 Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Dazu werden im Hauptprogramm im Quellcode (2) vier Routinen benötigt.
-Die \textit{main}-Methode liest die eingegebene Parameter erneut ein (Zeile 50-88), und befüllt die zuvor eingeführte Matrix $\textbf{M}$. Dazu wird ein Objekt der Klasse \textit{square\_matrix} aus Quellcode (3) benutzt (Zeile 90-123). Diese erbt von der Klasse \textit{matrix}, welche im Quellcode (4) und (6) definiert wird. Hierbei werden die Routinen \textit{beta} und \textit{gamma} benutzt, welche die so benannten Variablen für den jeweiligen Gitterpunkt berechnen (Zeile 21-48). Weitergehend wird das Temperaturfeld nicht mehr in einem zwei sondern in einem eindimensionalen Objekt gespeichert. Dieses wird zunächst mit den gewünschten Startwerten initialisiert (Zeile 143-155).\\
+Die \textit{main}-Methode liest die eingegebene Parameter erneut ein (Zeile 50-88), und befüllt die zuvor eingeführte Matrix $\textbf{M}$. Dazu wird ein Objekt der Klasse \textit{square\_matrix} aus Quellcode (3) benutzt (Zeile 90-155). Diese erbt von der Klasse \textit{matrix}, welche im Quellcode (4) und (6) definiert wird. Hierbei werden die Routinen \textit{beta} und \textit{gamma} benutzt, welche die so benannten Variablen für den jeweiligen Gitterpunkt berechnen (Zeile 21-48). Weitergehend wird das Temperaturfeld nicht mehr in einem zwei sondern in einem eindimensionalen Objekt gespeichert. Dieses wird zunächst mit den gewünschten Startwerten initialisiert (Zeile 155-170).\\
 Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrationsschritt die zuvor aufgestellte Matrix invertiert. Dafür wurde das \textit{SOR-Verfahren} im Quellcode (7) und (5) nach Gleichung (\ref{eq:sor}) implementiert. Dabei werden in jedem einzelnen Interationsschritt die Residuen $\vec{r} = \textbf{M} \vec{x}-\vec{b}$ für die Lösung von $\textbf{M} \vec{x} = \vec{b}$ berechnet, und gefordert, dass der Betrag dieser kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
 \begin{figure}[H]
  \centering
@@ -481,7 +506,7 @@ Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrat
 
 \noindent\begin{minipage}[t]{0.45\textwidth}% adapt widths of minipages to your needs
 \vspace{1cm}
-Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.41$ die geringste Anzahl an Iterationen benötigt wurde. Somit wird im weiteren Verlauf dieser Parameter genutzt.\\
+Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.455$ die geringste Anzahl an Iterationen benötigt wurde. Die Anzahl der benötigten Iterationen für höhere Relexationsparameter $\alpha$ sind nicht mehr graphisch dargestellt, da hier für leicht erhöhte Werte bereits mehrere Zehntausend Iterationen benötigten wurden. Somit wird im weiteren Verlauf dieser Parameter genutzt.\\
 Schließlich wird das zuvor implementierte und getestete Verfahren noch einmal für die Parameterwahl aus Aufgabenpunkt (\ref{sec:task4}) angewendet, um die Ergebnisse miteinander zu vergleichen. Hierfür wurde also erneut $Pe = 10$, $\Delta t = 2 \cdot 10^{-4}$ und $t \in \{0.005, 0.05, 0.5\}$ gewählt. Die hierdurch erhaltenen Temperaturverteilungen sind erneut als Heatmap in Abbildung (\ref{fig:task6}) dargestellt.
 \end{minipage}%
 \hfill%
@@ -504,7 +529,7 @@ Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numer
 
 \subsection{Aufgabe 5: Beurteilung der Stabilität der FTCS-Lösung}
 \label{sec:disc_stability}
-Die zuvor in Abschnitt (\ref{sec:task5}) hergeleitete Gleichung für den maximal gültigen Zeitschritt $\Delta t_{max}$ ist durch die Abschätzungen nach oben, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden. Hierbei zeigte sich allerdings, dass die Aussagen der Gleichung (\ref{eq:neumann_delta_t_max}) für geringe \textit{Péclet-Zahlen} zu stark sind, und noch zu viele Werte ausschließen, für die das Verfahren noch konvergiert. Allerdings konnte durch exemplarische Tests bei höhreren Werten ein Verhalten festgestellt werden, welches dem durch die Formel beschriebenen entspricht: je höher die Zahl wird, desto feiner muss die Zeitintegration gewählt werden.
+Die zuvor in Abschnitt (\ref{sec:task5}) hergeleitete Gleichung für den maximal gültigen Zeitschritt $\Delta t_{max}$ ist durch die Abschätzungen nach oben, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden. Hierbei zeigte sich allerdings, dass die Aussagen der Gleichung (\ref{eq:neumann_delta_t_max}) für geringe \textit{Péclet-Zahlen} zu stark sind, und noch zu viele Werte ausschließen, für die das Verfahren noch konvergiert. Allerdings konnte durch exemplarische Tests bei höheren Werten ein Verhalten festgestellt werden, welches dem durch die Formel beschriebenen entspricht: je höher die Zahl wird, desto feiner muss die Zeitintegration gewählt werden.
 
 \subsection{Aufgabe 6: Auswertung und Vergleich der BTCS-Lösung}
 \label{sec:disc_speed_comparison}
@@ -514,7 +539,7 @@ Nachdem nun beide Verfahren umgesetzt und getestet worden sind, folgt nun ein Ve
 	\begin{tabular}{c|c|c}
 		Simulierte Zeitspanne $t$ & \textit{FTCS} [sec] & \textit{BTCS} [sec] \\ 
 		\hline  \hline 
-		1 & \less 1 & 65 \\ 
+		1 & $<$ 1 & 65 \\ 
 		\hline 
 		10 & 3 & 79 \\ 
 		\hline 
@@ -531,7 +556,8 @@ Nachdem nun beide Verfahren umgesetzt und getestet worden sind, folgt nun ein Ve
 	\caption{Exemplarischer Laufzeitvergleich zwischen dem expliziten (\textit{FTCS}) und dem impliziten (\textit{BTCS}) Lösungsverfahren.}
 \end{table}
 Da zuvor das explizite Lösungsverfahren auf numerische Korrektheit überprüft wurde, kann also auch davon ausgegangen werden, dass das implizite Lösungsverfahren korrekt umgesetzt worden ist.\\
-Betrachtet man allerdings die Laufzeit der beiden Verfahren, so können große Unterschiede sowohl in der Größenordnung, als auch im Verlauf festgestellt werden. Diese Laufzeiten wurden exemplarisch gemessen und in Tabelle (\ref{table:speed_comparison}) festgehalten. Hier ist zu erkennen, dass die Laufzeit des expliziten Verfahrens in etwa linear mit der simulierten Zeitspanne $t$ anwächst, wohingegen die des impliziten Verfahrens deutlich geringer anwäächst, und näherungsweise fast konstant bleibt ab einer bestimmten Zeitspanne $t$.\\
+Betrachtet man allerdings die Laufzeit der beiden Verfahren, so können große Unterschiede sowohl in der Größenordnung, als auch im Verlauf festgestellt werden. Diese Laufzeiten wurden exemplarisch gemessen und in Tabelle (\ref{table:speed_comparison}) festgehalten. Es ist anzumerken, dass die gemessene Laufzeit von dem verwendeten Rechner und anderen äußeren Einflüssen abhängen kann, sodass diese Daten nur als Anhaltspunkt für das grobe Verhalten gesehen werden können. Zudem hätten die verschiedenen Routinen auch noch weiter hinsichtlich ihrer Laufzeit optimiert werden können. Da dies den Rahmen des Themas der Arbeit überschreiben würde, wurde darauf verzichtet.\\
+Es ist zu erkennen, dass die Laufzeit des expliziten Verfahrens in etwa linear mit der simulierten Zeitspanne $t$ anwächst, wohingegen die des impliziten Verfahrens deutlich geringer anwächst, und näherungsweise fast konstant bleibt ab einer bestimmten Zeitspanne $t$.\\
 Somit zeigt sich, dass das explizite Verfahren zweiter Ordnung in diesem Fall seine Stärken bei kurzen und das implizite Verfahren langen Simulationen hat.
 
 \begin{thebibliography}{9}
