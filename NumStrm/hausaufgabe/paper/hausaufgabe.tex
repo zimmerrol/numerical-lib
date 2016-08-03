@@ -157,15 +157,15 @@ Viele Verhaltensweisen und Effekte in der Natur können durch partielle Differen
 
 \section{Fragestellung}
 \label{sec:fragestellung}
-In dieser Hausaufgabe wird die Wärmeausbreitung (siehe \ref{sec:diff_adv}) in einem zweidimensionalen, rechteckigen System betrachtet. Diese soll durch ein extern erzeugtes Geschwindigkeitsfeld (beispielsweise durch einen Ventilator) verstärkt werden. Dieses Vektorfeld soll nicht zeitabhängig sein, und lässt sich in dimensionsloser Form durch
+In der Hausaufgabe wird die Wärmeausbreitung (siehe \ref{sec:diff_adv}) in einem zweidimensionalen, rechteckigen System betrachtet. Diese soll durch ein extern erzeugtes Geschwindigkeitsfeld (beispielsweise durch einen Ventilator) verstärkt werden. Das Vektorfeld soll nicht zeitabhängig sein, und lässt sich in dimensionsloser Form durch
 \begin{align*}
 \vec{v} = (\pi \sin(2\pi x) \cos(\pi y), -2 \pi \cos(2\pi x) \sin(\pi y))^t
 \end{align*}
 beschreiben. Das zu betrachtende System ist ein Quadrat $[0,1]^2$. Für dieses gibt es für jeden der vier Ränder je eine Randbedingung. So soll die Temperatur auf dem oberen Rand $T=1$ und auf dem unteren $T=0$ betragen. An dem linken und rechten Rand soll dagegen die jeweilige Normalenableitung verschwinden. Dies wird durch eine wärmeisoliernde Wand in dem System bedingt. Zu Beginn soll eine Temperaturverteilung der Form $T_{start}(x, y) = y$ vorliegen.\\
 
-Zur Untersuchung des System fallen mehrere Aufgaben an. So wird zuerst das Geschwindigkeitsfeld selber auf seine Divergenz untersucht (siehe \ref{sec:task1}). Anschließend wird eine erste numerische Lösung des Problems (im \textit{FTCS-Schema}) durchgeführt (siehe \ref{sec:task2}). Daraufhin wird nun die numerische Korrektheit dieser Lösung untersucht (siehe \ref{sec:task3}). Schließlich werden für verschiedene Parameter Simulationen durchgeführt, um unter anderem die Stabilität zu beurteilen (siehe \ref{sec:task4}, \ref{sec:task5}). Schließlich wird das Problem noch einmal gelöst, diesmal aber im \textit{BTCS-Schema} (siehe \ref{sec:task6}).\\
+Zur Untersuchung des System fallen mehrere Aufgaben an. So wird zuerst das Geschwindigkeitsfeld selber auf seine Divergenz untersucht (siehe \ref{sec:task1}). Anschließend wird eine erste numerische Lösung des Problems (im \textit{FTCS-Schema}) durchgeführt (siehe \ref{sec:task2}). Daraufhin wird nun die numerische Korrektheit dieser Lösung untersucht (siehe \ref{sec:task3}). Anschließend werden für verschiedene Parameter Simulationen durchgeführt, um unter anderem die Stabilität zu beurteilen (siehe \ref{sec:task4}, \ref{sec:task5}). Schließlich wird das Problem noch einmal gelöst, diesmal aber im \textit{BTCS-Schema} (siehe \ref{sec:task6}).\\
 Abschließend wird noch ein kurzer Vergleich der beiden Verfahren hinsichtlich ihrer Resultate und der benötigten Rechenzeit durchgeführt.\\
-Alle hierfür benötigten Programme und Hilfsroutinen werden in \textit{C++} implementiert.
+Alle hierfür benötigten Programme und Hilfsroutinen werden in \textit{C++} programmiert.
 
 \section{Theorie}
 \label{sec:theorie}
@@ -189,8 +189,8 @@ beschrieben werden. Hierbei stehen $T$ für die Verteilung der Energie (Temperat
 Während die \textit{Diffusionsgleichung} die zeitliche Ausbreitung der Partikel beziehungsweise der Energie, bedingt durch zufällige Bewegungen, beschreibt, beschreibt die \textit{Advektionsgleichung} den Partikelfluss der durch ein Geschwindigkeitsfeld herbeigeführt wird.\\
 Fasst man diese beiden Effekte aus den Gleichungen (\ref{eq:adv}) und (\ref{eq:diff}) zusammen [3, S.140ff], so erhält man die \textit{Diffusions-Advektion-Gleichung}
 \begin{align*}
-\frac{\partial}{\partial t}T = D \nabla^2 T - \nabla \cdot (\vec{v}\cdot T)
-%= D \left(\frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} \right)T - (\frac{\partial}{\partial x} + \frac{\partial}{\partial y}) (\vec{v}\cdot T).
+\frac{\partial}{\partial t}T = D \nabla^2 T - \nabla \cdot (\vec{v}\cdot T).
+%= D \left(\frac{\partial^2}{\partial x^2} + \frac{\partial^2}{\partial y^2} \right)T - (\frac{\partial}{\partial x} + \frac{\partial}{\partial y}) (\vec{v}\cdot T) .
 \end{align*}
 Hierbei kann nun, wenn ein gegebenen externes, divergenzfreies Geschwindigkeitsfeld gegeben ist, dieses aus der Divergenz herausgelöst werden, sodass sich
 \begin{align}
@@ -212,7 +212,7 @@ ist eine Entdimensionalisierung der Gleichung (\ref{eq:orig_diff_adv}) möglich.
 \label{sec:ftcs}
 Eine mögliche Methode zur Lösung einer solchen partiellen Differenzialgleichung ist durch die Verfahrensgruppe der finiten Differenzen gegeben. Eine hierfür geeignete Diskretiserung des Problems ist in Form eines \textit{FTCS}-Schemas (Forward in Time, Centered in Space) gegeben. Hierbei wird der Raum in der $x$-Richtung in $(N_x+1)$ und in der $y$-Richtung in $(N_y+1)$ Stützstellen unterteilt, sodass sich ein zweidimensionales räumliches Gitter ergibt. Zwischen diesen Punkten herrscht ein jeweiliger Abstand von $\Delta x = X/N_x$ und $\Delta y = Y/N_y$, wobei $X$ und $Y$ für die Ausmaße des zu beschreibenden Problems in der $x$- und $y$-Richtung stehen.\\
 Die Temperatur $T(x, y)$, die hiermit beschrieben werden soll, geht dadurch in die Form $T_{i,j}$ über, wobei $i$ der Index des Punktes in der $x$- und $j$ der in der $y$-Richtung ist. Diese Indizes laufen von $0$ bis $N_x$ beziehungsweise $N_y$.\\
-Um nun noch die Zeit zu erfassen, wird auch diese in Punkte diskretisiert, die einen Abstand $\Delta_t$ haben, sodass sich insgesamt ein dreidimensionaler Würfel ergibt, dessen verschiedenen Ebenen für die verschiedenen Zeitpunkte stehen. Erneut geht die Temperatur $T(t, x, y) = T_{i,j}(t)$ über in $T_{i,j}^N$, wobei $N$ für den zeitlichen Index steht. Auch hier wird von $0$ an indiziert.\\
+Um nun noch die Zeit zu erfassen, wird auch diese in Punkte diskretisiert, die einen Abstand $\Delta t$ haben, sodass sich insgesamt ein dreidimensionaler Würfel ergibt, dessen verschiedenen Ebenen für die verschiedenen Zeitpunkte stehen. Erneut geht die Temperatur $T(t, x, y) = T_{i,j}(t)$ über in $T_{i,j}^N$, wobei $N$ für den zeitlichen Index steht. Auch hier wird von $0$ an indiziert.\\
 
 Diese Aufteilung erlaubt es nun, die in den Gleichung (\ref{eq:diff_adv}) vorkommenden Ableitungen zu beschreiben.   
 Hierbei wird in dem \textit{FTCS}-Schema die zeitliche Ableitung in der ersten und die räumlichen in der zweiten Ordnung beschrieben. Die Ordnung gibt hierbei jeweils an, wie stark der Fehler von der jeweiligen Schrittweite abhängt. Bei einem Verfahren zweiter Ordnung [1, S.18ff] hängt dieser Fehler von $\mathcal{O}(\Delta x^2)$ ab.
@@ -220,9 +220,9 @@ Es ergibt sich für die Ableitungen
 \begin{align}
 \frac{\partial}{\partial t}T(x,y) &= \frac{T_{i,j}^{N+1} - T_{i,j}^{N}}{\Delta t}, \\
 \frac{\partial}{\partial x}T(x,y) &= \frac{T_{i+1,j}^{N} - T_{i-1,j}^{N}}{2 \Delta x}, \\
-\frac{\partial^2}{\partial x^2}T(x,y) &= \frac{T_{i+1,j}^{N} - 2 T_{i,j}^{N} + T_{i-1,j}^{N}}{ \Delta x^2}.
+\frac{\partial^2}{\partial x^2}T(x,y) &= \frac{T_{i+1,j}^{N} - 2 T_{i,j}^{N} + T_{i-1,j}^{N}}{ \Delta x^2},
 \end{align}
-
+wobei die Fehlerordnung aus Gründen der Übersichtlichkeit implizit weggelassen worden ist.
 Durch Einsetzen in die Gleichung (\ref{eq:diff_adv}) und Umstellen nach $T_{i,j}^{N+1}$ erhält man schließlich %in der zweiten räumlichen Ordnung
 \begin{align}
 \label{eq:ftcs}
@@ -264,7 +264,7 @@ T^{N+1}_{0,j} - \frac{4}{3} T^{N+1}_{1,j} + \frac{1}{3} T^{N+1}_{2,j} &= 0, \\
 T^{N+1}_{N_x,j} - \frac{4}{3} T^{N+1}_{N_x-1,j} + \frac{1}{3} T^{N+1}_{N_x-2,j} &= 0.
 \end{align}
 
-Um das Problem nun besser beschreiben zu können, wird das zweidimensionale Feld in einem eindimensionalen Spaltenvektor zusammengefasst. Hierfür ist es notwendig, die Indizes umzubenennen. Hierbei wird ab jetzt die folgende Konvention benutzt: durchlaufe erst alle $x$-Werte zu einem festen $y$-Wert, und erhöhe den $y$-Wert. Dies bewirkt, dass die Zeilen des Feldes hintereinander geschrieben werden:
+Um das Problem nun besser beschreiben zu können, wird das zweidimensionale Feld in einem eindimensionalen Spaltenvektor zusammengefasst. Hierfür ist es notwendig, die Indizes umzubenennen. Hierbei wird ab jetzt die folgende Konvention benutzt: durchlaufe erst alle $x$-Werte zu einem festen $y$-Wert, und erhöhe den $y$-Wert. Dies bewirkt, dass die Zeilen des Feldes hintereinander geschrieben werden können:
 \begin{align*}
 T_{i,j}^{N} = T_{i+N_y j}^{N}.
 \end{align*}
@@ -273,7 +273,7 @@ Nun kann die Gleichung (\ref{eq:impli}) als eine Matrixoperation der Form
 \vec{F} = M \cdot \vec{T}^{N+1},
 \end{align*} 
 mit der Matrix \textbf{M} ausgedrückt werden. Hierbei geht $\vec{F}$ aus $\vec{T^N}$ hervor, wobei einige Einträge auf null gesetzt werden, um die Gleichungen (\ref{eq:impli_neumann_l}) und (\ref{eq:impli_neumann_r}) korrekt als Matrix-Gleichung darzustellen.
-Die Matrix \textbf{M} hat fünf Diagonalen, die ungleich null sind. \textbf{M} kann nun als Blockmatrix
+Die Matrix \textbf{M} hat fünf Diagonalen, die ungleich null sind. Sie kann nun als Blockmatrix
 \begin{align*}
 \boldsymbol{M} = \begin{pmatrix}
   \mathds{1}  & 0 & 0 &  0 & . & . & . & . & 0 \\
@@ -299,7 +299,7 @@ Die Matrizen \textbf{D} und $\textbf{E}^\pm$
 	. & . & 0 & \gamma^\pm & 0  & .\\  
 	. & . & . & 0 &  \gamma^\pm & .\\ 
 	0 & . & .& .& .& 0\\
- \end{pmatrix}
+ \end{pmatrix},
 \end{align*}
 \begin{align*}
  \boldsymbol{D} = \begin{pmatrix}
@@ -309,7 +309,7 @@ Die Matrizen \textbf{D} und $\textbf{E}^\pm$
 	. & . & \beta^- & \alpha & \beta^+ & 0\\ 
 	. &   & 0 & \beta^- & \alpha & \beta^+\\ 
 	0 & . & .& \frac{1}{3} & -\frac{4}{3} & 1\\
- \end{pmatrix}.
+ \end{pmatrix}
  \end{align*}
  setzen die implizite Gleichungen (\ref{eq:impli}) und (\ref{eq:impli_neumann_l}) um, sind also das Kernstück des \textit{BTCS-Schemas}. Ihre erste und letzte Zeile weichen hierbei vom Rest ab, da sie die \textit{Neumann}-Randbedingungen umsetzen.
 Um das System nun um einen Zeitschritt weiter zu simulieren, muss die Matrix $\textbf{M}$ invertiert werden - beziehungsweise das Gleichungssystem $\textbf{M} \vec{x} = \vec{b}$ gelöst werden.\\
@@ -349,18 +349,18 @@ Es ist zu erkennen, dass das Feld zwei Zentren hat, um die sich je ein Strudel b
 \subsection{Aufgabe 2: FTCS-Lösung}
 \label{sec:task2}
 Um nun eine erste numerische Lösung erzeugen zu können, wird das zuvor in (\ref{sec:ftcs}) hergeleitete Verfahren benutzt. Hierfür wird direkt eine etwas allgemeinere Implementation gewählt, welche in der Integration auch mögliche Quellterme berücksichtigt. Dieser Ansatz wird gewählt, da im weiteren Verlauf dieser Arbeit (siehe \ref{sec:task3}) die numerische Korrektheit des Integrators überprüft werden soll. Hierfür wird eine Quelle hinzugefügt, welche eine analytische Lösung erlaubt.\\
-Das Programm aus Quellcode (1) besteht aus zwei verschiedenen Routinen. Die \textit{main}-Methode liest ge-wünschte Eingangsparameter, wie die Schrittweite $\Delta t$, die maximale Integrationszeit $t_{max}$, die \textit{Péclet-Zahl} $Pe$, die Gitterauflösung $N_x$ und $N_y$ und einen weiteren Parameter, der angibt, ob ein Quellterm erzeugt werden soll, ein (Zeile 78-119). Zudem erzeugt sie Objekte des Types \textsc{vector\textless vector\textless double\textgreater \textgreater}, in welchem der Temperaturverlauf in dem Rechteck, und ein etwaiger Quellterm abgespeichert werden. Hierfür wird ein \textsc{vector} statt eines Feldes genutzt, um mögliche \textsc{Acess Violation Exceptions} zu vermeiden und um Memoryleaks zu reduzieren (Zeile 121-163). Etwaige Leistungsverluste hierdurch sind zum einen begrenzt und steuern keinen großen Anteil zu der Gesamtlaufzeit bei.\\
+Das Programm aus Quellcode (1) besteht aus zwei verschiedenen Routinen. Die \textsc{main}-Methode liest gewünschte Eingangsparameter, wie die Schrittweite $\Delta t$, die maximale Integrationszeit $t_{max}$, die \textit{Péclet-Zahl} $Pe$, die Gitterauflösung $N_x$ und $N_y$ und einen weiteren Parameter, der angibt, ob ein Quellterm erzeugt werden soll, ein (Zeile 78-119). Zudem erzeugt sie Objekte des Types \textsc{vector\textless vector\textless double\textgreater \textgreater}, in welchem der Temperaturverteilung in dem Rechteck, und ein etwaiger Quellterm abgespeichert werden. Hierfür wird ein \textsc{vector} statt eines Feldes genutzt, um mögliche \textsc{Acess Violation Exceptions} zu vermeiden und um Memoryleaks zu reduzieren (Zeile 121-163). Etwaige Leistungsverluste hierdurch sind zum einen begrenzt und steuern keinen großen Anteil zu der Gesamtlaufzeit bei.\\
 In einer Schleife wird in den gewählten Zeitschritten bis zur Endzeit iteriert, und für jede Zeit ein Integrationsschritt durchgeführt (Zeile 131-163). Im Anschluss daran wird die benötigte Rechenzeit ausgegeben (Zeile 165-166 und 202-205). Zuletzt wird die berechnete Temperaturverteilung in die vorher angegebene Datei ausgegeben (Zeile 208-215).\\
-Der jeweilige Integrationsschritt wird von der \textit{ftcs\_time\_step}-Methode ausgeführt. Diese legt zuerst eine Kopie des übermittelten Feldes an, um auf Grundlage dieser, die Ableitungsterme berechnen zu können. Hierfür wird in einer Schleife über das gesamte Gitter iteriert, und jeweils der $\nabla^2 T$ und der $\vec{v_0} \cdot \nabla T$ Term einzeln berechnet und anschließend nach Gleichung (\ref{eq:ftcs_source}) als Änderung von $T$ verrechnet (Zeile 19-59). Abschließend werden noch die \textit{Dirichlet}- und \textit{Neumann}-Ränder beachtet und die Werte passend aktualisiert (Zeile 61-76). 
+Der jeweilige Integrationsschritt wird von der \textsc{ftcs\_time\_step}-Methode ausgeführt. Diese legt zuerst eine Kopie des übermittelten Feldes an, um auf Grundlage dieser, die Ableitungsterme berechnen zu können. Hierfür wird in einer Schleife über das gesamte Gitter iteriert, und jeweils der $\nabla^2 T$ und der $\vec{v_0} \cdot \nabla T$ Term einzeln berechnet und anschließend nach Gleichung (\ref{eq:ftcs_source}) als Änderung von $T$ verrechnet (Zeile 19-59). Abschließend werden noch die \textit{Dirichlet}- und \textit{Neumann}-Ränder beachtet und die Werte passend aktualisiert (Zeile 61-76). 
 
 \subsection{Aufgabe 3: Numerische Korrektheit der FTCS-Lösung}
 \label{sec:task3}
 Zur Beurteilung der Korrektheit der numerischen Lösung wird normalerweise erstmal versucht, das Ergebnis mit der analytischen Lösung zu vergleichen. Da dieses Problem allerdings nicht analytisch lösbar ist, muss hier anders verfahren werden. Als Ansatz hierbei wird eine mögliche stationäre Lösung geraten, und die Differenzialgleichung um einen Quellterm so ergänzt, dass dies die exakte Lösung des Problems ist.\\
-Für diese konstruierte stationäre Lösung wird der Ansatz
+Für die konstruierte stationäre Lösung wird der Ansatz
 \begin{align*}
 T^* = \cos(\pi x) \sin(\pi y) + y
 \end{align*} 
-gewählt, da dies die vier Randbedingungen erfüllt.
+gewählt, da sie die vier Randbedingungen erfüllt.
 Um den Quellterm $Q$ zu korrigieren, wird $T^*$ in die stationäre Gleichung
 \begin{align*}
 Pe \cdot \vec{v} \nabla T^* = \nabla^2 T^* + Q 
@@ -374,7 +374,7 @@ was sich nach Einsetzen des Ansatzes und des gegebenen Geschwindigkeitsfeldes zu
 Q = \pi^2 \left(2 \cos(\pi x) \sin(\pi y) - Pe \cdot \cos(\pi x)^3 \sin(2 \pi y) \right) - 2 Pe \cdot \pi \cos(2 \pi x) \sin(\pi y)
 \end{align*}
 ergibt.\\
-Berücksichtigt man diesen Quellterm in dem \textit{FTCS-Schema}, folgt:
+Berücksichtigt man diesen Quellterm in dem \textit{FTCS-Schema}, so folgt:
 \begin{align}
 \label{eq:ftcs_source}
 T_{i,j}^{N+1} = T_{i,j}^N & + \Delta t \left[ -Pe \left( v^x_{i,j} \frac{T_{i+1,j}^N-T_{i-1,j}^N}{2\Delta x}+v^y_{i,j} \frac{T_{i,j+1}^N-T_{i,j-1}^N}{2\Delta x} \right) \right. \nonumber \\ 
@@ -398,7 +398,7 @@ Setzt man nun noch $N_x = N_y$, und variiert diese Werte für ein festes $\Delta
 \end{figure}
 
 In Abbildung (\ref{fig:task3}) zeigt den Verlauf des Fehlers $\sigma$ in Abhängigkeit von $N_x = N_y$ für $Pe = 2$ für einen Zeitschritt von $\Delta t = 2 \cdot 10^{-5}$ aufgetragen.
-Zudem wurde eine eine Regression durchgeführt, welche eine Abhängigkeit der Form $\sigma = N^{-1.2}$ ergeben hat. Dazu ist noch anzumerken, dass für größere $N$-Werte (größer als $115$) der Fehler nicht mehr weiter sinkt, sondern sogar stark anwächst, da die numerische Lösung divergent wird.
+Zudem wurde eine Regression durchgeführt, welche eine Abhängigkeit der Form $\sigma = N^{-1.2}$ ergeben hat. Dazu ist noch anzumerken, dass für größere $N$-Werte (größer als $115$) der Fehler nicht mehr weiter sinkt, sondern sogar stark anwächst, da die numerische Lösung divergent wird.
 
 
 \subsection{Aufgabe 4: Auswertung verschiedener FTCS-Lösungen}
@@ -406,7 +406,14 @@ Zudem wurde eine eine Regression durchgeführt, welche eine Abhängigkeit der Fo
 Im weiteren Verlauf wird der zuvor eingeführte Quellterm $Q=0$ gesetzt. Nun kann das Temperaturfeld $T$ für zwei verschiedene \textit{Péclet-Zahlen} $Pe = 2$ und $Pe = 10$ simuliert,
 und zu den drei Zeitpunkten $t = 0.005$, $t = 0.05$ und $t=0.5$ visualisiert werden. Hierfür wird $\Delta t = 2 \cdot 10^{-4}$ und $N=N_x=N_y = 30$ angenommen. Die Darstellungen sind in den Abbildungen (\ref{fig:task4_2}) und (\ref{fig:task4_10}) zu finden.
 
-Hierbei ergibt sich unabhängig von der \textit{Péclet-Zahl} eine ähnliche Temperaturverteilung. So ist sie im unteren Bereich deutlich geringer, als im oberen Bereich, was durch die \textit{Dirichlet}-Randbedingungen hervorgerufen wird. Zudem ist sie in der Mitte deutlich geringer, als rechts und links daneben. Dies lässt sich gut durch die Verteilung durch das Geschwindigkeitsfeld erklären. Diese transportiert anschaulich die vorhandene Wärme aus der Mitte hinweg, und verteilt sich im oberen Bereich. Bei der größeren \textit{Péclet-Zahl} $Pe=10$ ergibt sich eine stärkere Unterteilung, sodass ein stärker ausgeprägtes Gefälle zwischen warm und kalt entsteht. Für beide Parameter geht das System allerdings schon nach der kurzen Zeitspanne $t = 0.05$ in eine annähernd stationäre Lösung über - die Unterschiede zwischen den Verteilung für $t=0.05$ und $t=0.5$ sind minimal. 
+Hierbei ergibt sich unabhängig von der \textit{Péclet-Zahl} eine ähnliche Temperaturverteilung. So ist sie im unteren Bereich deutlich geringer, als im oberen Bereich, was durch die \textit{Dirichlet}-Randbedingungen hervorgerufen wird. Zudem ist sie in der Mitte deutlich geringer, als rechts und links daneben. Dies lässt sich gut durch die Verteilung durch das Geschwindigkeitsfeld erklären. Diese transportiert anschaulich die vorhandene Wärme aus der Mitte hinweg, und verteilt sich im oberen Bereich. Bei der größeren \textit{Péclet-Zahl} $Pe=10$ ergibt sich eine stärkere Unterteilung. Für beide Parameter geht das System allerdings schon nach der kurzen Zeitspanne $t = 0.05$ in eine annähernd stationäre Lösung über - die Unterschiede zwischen den Verteilung für $t=0.05$ und $t=0.5$ sind gering. Zur Veranschaulichung des Zusammenhanges zwischen der Verteilung und dem Geschwindigkeitsfeld wurden diese für eine Parameterwahl in Abbildung (\ref{fig:task4_velocity}) dargestellt.
+%[sich eine stärkere Unterteilung], sodass ein stärker ausgeprägtes Gefälle zwischen warm und kalt entsteht
+\begin{figure}[H]
+ \centering
+   \includegraphics[width=0.69\textwidth]{res/task4/10_05_velocity.png}
+   \caption{Darstellung der Temperaturverteilung und dem Geschwindigkeitsfeld $\vec{v}$ für $Pe = 10$, $t_{max} = 0.05$, $\Delta t = 2 \cdot 10^{-4}$ und $N=N_x=N_y = 30$.}
+ \label{fig:task4_velocity}
+\end{figure}
 
 \noindent\begin{minipage}[t]{0.50\textwidth}% adapt widths of minipages to your needs
 \begin{figure}[H]  
@@ -449,14 +456,14 @@ T^N_{i,j} = \xi^N e^{i(k_x \Delta x \cdot i + k_y \Delta y \cdot j)}
 gewählt.
 Durch Einsetzen in Gleichung (\ref{eq:ftcs}) und Kürzen ergibt sich der Ausdruck
 \begin{align*}
-\vec{\xi} = 1 &- \frac{\Delta t Pe v^x}{2 \Delta x} \left( e^{i k_x \Delta x} - e^{-i k_x \Delta x} \right) - \frac{\Delta t Pe v^y}{2 \Delta y} \left( e^{i k_y \Delta y} - e^{-i k_y \Delta y} \right) -\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2} \\
+\xi = 1 &- \frac{\Delta t Pe v^x}{2 \Delta x} \left( e^{i k_x \Delta x} - e^{-i k_x \Delta x} \right) - \frac{\Delta t Pe v^y}{2 \Delta y} \left( e^{i k_y \Delta y} - e^{-i k_y \Delta y} \right) -\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2} \\
  &+ \frac{\Delta t}{\Delta x^2} \left( e^{i k_x \Delta x} + e^{-i k_x \Delta x} \right) +\frac{\Delta t}{\Delta y^2} \left( e^{i k_y \Delta y} + e^{-i k_y \Delta y} \right),
 \end{align*}
 welcher durch trigonometrische Identitäten in
 \begin{align*}
-\vec{\xi} = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) + \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2 \Delta t}{\Delta x^2}\cos(k_x \Delta x) &+ \frac{2 \Delta t}{\Delta y^2}\cos(k_y \Delta y) \\ &-\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2}
+\xi = 1 - i \Delta t Pe\left(\frac{ v^x }{\Delta x} \sin(k_x \Delta x) + \frac{v^y}{\Delta y}  \sin(k_y \Delta y) \right) + \frac{2 \Delta t}{\Delta x^2}\cos(k_x \Delta x) &+ \frac{2 \Delta t}{\Delta y^2}\cos(k_y \Delta y) \\ &-\frac{2 \Delta t}{\Delta x^2} - \frac{2 \Delta t}{\Delta y^2}
 \end{align*}
-übergeht. Damit das Verfahren konvergiert, muss $|\vec{\xi}|$ kleiner $1$ ein. Nähert man hier den Sinus und den Cosinus mit den Maximalwerten, und schätzt die Komponenten $v^x$ und $v^y$ nach oben durch $\pi$ und $2\pi$ ab, so ergibt sich
+übergeht. Damit das Verfahren konvergiert, muss $|\xi|$ kleiner $1$ ein. Nähert man hier den Sinus und den Cosinus mit den Maximalwerten, und schätzt die Komponenten $v^x$ und $v^y$ nach oben durch $\pi$ und $2\pi$ ab, so ergibt sich
 \begin{align}
 \lambda^2 \left(64 + (2 \pi Pe \Delta x)^2 \right) -16 \lambda <0,
 \end{align}
@@ -465,7 +472,7 @@ Eine Lösung dieser Ungleichung ergibt folgenden Bereich, sodass das \textit{FTC
 \begin{align}
 0 < \lambda = \frac{\Delta t}{\Delta x^2} < \frac{4}{16 + (\Delta_x Pe \pi)^2}.
 \end{align}
-Hierdurch kann der maximale Zeitschrit, für den das Verfahren konvergiert durch
+Hierdurch kann der maximale Zeitschrit, für den das Verfahren konvergiert, durch
 \begin{align}
 \label{eq:neumann_delta_t_max}
 \Delta t_{max} = \frac{4 \Delta x^2}{16 + \left(\pi Pe \Delta_x \right)^2}
@@ -489,7 +496,7 @@ ausgedrückt werden.
 	\label{tab:delta_t_comp}
 \end{table}
 
-Ein Vergleich zwischen den empirisch ermittelten Grenzzeitschritten und den maximalen Zeitschritten, für die nach der nach oben abgeschätzten theoretischen Betrachtung noch ein konvergentes Verhalten zu erwarten ist, bietet die Tabelle (\ref{tab:delta_t_comp}) Es ist zu erkennen, die theoretische Abschätzung für die kleinste \textit{Péclet}-Zahl die beste Übereinstimmung mit dem empirisch gefunden Wert hat - dies hebt den Charakter der bei der Herleitung angenommenen Abschätzungen hervor.  
+Ein Vergleich zwischen den empirisch ermittelten Grenzzeitschritten und den maximalen Zeitschritten, für die nach der nach oben abgeschätzten theoretischen Betrachtung noch ein konvergentes Verhalten zu erwarten ist, bietet die Tabelle (\ref{tab:delta_t_comp}). Es ist zu erkennen, die theoretische Abschätzung für die kleinste \textit{Péclet}-Zahl die beste Übereinstimmung mit dem empirisch gefunden Wert hat - dies hebt den Charakter der bei der Herleitung angenommenen Abschätzungen hervor.  
 \\
 
 
@@ -497,7 +504,7 @@ Ein Vergleich zwischen den empirisch ermittelten Grenzzeitschritten und den maxi
 \subsection{Aufgabe 6: BTCS-Lösung}
 \label{sec:task6}
 Nachdem zuvor die explizite Diskretisierung untersucht wurde, wird das Problem nun implizit im \textit{BTCS-Schema} betrachtet (siehe \ref{sec:btcs}). Dazu werden im Hauptprogramm im Quellcode (2) vier Routinen benötigt.
-Die \textit{main}-Methode liest die eingegebene Parameter erneut ein (Zeile 50-88), und befüllt die zuvor eingeführte Matrix $\textbf{M}$. Dazu wird ein Objekt der Klasse \textit{square\_matrix} aus Quellcode (3) benutzt (Zeile 90-155). Diese erbt von der Klasse \textit{matrix}, welche im Quellcode (4) und (6) definiert wird. Hierbei werden die Routinen \textit{beta} und \textit{gamma} benutzt, welche die so benannten Variablen für den jeweiligen Gitterpunkt berechnen (Zeile 21-48). Weitergehend wird das Temperaturfeld nicht mehr in einem zwei sondern in einem eindimensionalen Objekt gespeichert. Dieses wird zunächst mit den gewünschten Startwerten initialisiert (Zeile 155-170).\\
+Die \textsc{main}-Methode liest die eingegebene Parameter erneut ein (Zeile 50-88), und befüllt die zuvor eingeführte Matrix $\textbf{M}$. Dazu wird ein Objekt der Klasse \textsc{square\_matrix} aus Quellcode (3) benutzt (Zeile 90-155). Diese erbt von der Klasse \textsc{matrix}, welche im Quellcode (4) und (6) definiert wird. Hierbei werden die Routinen \textsc{beta} und \textsc{gamma} benutzt, welche die so benannten Variablen für den jeweiligen Gitterpunkt berechnen (Zeile 21-48). Weitergehend wird das Temperaturfeld nicht mehr in einem zwei sondern in einem eindimensionalen Objekt gespeichert. Dieses wird zunächst mit den gewünschten Startwerten initialisiert (Zeile 155-170).\\
 Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrationsschritt die zuvor aufgestellte Matrix invertiert. Dafür wurde das \textit{SOR-Verfahren} im Quellcode (7) und (5) nach Gleichung (\ref{eq:sor}) implementiert. Dabei werden in jedem einzelnen Interationsschritt die Residuen $\vec{r} = \textbf{M} \vec{x}-\vec{b}$ für die Lösung von $\textbf{M} \vec{x} = \vec{b}$ berechnet, und gefordert, dass der Betrag dieser kleiner als $|\vec{r}| < 10^{-4}$ ist. Dies wird als Abbruchbedingung im dem \textit{SOR-Verfahren} genutzt. Um die Vorteile des \textit{SOR} wirklich nutzen zu können, muss zuerst ein geeigneter Relaxationsparameter $\alpha$ ermittelt werden. Hierzu wird $Pe=10$, $N_x=N_y = 30$ und $\Delta t=100$ gesetzt. Nun wird $\alpha$ mit einer Schrittweite von $0.05$ ab $1.0$ variiert und die benötigten Iterationen ermittelt. 
 \begin{figure}[H]
  \centering
@@ -506,13 +513,13 @@ Nun wird über das zu betrachtende Zeitintervall iteriert, und in jedem Integrat
  \label{fig:task6_param_comp}
 \end{figure}
 
-\noindent\begin{minipage}[t]{0.45\textwidth}% adapt widths of minipages to your needs
+\noindent\begin{minipage}[t]{0.40\textwidth}% adapt widths of minipages to your needs
 \vspace{1cm}
-Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass das bei $\alpha=1.455$ die geringste Anzahl an Iterationen benötigt wurde. Die Anzahl der benötigten Iterationen für höhere Relexationsparameter $\alpha$ sind nicht mehr graphisch dargestellt, da hier für leicht erhöhte Werte bereits mehrere Zehntausend Iterationen benötigten wurden. Somit wird im weiteren Verlauf dieser Parameter genutzt.\\
+Die grafische Auftragung der so ermittelten Ergebnisse ist in Abbildung (\ref{fig:task6_param_comp}) zu finden. Es ist gut erkennbar, dass bei $\alpha=1.455$ die geringste Anzahl an Iterationen benötigt wurde. Die Anzahl der benötigten Iterationen für höhere Relexationsparameter $\alpha$ sind nicht mehr graphisch dargestellt, da hier für leicht erhöhte Werte bereits mehrere Zehntausend Iterationen benötigten wurden. Somit wird im weiteren Verlauf dieser Parameter auf $1.455$ gesetzt.\\
 Schließlich wird das zuvor implementierte und getestete Verfahren noch einmal für die Parameterwahl aus Aufgabenpunkt (\ref{sec:task4}) angewendet, um die Ergebnisse miteinander zu vergleichen. Hierfür wurde also erneut $Pe = 10$, $\Delta t = 2 \cdot 10^{-4}$ und $t \in \{0.005, 0.05, 0.5\}$ gewählt. Die hierdurch erhaltenen Temperaturverteilungen sind erneut als Heatmap in Abbildung (\ref{fig:task6}) dargestellt.
 \end{minipage}%
 \hfill%
-\noindent\begin{minipage}[t]{0.55\textwidth}% adapt widths of minipages to your needs
+\noindent\begin{minipage}[t]{0.56\textwidth}% adapt widths of minipages to your needs
 \begin{figure}[H]  
    \includegraphics[width=\linewidth]{res/task6/grid0005.png}
    \includegraphics[width=\linewidth]{res/task6/grid005.png}
@@ -531,11 +538,11 @@ Durch den Vergleich in Abschnitt (\ref{sec:task3}) ist erkennbar, dass der numer
 
 \subsection{Aufgabe 5: Beurteilung der Stabilität der FTCS-Lösung}
 \label{sec:disc_stability}
-Die zuvor in Abschnitt (\ref{sec:task5}) hergeleitete Gleichung für den maximal gültigen Zeitschritt $\Delta t_{max}$ ist durch die Abschätzungen nach oben, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden. Hierbei zeigte sich allerdings, dass die Aussagen der Gleichung (\ref{eq:neumann_delta_t_max}) für geringe \textit{Péclet-Zahlen} zu stark sind, und noch zu viele Werte ausschließen, für die das Verfahren noch konvergiert. Allerdings konnte durch exemplarische Tests bei höheren Werten ein Verhalten festgestellt werden, welches dem durch die Formel beschriebenen entspricht: je höher die Zahl wird, desto feiner muss die Zeitintegration gewählt werden.
+Die zuvor in Abschnitt (\ref{sec:task5}) hergeleitete Gleichung für den maximal gültigen Zeitschritt $\Delta t_{max}$ ist durch die Abschätzungen nach oben, eine obere Schranke. Liegt $\lambda$ außerhalb des Bereiches, aber nahe an der Grenze, so ist ein Konvergieren nicht sicher ausgeschlossen. Liegt $\lambda$ allerdings in dem Bereich, so konvergiert das Verfahren sicher. Dieses Verhalten konnte an den zuvor empirisch ermittelten Grenzen für $\Delta t$ verifiziert werden. Hierbei zeigte sich allerdings, dass die Aussagen der Gleichung (\ref{eq:neumann_delta_t_max}) für geringe \textit{Péclet-Zahlen} zu stark sind, und noch zu viele Werte ausschließen, für die das Verfahren noch konvergiert. Allerdings konnte durch exemplarische Tests bei höheren Werten ein Verhalten festgestellt werden, welches dem durch die Formel beschriebenen entspricht: je höher die \textit{Péclet-Zahl} wird, desto feiner muss die Zeitintegration gewählt werden.
 
 \subsection{Aufgabe 6: Auswertung und Vergleich der BTCS-Lösung}
 \label{sec:disc_speed_comparison}
-Nachdem nun beide Verfahren umgesetzt und getestet worden sind, folgt nun ein Vergleich dieser. Hierbei werden zuerst die dadurch erhaltenen Lösungen miteinander verglichen. Betrachtet man die Ergebnisse für die \textit{Péclet}-Zahl $Pe = 10$ des \textit{BTCS}-Verfahrens aus Abbildung (\ref{fig:task6}) mit denen des \textit{FTCS}-Verfahrens in Abbildung (\ref{fig:task4_10}), so kann man eine hohe Übereinstimmung des Verlaufes festellen. Hierbei ist für diese gegebene Parameterwahl kein Unterschied feststellbar.
+Nachdem nun beide Verfahren umgesetzt und getestet worden sind, bietet sich ein Vergleich dieser an. Hierbei werden zuerst die dadurch erhaltenen Lösungen miteinander verglichen. Betrachtet man die Ergebnisse für die \textit{Péclet}-Zahl $Pe = 10$ des \textit{BTCS}-Verfahrens aus Abbildung (\ref{fig:task6}) mit denen des \textit{FTCS}-Verfahrens in Abbildung (\ref{fig:task4_10}), so kann man eine hohe Übereinstimmung des Verlaufes festellen. Hierbei ist für diese gegebene Parameterwahl kein Unterschied feststellbar.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{c|c|c}
@@ -558,10 +565,9 @@ Nachdem nun beide Verfahren umgesetzt und getestet worden sind, folgt nun ein Ve
 	\caption{Exemplarischer Laufzeitvergleich zwischen dem expliziten (\textit{FTCS}) und dem impliziten (\textit{BTCS}) Lösungsverfahren.}
 \end{table}
 Da zuvor das explizite Lösungsverfahren auf numerische Korrektheit überprüft wurde, kann also auch davon ausgegangen werden, dass das implizite Lösungsverfahren korrekt umgesetzt worden ist.\\
-Betrachtet man allerdings die Laufzeit der beiden Verfahren, so können große Unterschiede sowohl in der Größenordnung, als auch im Verlauf festgestellt werden. Diese Laufzeiten wurden exemplarisch gemessen und in Tabelle (\ref{table:speed_comparison}) festgehalten. Es ist anzumerken, dass die gemessene Laufzeit von dem verwendeten Rechner und anderen äußeren Einflüssen abhängen kann, sodass diese Daten nur als Anhaltspunkt für das grobe Verhalten gesehen werden können. Zudem hätten die verschiedenen Routinen auch noch weiter hinsichtlich ihrer Laufzeit optimiert werden können. Da dies den Rahmen des Themas der Arbeit überschreiben würde, wurde darauf verzichtet.\\
+Betrachtet man allerdings die Laufzeit der beiden Verfahren, so können große Unterschiede sowohl in der Größenordnung, als auch im Verlauf festgestellt werden. Diese Laufzeiten wurden exemplarisch gemessen und in Tabelle (\ref{table:speed_comparison}) festgehalten. Es ist anzumerken, dass die gemessene Laufzeit von dem verwendeten Rechner und anderen äußeren Einflüssen abhängen kann, sodass diese Daten nur als Anhaltspunkt für das grobe Verhalten gesehen werden können. Zudem hätten die verschiedenen Routinen auch noch weiter hinsichtlich ihrer Laufzeit optimiert werden können. Da dies den Rahmen des Themas der Arbeit überschreiten würde, wurde darauf verzichtet.\\
 Es ist zu erkennen, dass die Laufzeit des expliziten Verfahrens in etwa linear mit der simulierten Zeitspanne $t$ anwächst, wohingegen die des impliziten Verfahrens deutlich geringer anwächst, und näherungsweise fast konstant bleibt.\\
-Somit zeigt sich, dass das explizite Verfahren zweiter Ordnung in diesem Fall seine Stärken nur bei sehr kurzen Zeitspannen hat. Das implizite Verfahren läuft bereits bei Simulationen für mehr als $t=50$ schneller ab.
-
+Somit zeigt sich, dass das explizite Verfahren zweiter Ordnung in diesem Fall seine Stärken nur bei sehr kurzen Zeitspannen hat. Das implizite Verfahren läuft bereits bei Simulationen für mehr als $t=50$ schneller ab und ist zu bevorzugen.
 \begin{thebibliography}{9}
   \bibitem{manmana}
   Andres Honecker, Thomas Pruschke, Salvatore R. Manmana, \\
