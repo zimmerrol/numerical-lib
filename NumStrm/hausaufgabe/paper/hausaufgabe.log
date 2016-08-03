@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2016.3.16)  2 AUG 2016 17:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2016.3.16)  3 AUG 2016 13:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -490,38 +490,73 @@ Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 337.
 Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 338.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 339.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 340.
-) (./hausaufgabe.aux)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pdfpages/pdfpages.sty
+Package: pdfpages 2013/08/25 v0.4v Insert pages of external PDF documents (AM)
+
+(/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count125
+\calc@Bcount=\count126
+\calc@Adimen=\dimen136
+\calc@Bdimen=\dimen137
+\calc@Askip=\skip57
+\calc@Bskip=\skip58
+LaTeX Info: Redefining \setlength on input line 76.
+LaTeX Info: Redefining \addtolength on input line 77.
+\calc@Ccount=\count127
+\calc@Cskip=\skip59
+)
+(/usr/share/texlive/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2013/10/06 v2.0d eso-pic (RN)
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)))
+(/usr/share/texlive/texmf-dist/tex/latex/pdfpages/pppdftex.def
+File: pppdftex.def 2013/08/25 v0.4v Pdfpages driver for pdfTeX (AM)
+)
+\AM@pagebox=\box39
+\AM@toc@title=\toks30
+\c@AM@survey=\count128
+\AM@templatesizebox=\box40
+)
+(./hausaufgabe.aux)
 \openout1 = `hausaufgabe.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 112.
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 112.
-LaTeX Font Info:    Try loading font information for LGR+cmr on input line 112.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for LGR/cmr/m/n on input line 113.
+LaTeX Font Info:    Try loading font information for LGR+cmr on input line 113.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/cbfonts-fd/lgrcmr.fd
 File: lgrcmr.fd 2013/09/01 v1.0 Greek European Computer Regular
 )
-LaTeX Font Info:    ... okay on input line 112.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 112.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 112.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 113.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 113.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 112.
-\c@lstlisting=\count125
+LaTeX Font Info:    ... okay on input line 113.
+\c@lstlisting=\count129
 
 (/usr/share/texlive/texmf-dist/tex/latex/ucs/ucsencs.def
 File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
@@ -604,17 +639,17 @@ LGR\textaristerikeraia already defined.
 fontencoding LGR patched
 ) (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count126
-\scratchdimen=\dimen136
-\scratchbox=\box39
-\nofMPsegments=\count127
-\nofMParguments=\count128
-\everyMPshowfont=\toks30
-\MPscratchCnt=\count129
-\MPscratchDim=\dimen137
-\MPnumerator=\count130
-\makeMPintoPDFobject=\count131
-\everyMPtoPDFconversion=\toks31
+\scratchcounter=\count130
+\scratchdimen=\dimen138
+\scratchbox=\box41
+\nofMPsegments=\count131
+\nofMParguments=\count132
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count133
+\MPscratchDim=\dimen139
+\MPnumerator=\count134
+\makeMPintoPDFobject=\count135
+\everyMPtoPDFconversion=\toks32
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -622,10 +657,6 @@ Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifluatex.sty
 Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
-)
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
 )
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
@@ -672,54 +703,56 @@ Package: everysel 2011/10/28 v1.2 EverySelectfont Package (MS)
 ABD: EverySelectfont initializing macros
 LaTeX Info: Redefining \selectfont on input line 126.
 )
-\CenteringLeftskip=\skip57
-\RaggedLeftLeftskip=\skip58
-\RaggedRightLeftskip=\skip59
-\CenteringRightskip=\skip60
-\RaggedLeftRightskip=\skip61
-\RaggedRightRightskip=\skip62
-\CenteringParfillskip=\skip63
-\RaggedLeftParfillskip=\skip64
-\RaggedRightParfillskip=\skip65
-\JustifyingParfillskip=\skip66
-\CenteringParindent=\skip67
-\RaggedLeftParindent=\skip68
-\RaggedRightParindent=\skip69
-\JustifyingParindent=\skip70
+\CenteringLeftskip=\skip60
+\RaggedLeftLeftskip=\skip61
+\RaggedRightLeftskip=\skip62
+\CenteringRightskip=\skip63
+\RaggedLeftRightskip=\skip64
+\RaggedRightRightskip=\skip65
+\CenteringParfillskip=\skip66
+\RaggedLeftParfillskip=\skip67
+\RaggedRightParfillskip=\skip68
+\JustifyingParfillskip=\skip69
+\CenteringParindent=\skip70
+\RaggedLeftParindent=\skip71
+\RaggedRightParindent=\skip72
+\JustifyingParindent=\skip73
 )
+\AtBeginShipoutBox=\box42
+
 (/usr/share/texlive/texmf-dist/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2013/05/13 UCS: Unicode data U+0000..U+00FF
 )
 <res/title/2_05.png, id=1, 452.4403pt x 344.03531pt>
 File: res/title/2_05.png Graphic file (type png)
  <use res/title/2_05.png>
-Package pdftex.def Info: res/title/2_05.png used on input line 131.
+Package pdftex.def Info: res/title/2_05.png used on input line 134.
 (pdftex.def)             Requested size: 313.69029pt x 238.52902pt.
-LaTeX Font Info:    Try loading font information for U+lasy on input line 135.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 138.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-LaTeX Font Info:    Try loading font information for U+stmry on input line 135.
+LaTeX Font Info:    Try loading font information for U+stmry on input line 138.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
-LaTeX Font Info:    Try loading font information for U+msa on input line 135.
+LaTeX Font Info:    Try loading font information for U+msa on input line 138.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 135.
+LaTeX Font Info:    Try loading font information for U+msb on input line 138.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+wasy on input line 135.
+LaTeX Font Info:    Try loading font information for U+wasy on input line 138.
 
 (/usr/share/texlive/texmf-dist/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
 )
-Overfull \hbox (0.53824pt too wide) in paragraph at lines 135--142
+Overfull \hbox (0.53824pt too wide) in paragraph at lines 138--145
  [][] 
  []
 
@@ -731,34 +764,34 @@ Overfull \hbox (0.53824pt too wide) in paragraph at lines 135--142
 \openout3 = `hausaufgabe.toc'.
 
  [2]
-Underfull \hbox (badness 10000) in paragraph at lines 160--162
+Underfull \hbox (badness 10000) in paragraph at lines 163--165
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 210--213
+Underfull \hbox (badness 10000) in paragraph at lines 213--216
 
  []
 
 [4] [5] [6]
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 287.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 290.
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 287.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 290.
 
 
 LaTeX Font Warning: Font shape `U/stmry/b/n' undefined
-(Font)              using `U/stmry/m/n' instead on input line 287.
+(Font)              using `U/stmry/m/n' instead on input line 290.
 
 
 LaTeX Font Warning: Font shape `U/wasy/b/n' in size <8> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 287.
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 290.
 
 
 LaTeX Font Warning: Font shape `U/wasy/b/n' in size <6> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 287.
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 290.
 
-LaTeX Font Info:    Try loading font information for U+dsrom on input line 287.
+LaTeX Font Info:    Try loading font information for U+dsrom on input line 290.
 
 (/usr/share/texlive/texmf-dist/tex/latex/doublestroke/Udsrom.fd
 File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
@@ -766,63 +799,63 @@ File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
 <res/task1.png, id=44, 578.16pt x 576.1525pt>
 File: res/task1.png Graphic file (type png)
  <use res/task1.png>
-Package pdftex.def Info: res/task1.png used on input line 340.
+Package pdftex.def Info: res/task1.png used on input line 343.
 (pdftex.def)             Requested size: 268.8813pt x 267.9433pt.
  [8]
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 349.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 352.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/sc' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 349.
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 352.
  [9 <./res/task1.png>]
 [10] <res/task3.png, id=54, 642.4pt x 481.8pt>
 File: res/task3.png Graphic file (type png)
  <use res/task3.png>
-Package pdftex.def Info: res/task3.png used on input line 392.
+Package pdftex.def Info: res/task3.png used on input line 395.
 (pdftex.def)             Requested size: 313.69029pt x 235.27538pt.
  [11 <./res/task3.png>] <res/task4/2_0005.png, id=58, 642.4pt x 481.8pt>
 File: res/task4/2_0005.png Graphic file (type png)
 
 <use res/task4/2_0005.png>
-Package pdftex.def Info: res/task4/2_0005.png used on input line 410.
+Package pdftex.def Info: res/task4/2_0005.png used on input line 413.
 (pdftex.def)             Requested size: 224.06548pt x 168.04439pt.
  <res/task4/2_005.png, id=59, 642.4pt x 481.8pt>
 File: res/task4/2_005.png Graphic file (type png)
 
 <use res/task4/2_005.png>
-Package pdftex.def Info: res/task4/2_005.png used on input line 411.
+Package pdftex.def Info: res/task4/2_005.png used on input line 414.
 (pdftex.def)             Requested size: 224.06548pt x 168.04439pt.
  <res/task4/2_05.png, id=60, 642.4pt x 481.8pt>
 File: res/task4/2_05.png Graphic file (type png)
 
 <use res/task4/2_05.png>
-Package pdftex.def Info: res/task4/2_05.png used on input line 412.
+Package pdftex.def Info: res/task4/2_05.png used on input line 415.
 (pdftex.def)             Requested size: 224.06548pt x 168.04439pt.
  <res/task4/10_0005.png, id=61, 642.4pt x 481.8pt>
 File: res/task4/10_0005.png Graphic file (type png)
 
 <use res/task4/10_0005.png>
-Package pdftex.def Info: res/task4/10_0005.png used on input line 421.
+Package pdftex.def Info: res/task4/10_0005.png used on input line 424.
 (pdftex.def)             Requested size: 224.06548pt x 168.04439pt.
  <res/task4/10_005.png, id=62, 642.4pt x 481.8pt>
 File: res/task4/10_005.png Graphic file (type png)
 
 <use res/task4/10_005.png>
-Package pdftex.def Info: res/task4/10_005.png used on input line 422.
+Package pdftex.def Info: res/task4/10_005.png used on input line 425.
 (pdftex.def)             Requested size: 224.06548pt x 168.04439pt.
  <res/task4/10_05.png, id=63, 642.4pt x 481.8pt>
 File: res/task4/10_05.png Graphic file (type png)
 
 <use res/task4/10_05.png>
-Package pdftex.def Info: res/task4/10_05.png used on input line 423.
+Package pdftex.def Info: res/task4/10_05.png used on input line 426.
 (pdftex.def)             Requested size: 224.06548pt x 168.04439pt.
  [12] [13 <./res/task4/2_0005.png> <./res/task4/2_005.png> <./res/task4/2_05.pn
 g> <./res/task4/10_0005.png> <./res/task4/10_005.png> <./res/task4/10_05.png>] 
 [14]
-Underfull \hbox (badness 10000) in paragraph at lines 489--491
+Underfull \hbox (badness 10000) in paragraph at lines 492--494
 
  []
 
@@ -830,15 +863,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 489--491
 File: res/task6/sor_parameter.png Graphic file (type png)
 
 <use res/task6/sor_parameter.png>
-Package pdftex.def Info: res/task6/sor_parameter.png used on input line 501.
+Package pdftex.def Info: res/task6/sor_parameter.png used on input line 504.
 (pdftex.def)             Requested size: 291.28238pt x 218.46947pt.
 
-Underfull \hbox (badness 1014) in paragraph at lines 508--510
+Underfull \hbox (badness 1014) in paragraph at lines 511--513
 []\OT1/cmr/m/n/12 Die gra-fi-sche Auf-tra-gung der so er-
  []
 
 
-Underfull \hbox (badness 5022) in paragraph at lines 508--510
+Underfull \hbox (badness 5022) in paragraph at lines 511--513
 \OT1/cmr/m/n/12 pe-ra-tur-ver-tei-lun-gen sind er-neut als
  []
 
@@ -846,22 +879,22 @@ Underfull \hbox (badness 5022) in paragraph at lines 508--510
 File: res/task6/grid0005.png Graphic file (type png)
 
 <use res/task6/grid0005.png>
-Package pdftex.def Info: res/task6/grid0005.png used on input line 514.
+Package pdftex.def Info: res/task6/grid0005.png used on input line 517.
 (pdftex.def)             Requested size: 246.47339pt x 184.8503pt.
  <res/task6/grid005.png, id=79, 642.4pt x 481.8pt>
 File: res/task6/grid005.png Graphic file (type png)
 
 <use res/task6/grid005.png>
-Package pdftex.def Info: res/task6/grid005.png used on input line 515.
+Package pdftex.def Info: res/task6/grid005.png used on input line 518.
 (pdftex.def)             Requested size: 246.47339pt x 184.8503pt.
  <res/task6/grid05.png, id=80, 642.4pt x 481.8pt>
 File: res/task6/grid05.png Graphic file (type png)
 
 <use res/task6/grid05.png>
-Package pdftex.def Info: res/task6/grid05.png used on input line 516.
+Package pdftex.def Info: res/task6/grid05.png used on input line 519.
 (pdftex.def)             Requested size: 246.47339pt x 184.8503pt.
 
-Underfull \hbox (badness 3128) in paragraph at lines 517--517
+Underfull \hbox (badness 3128) in paragraph at lines 520--520
 [] []\OT1/cmr/m/n/12 Temperatur nach dem \OT1/cmr/m/it/12 BTCS-
  []
 
@@ -932,13 +965,13 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 10083 strings out of 494075
- 149839 string characters out of 6162224
- 351465 words of memory out of 5000000
- 13166 multiletter control sequences out of 15000+600000
+ 10831 strings out of 494075
+ 162150 string characters out of 6162224
+ 356959 words of memory out of 5000000
+ 13896 multiletter control sequences out of 15000+600000
  24465 words of font info for 105 fonts, out of 8000000 for 9000
  564 hyphenation exceptions out of 8191
- 47i,15n,59p,990b,2181s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 47i,15n,59p,990b,2191s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share
