@@ -23,15 +23,17 @@ void ftcs_time_step(grid_t& values, grid_t &v0x, grid_t &v0y, const double delta
 
   //create copy of the grid with the same dimensions
   //this will be used for the calculation of the derivatives
-  grid_t old_values = vector<vector<double> > (dimension_x);
+  grid_t old_values = vector<vector<double> >();
+  old_values.reserve(dimension_x);
   for (size_t x=0; x<dimension_x; x++)
   {
     //add a new row
-    old_values[x] = vector<double>(dimension_y);
+    old_values.push_back(vector<double>());
+    old_values[x].reserve(dimension_y);
     for (size_t y=0; y<dimension_y; y++)
     {
       //copy value
-      old_values[x][y] = values[x][y];
+      old_values[x].push_back(values[x][y]);
     }
   }
 

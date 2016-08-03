@@ -1,7 +1,7 @@
 reset
 set term pngcairo enhanced
 
-set palette maxcolors 128
+set palette maxcolors 256
 set xlabel "x"
 set ylabel "y"
 set cbrange[0:1]
@@ -25,5 +25,7 @@ set output "10_0005.png"
 plot "10_0005.dat" matrix w image t "Temperatur T zu t = 0.005"
 
 
-set output "test.png"
-plot "test.dat" matrix w image t "test"
+set xrange[0:100]
+set yrange[0:100]
+set output "out3.png"
+plot "out3.dat" matrix w image t "test"
