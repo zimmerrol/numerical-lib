@@ -470,15 +470,21 @@ welcher durch trigonometrische Identitäten in
 mit der \textit{CFL-Zahl} $\lambda = \Delta t/\Delta x^2$.
 Eine Lösung dieser Ungleichung ergibt folgenden Bereich, sodass das \textit{FTCS-Schema} konvergiert:
 \begin{align}
-0 < \lambda = \frac{\Delta t}{\Delta x^2} < \frac{4}{16 + (\Delta_x Pe \pi)^2}.
+0 < \lambda = \frac{\Delta t}{\Delta x^2} < \frac{4}{16 + (\Delta x Pe \pi)^2}.
 \end{align}
 Hierdurch kann der maximale Zeitschrit, für den das Verfahren konvergiert, durch
 \begin{align}
 \label{eq:neumann_delta_t_max}
-\Delta t_{max} = \frac{4 \Delta x^2}{16 + \left(\pi Pe \Delta_x \right)^2}
+\Delta t_{max} = \frac{4 \Delta x^2}{16 + \left(\pi Pe \Delta x \right)^2}
 \end{align}
-ausgedrückt werden.
-
+ausgedrückt werden. Die Abhängigkeit von der \textit{Péclet-Zahl} wurde für ein festes $\Delta x =  \frac{1}{30}$ in Abbildung (\ref{fig:task5}) dargestellt. Hierbei ist der Abfall von $\Delta t_{max}$ für größere $Pe$ deutlich zu erkennen. \\
+\begin{figure}[H]
+ \centering
+   \includegraphics[width=0.65\textwidth]{res/task5.png}
+   \caption{Grafische Darstellung der maximalen Schrittweite $\Delta t_{max}$ in Abhängigkeit von der \textit{Pécletzahl} $Pe$ für $\Delta x = \frac{1}{30}$.}
+ \label{fig:task5}
+\end{figure}
+Einen Vergleich zwischen den empirisch ermittelten Grenzzeitschritten und den maximalen Zeitschritten, für die nach der nach oben abgeschätzten theoretischen Betrachtung noch ein konvergentes Verhalten zu erwarten ist, bietet die Tabelle (\ref{tab:delta_t_comp}).
 \begin{table}[H]
 \centering
 	\begin{tabular}{c|c|c}
@@ -496,8 +502,9 @@ ausgedrückt werden.
 	\label{tab:delta_t_comp}
 \end{table}
 
-Ein Vergleich zwischen den empirisch ermittelten Grenzzeitschritten und den maximalen Zeitschritten, für die nach der nach oben abgeschätzten theoretischen Betrachtung noch ein konvergentes Verhalten zu erwarten ist, bietet die Tabelle (\ref{tab:delta_t_comp}). Es ist zu erkennen, die theoretische Abschätzung für die kleinste \textit{Péclet}-Zahl die beste Übereinstimmung mit dem empirisch gefunden Wert hat - dies hebt den Charakter der bei der Herleitung angenommenen Abschätzungen hervor.  
-\\
+ Es ist zu erkennen, die theoretische Abschätzung für die kleinste \textit{Péclet}-Zahl die beste Übereinstimmung mit dem empirisch gefunden Wert hat - dies hebt den Charakter der bei der Herleitung angenommenen Abschätzungen hervor.  
+
+
 
 
 \newpage

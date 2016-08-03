@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2014.11.25)  3 AUG 2016 21:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/W32TeX) (preloaded format=pdflatex 2014.11.25)  4 AUG 2016 00:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -891,47 +891,54 @@ Package pdftex.def Info: res/task4/10_05.png used on input line 433.
 
 [12 <./res/task4/10_05_velocity.png>] [13 <./res/task4/2_0005.png> <./res/task4
 /2_005.png> <./res/task4/2_05.png> <./res/task4/10_0005.png> <./res/task4/10_00
-5.png> <./res/task4/10_05.png>] [14]
-Underfull \hbox (badness 10000) in paragraph at lines 499--501
+5.png> <./res/task4/10_05.png>] <res/task5.png, id=72, 642.4pt x 481.8pt>
+File: res/task5.png Graphic file (type png)
+
+<use res/task5.png>
+Package pdftex.def Info: res/task5.png used on input line 483.
+(pdftex.def)             Requested size: 291.28238pt x 218.46947pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 479--486
 
  []
 
-[15] <res/task6/sor_parameter.png, id=78, 642.4pt x 481.8pt>
+[14] [15 <./res/task5.png>]
+<res/task6/sor_parameter.png, id=79, 642.4pt x 481.8pt>
 File: res/task6/sor_parameter.png Graphic file (type png)
 
 <use res/task6/sor_parameter.png>
-Package pdftex.def Info: res/task6/sor_parameter.png used on input line 511.
+Package pdftex.def Info: res/task6/sor_parameter.png used on input line 518.
 (pdftex.def)             Requested size: 291.28238pt x 218.46947pt.
 
-Underfull \hbox (badness 1270) in paragraph at lines 518--520
+Underfull \hbox (badness 1270) in paragraph at lines 525--527
 \OT1/cmr/m/n/12 f[]ur leicht erh[]ohte Wer-te be-reits
  []
 
 
-Underfull \hbox (badness 1137) in paragraph at lines 518--520
+Underfull \hbox (badness 1137) in paragraph at lines 525--527
 \OT1/cmr/m/n/12 meh-re-re Zehn-tau-send Ite-ra-tio-nen
  []
 
-<res/task6/grid0005.png, id=79, 642.4pt x 481.8pt>
+<res/task6/grid0005.png, id=80, 642.4pt x 481.8pt>
 File: res/task6/grid0005.png Graphic file (type png)
 
 <use res/task6/grid0005.png>
-Package pdftex.def Info: res/task6/grid0005.png used on input line 524.
+Package pdftex.def Info: res/task6/grid0005.png used on input line 531.
 (pdftex.def)             Requested size: 250.95222pt x 188.21pt.
- <res/task6/grid005.png, id=80, 642.4pt x 481.8pt>
+ <res/task6/grid005.png, id=81, 642.4pt x 481.8pt>
 File: res/task6/grid005.png Graphic file (type png)
 
 <use res/task6/grid005.png>
-Package pdftex.def Info: res/task6/grid005.png used on input line 525.
+Package pdftex.def Info: res/task6/grid005.png used on input line 532.
 (pdftex.def)             Requested size: 250.95222pt x 188.21pt.
- <res/task6/grid05.png, id=81, 642.4pt x 481.8pt>
+ <res/task6/grid05.png, id=82, 642.4pt x 481.8pt>
 File: res/task6/grid05.png Graphic file (type png)
 
 <use res/task6/grid05.png>
-Package pdftex.def Info: res/task6/grid05.png used on input line 526.
+Package pdftex.def Info: res/task6/grid05.png used on input line 533.
 (pdftex.def)             Requested size: 250.95222pt x 188.21pt.
 
-Underfull \hbox (badness 5985) in paragraph at lines 527--527
+Underfull \hbox (badness 5985) in paragraph at lines 534--534
 [] []\OT1/cmr/m/n/12 Temperatur nach dem \OT1/cmr/m/it/12 BTCS-
  []
 
@@ -1007,10 +1014,10 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 10837 strings out of 493109
- 166055 string characters out of 6129602
- 360056 words of memory out of 5000000
- 13989 multiletter control sequences out of 15000+600000
+ 10843 strings out of 493109
+ 166146 string characters out of 6129602
+ 360112 words of memory out of 5000000
+ 13994 multiletter control sequences out of 15000+600000
  24465 words of font info for 105 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  47i,15n,59p,1046b,2191s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1036,10 +1043,10 @@ sfonts/cm/cmsy8.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmti12.pfb><c:/Program Files (x86)/texlive/2014/texmf-dist/
 fonts/type1/public/doublestroke/dsrom12.pfb><c:/Program Files (x86)/texlive/201
 4/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb>
-Output written on hausaufgabe.pdf (32 pages, 559724 bytes).
+Output written on hausaufgabe.pdf (32 pages, 580026 bytes).
 PDF statistics:
- 197 PDF objects out of 1000 (max. 8388607)
+ 198 PDF objects out of 1000 (max. 8388607)
  128 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 76 words of extra memory for PDF output out of 10000 (max. 10000000)
 
